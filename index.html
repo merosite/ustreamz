@@ -52,7 +52,7 @@
   <script>
     (() => {
       "use strict";
-      const DEFAULT_SOURCE = "https://ott-nettv-02.nettv.com.np/iptvlivestream/hpremiumPAID/chunks.m3u8?nimblesessionid=65475791&wmsAuthSign=c2VydmVyX3RpbWU9MTEvMi8yMDI2IDg6MDI6NDEgQU0maGFzaF92YWx1ZT1zWVhRMVU4QUxQSmZEQ1RLTmNqK2ZBPT0mdmFsaWRtaW51dGVzPTE0NDAmaWQ9MjAw";
+      const DEFAULT_SOURCE = "https://sonyeventsglobal.akamaized.net/hls/live/2119931/cricodi_2011/ENG/master.m3u8?hdnea=exp=1795211773~acl=/*~id=76948268902062468843895461111021~hmac=d949091fecf4c22fd2ca351f4d9da867d84b54d858155007fa953d08dddf3b2f&nocache=1795168663955";
       const query = new URLSearchParams(window.location.search);
       const source = (query.get("src") || DEFAULT_SOURCE).trim();
       const parent = document.getElementById("clapper-player-screen");
