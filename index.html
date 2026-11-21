@@ -15,6 +15,8 @@
     <!-- HLS.js for reliable m3u8 / Akamai token playback -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -27,6 +29,7 @@
             margin: 0;
             padding: 0;
             background-color: #020617;
+            width: 100%;
         }
 
         #umc-live-tv-app {
@@ -126,7 +129,8 @@
         #umc-live-tv-app:not(.sidebar-hidden) > aside:hover #sidebar-hide-hover { opacity:1; pointer-events:auto; }
         #sidebar-hide-hover { opacity:0; pointer-events:none; transition:opacity .15s; }
         #umc-live-tv-app #view-player.mini-player #player-back-button,
-        #umc-live-tv-app #view-player.mini-player #player-fullscreen-btn { display:none !important; }
+        #umc-live-tv-app #view-player.mini-player #player-fullscreen-btn,
+        #umc-live-tv-app #view-player.mini-player #player-exit-channel-btn { display:none !important; }
 
         /* Player channel list menu */
         #player-category-menu.hidden { display:none !important; }
@@ -264,10 +268,12 @@
             border-color:#38bdf8 !important;
         }
         #umc-live-tv-app .tv-search-icon { flex:0 0 auto !important; color:#94a3b8 !important; }
-        #umc-live-tv-app input.tv-search-input {
+        #umc-live-tv-app input.tv-search-input,
+        #umc-live-tv-app input.tv-search-input:focus,
+        #umc-live-tv-app input.tv-search-input:focus-visible {
             display:block !important; flex:1 1 auto !important; width:100% !important; min-width:0 !important;
             height:100% !important; margin:0 !important; padding:0 !important; border:0 !important;
-            outline:0 !important; background:transparent !important;
+            outline:none !important; outline-offset:0 !important; background:transparent !important;
             color:#f8fafc !important; font-family:Inter,sans-serif !important; font-size:13px !important;
             font-weight:500 !important; box-shadow:none !important;
             appearance:none !important; -webkit-appearance:none !important;
@@ -280,7 +286,8 @@
             color:#94a3b8 !important; font-size:14px !important;
         }
         #umc-live-tv-app input#settings-channel-search,
-        #umc-live-tv-app input#settings-movie-search {
+        #umc-live-tv-app input#settings-movie-search,
+        #umc-live-tv-app input#settings-file-search {
             display:block !important; width:100% !important; min-height:40px !important;
             margin:0 0 12px !important; padding:9px 12px !important;
             border:1px solid #334155 !important; border-radius:10px !important;
@@ -373,15 +380,7 @@
             100% { transform: translateX(145%); }
         }
 
-
         /* Safe Full-Width Layout for Elementor & Standalone Hosting */
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            min-height: 100dvh !important;
-            background-color: #020617 !important;
-        }
         body.elementor-page .elementor-section,
         body.elementor-page .elementor-container,
         body.elementor-page .e-con,
@@ -413,7 +412,6 @@
                 min-height: calc(100dvh - 46px) !important;
             }
         }
-
     </style>
 </head>
 <body>
@@ -426,7 +424,6 @@
     <div class="splash-loader"><div class="splash-loader-bar"></div></div>
 </div>
 
-
 <div id="umc-live-tv-app" class="flex w-full antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Sidebar -->
@@ -435,11 +432,11 @@
         <button id="sidebar-hide-hover" type="button" tabindex="0" onclick="toggleSidebarPanel()" title="Hide categories panel" aria-label="Hide categories panel" class="absolute -right-3 top-1/2 z-50 h-10 w-6 items-center justify-center rounded-r-lg bg-slate-700 text-white shadow-lg"><i data-lucide="chevron-left" class="!w-4 !h-4"></i></button>
         
         <!-- Logo Area -->
-        <button type="button" tabindex="0" onclick="goHomeAllCategories()" title="U Stream — All Categories" aria-label="U Stream Home" class="h-14 md:h-16 w-full flex items-center justify-center md:justify-start md:px-6 border-b border-slate-800 shrink-0 text-left hover:bg-slate-800/60 transition-colors">
+        <button type="button" tabindex="0" onclick="goHomeAllCategories()" title="UStreamz — All Categories" aria-label="UStreamz Home" class="h-14 md:h-16 w-full flex items-center justify-center md:justify-start md:px-6 border-b border-slate-800 shrink-0 text-left hover:bg-slate-800/60 transition-colors">
             <div class="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30">
                 <i data-lucide="tv" class="text-indigo-400 !w-6 !h-6 md:!w-6 md:!h-6"></i>
             </div>
-            <span class="ml-3 font-bold text-xl hidden md:block tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-300">U Stream</span>
+            <span class="ml-3 font-bold text-xl hidden md:block tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-300">UStreamz</span>
         </button>
 
         <!-- Navigation Menu -->
@@ -457,12 +454,17 @@
         </nav>
 
         <!-- Current playing channel -->
-        <div id="sidebar-now-playing" class="hidden mx-2 md:mx-3 mb-2 border-t border-slate-800 pt-2">
-            <div class="text-[10px] uppercase tracking-wider text-slate-500 px-2 mb-1 hidden md:block">Now Playing</div>
-            <button type="button" onclick="expandPlayer()" class="w-full flex items-center justify-center md:justify-start gap-2 rounded-xl bg-slate-800/90 hover:bg-slate-800 border border-slate-700/60 px-2.5 py-2 min-w-0 transition-colors" title="Click to open full player">
-                <span class="h-2 w-2 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
-                <span id="sidebar-playing-name" class="text-xs font-medium text-slate-200 truncate hidden md:block">—</span>
-            </button>
+        <div id="sidebar-now-playing" class="hidden mx-1.5 md:mx-3 mb-2 border-t border-slate-800 pt-2 z-30">
+            <div class="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold px-2 mb-1 block truncate">Now Playing</div>
+            <div class="flex items-center gap-1.5 min-w-0">
+                <button type="button" tabindex="0" onclick="expandPlayer()" class="flex-1 flex items-center justify-start gap-2 rounded-xl bg-indigo-950/70 hover:bg-indigo-900/70 border border-indigo-500/40 px-2 py-2 min-w-0 transition-colors" title="Click or press Enter to open full player">
+                    <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+                    <span id="sidebar-playing-name" class="text-[11px] md:text-xs font-semibold text-white truncate block">—</span>
+                </button>
+                <button type="button" tabindex="0" onclick="closePlayer()" title="Exit Channel" aria-label="Exit Current Channel" class="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-rose-950/90 hover:bg-rose-900 border border-rose-500/35 text-rose-200 hover:text-white transition-colors">
+                    <i data-lucide="power" class="!w-4 !h-4"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Bottom Menu -->
@@ -504,7 +506,7 @@
             </div>
         </section>
 
-        <!-- View 2: Video Player (Powered by HLS.js Engine) -->
+        <!-- View 2: Video Player -->
         <section id="view-player" class="view-section flex-col w-full h-full bg-black relative" onmousemove="resetPlayerOverlayTimeout()" ontouchstart="resetPlayerOverlayTimeout()">
             <header id="player-overlay" class="h-14 md:h-16 flex items-center px-4 bg-gradient-to-b from-black/95 via-black/60 to-transparent absolute top-0 left-0 w-full z-30 transition-opacity duration-300 opacity-100">
                 <div class="relative">
@@ -515,14 +517,18 @@
                         </button>
                         <!-- Channel List button -->
                         <div class="relative">
-                            <button type="button" tabindex="0" onclick="togglePlayingCategoryList(event)" class="flex items-center justify-center text-white hover:text-indigo-300 bg-slate-900/90 border border-white/15 w-10 h-10 rounded-full shadow-lg" title="Show channels list" aria-label="Show channels in this category">
-                                <i data-lucide="list-video" class="!w-5 !h-5"></i>
+                            <button type="button" tabindex="0" onclick="togglePlayingCategoryList(event)" class="flex items-center justify-center text-white hover:text-indigo-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" aria-label="Show channels in this category">
+                                <i data-lucide="list-video" class="!w-4 !h-4"></i>
                             </button>
-                            <div id="player-category-menu" class="hidden absolute left-0 top-12 z-50 w-56 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-2xl"></div>
+                            <div id="player-category-menu" class="hidden absolute left-0 top-10 z-50 w-56 rounded-xl border border-slate-700 bg-slate-950 p-2 shadow-2xl"></div>
                         </div>
                         <!-- Full Screen Toggle Button -->
-                        <button type="button" tabindex="0" id="player-fullscreen-btn" onclick="toggleAppFullScreen()" class="flex items-center justify-center text-white hover:text-cyan-300 bg-slate-900/90 border border-white/15 w-10 h-10 rounded-full shadow-lg" title="Full Screen" aria-label="Toggle Full Screen">
-                            <i data-lucide="maximize" id="player-fullscreen-icon" class="!w-5 !h-5"></i>
+                        <button type="button" tabindex="0" id="player-fullscreen-btn" onclick="toggleAppFullScreen(event)" class="flex items-center justify-center text-white hover:text-cyan-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" aria-label="Toggle Full Screen">
+                            <i data-lucide="maximize" id="player-fullscreen-icon" class="!w-4 !h-4"></i>
+                        </button>
+                        <!-- Exit Playing Channel Button (Icon Only, turns red only on hover) -->
+                        <button type="button" tabindex="0" id="player-exit-channel-btn" onclick="closePlayer()" class="flex items-center justify-center text-white bg-slate-900/90 hover:bg-rose-600 hover:border-rose-500 hover:text-white border border-white/15 w-8 h-8 rounded-full shadow-lg transition-colors" aria-label="Exit Playing Channel">
+                            <i data-lucide="power" class="!w-4 !h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -536,16 +542,15 @@
             <div class="flex-1 flex items-center justify-center relative w-full h-full bg-black overflow-hidden" id="player-container" ondblclick="toggleAppFullScreen()">
                 <!-- Native HTML5 Video + HLS.js Wrapper -->
                 <div id="video-wrapper" class="w-full h-full flex items-center justify-center bg-black">
-                    <video id="video-element" class="w-full h-full object-contain bg-black" controls playsinline autoplay></video>
+                    <video id="video-element" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="w-full h-full object-contain bg-black" controls playsinline autoplay></video>
                 </div>
 
-                <!-- Fallback Iframe for Embeds -->
+                <!-- Fallback Iframe for Embeds / Null-Origin Sandbox -->
                 <iframe id="embed-element" class="hidden w-full h-full border-0 bg-black" title="Channel player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; presentation" allowfullscreen referrerpolicy="no-referrer"></iframe>
                 
-                <!-- Live Stream Status Indicator Badge -->
-                <div id="stream-status-badge" role="status" aria-live="polite" class="absolute bottom-14 left-4 z-30 flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/85 border border-white/15 backdrop-blur-md shadow-xl pointer-events-none transition-all duration-300">
-                    <span id="stream-status-dot" class="h-2.5 w-2.5 rounded-full bg-slate-400"></span>
-                    <span id="stream-status-text" class="text-[11px] font-semibold tracking-wide text-slate-200 uppercase">Ready</span>
+                <!-- Live Stream Status Indicator Dot (Icon Only, No Text) -->
+                <div id="stream-status-badge" role="status" aria-live="polite" class="absolute left-3 z-20 flex items-center justify-center pointer-events-none transition-all duration-300" style="bottom:16px;background:transparent !important;border:none !important;box-shadow:none !important;">
+                    <span id="stream-status-dot" class="h-3 w-3 rounded-full bg-slate-400"></span>
                 </div>
                 
                 <!-- Loading Overlay -->
@@ -562,7 +567,7 @@
         <section id="view-settings" class="view-section flex-col w-full h-full">
             <header class="h-16 flex items-center px-4 md:px-6 lg:px-10 border-b border-slate-800 bg-slate-900 shrink-0">
                 <div class="min-w-0">
-                    <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">U Stream — Settings</h1>
+                    <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight">UStreamz — Settings</h1>
                     <p id="cloud-connection-status" class="text-xs text-slate-500 mt-0.5">Checking cloud connection…</p>
                 </div>
                 <button type="button" onclick="signOutSettings()" class="ml-auto inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700"><i data-lucide="log-out" class="!w-4 !h-4"></i><span>Sign Out</span></button>
@@ -583,9 +588,10 @@
                                 <input type="hidden" id="edit-id" value="">
                                 <div>
                                     <label class="block text-sm font-medium text-slate-400 mb-1">Add to list</label>
-                                    <select id="add-content-type" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                                    <select id="add-content-type" onchange="toggleAppFileFields()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
                                         <option value="channel">Channel List</option>
                                         <option value="movie">Movies Online</option>
+                                        <option value="app">App / Files (APK, EXE, DOC, PDF, Word, Excel, Image)</option>
                                     </select>
                                 </div>
                                 <div>
@@ -607,8 +613,13 @@
                                     <img id="add-logo-preview" class="hidden mt-2 h-14 w-14 rounded-lg border border-slate-700 bg-slate-950 object-contain p-1" alt="Logo preview">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Stream / Player URL (M3U8 or PHP Embed)</label>
-                                    <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/stream.m3u8">
+                                    <label id="add-url-label" class="block text-sm font-medium text-slate-400 mb-1">Stream / Player / Direct App Download URL</label>
+                                    <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/stream.m3u8 or https://example.com/app.apk">
+                                </div>
+                                <div id="app-file-upload-box" class="rounded-xl border border-slate-700/80 bg-slate-950/70 p-3.5 space-y-2">
+                                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider">Upload App or File (Image, DOC, PDF, Word, Excel, EXE, APK)</label>
+                                    <input type="file" id="add-file-upload" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.exe,.apk,.zip,.rar" class="block w-full text-xs text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                                    <div id="add-file-meta" class="text-[11px] text-slate-400">Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download &amp; preview)</div>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-slate-400 mb-1">Multiple stream links (Label | URL)</label>
@@ -641,6 +652,15 @@
                             <form onsubmit="handleAddCategory(event)" class="flex flex-col gap-2 mb-4">
                                 <select id="new-category-parent" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white"><option value="">Top-level category</option></select>
                                 <input type="text" id="new-category-name" required placeholder="New Category Name" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                                <input type="text" id="new-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-xs font-semibold text-cyan-300">Select Category Icon (<span id="category-icon-count">1050+</span>)</span>
+                                        <span id="selected-category-icon-badge" class="inline-flex items-center gap-1.5 text-xs bg-slate-900 border border-slate-700 text-cyan-200 px-2.5 py-0.5 rounded-full"><i data-lucide="folder" class="!w-3.5 !h-3.5"></i><span>folder</span></span>
+                                    </div>
+                                    <input type="search" id="category-icon-search" oninput="renderCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv, app, sport...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                    <div id="category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
+                                </div>
                                 <input type="url" id="new-category-logo" placeholder="Category logo URL (optional)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
                                 <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="new-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
                                 <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center">Add</button>
@@ -685,6 +705,14 @@
                             <input type="search" id="settings-movie-search" oninput="renderSettingsList()" placeholder="Search movie by name...">
                             <div class="flex-1 overflow-y-auto pr-2" id="settings-movie-list"></div>
                         </div>
+                        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[300px] max-h-[520px]">
+                            <h2 class="text-xl font-semibold mb-4 flex items-center text-emerald-400 pb-4 border-b border-slate-800 shrink-0">
+                                <i data-lucide="file-down" class="mr-2"></i> Apps &amp; Files
+                                <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-files-count">0</span>
+                            </h2>
+                            <input type="search" id="settings-file-search" oninput="renderSettingsList()" placeholder="Search app or file by name...">
+                            <div class="flex-1 overflow-y-auto pr-2" id="settings-file-list"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -697,7 +725,7 @@
         <div class="w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-2xl">
             <div class="flex items-center gap-3 mb-5">
                 <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500/15 text-indigo-400"><i data-lucide="shield-check" class="!w-6 !h-6"></i></div>
-                <div><h2 class="text-xl font-bold text-white">U Stream Admin</h2><p class="text-sm text-slate-400">Sign in with your administrator account.</p></div>
+                <div><h2 class="text-xl font-bold text-white">UStreamz Admin</h2><p class="text-sm text-slate-400">Sign in with your administrator account.</p></div>
             </div>
             <form id="settings-login-form" class="space-y-4">
                 <div><label for="settings-email" class="mb-1 block text-sm font-medium text-slate-300">User ID / Email</label><input id="settings-email" type="email" autocomplete="username" required class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-indigo-500" placeholder="Enter your user ID / email"></div>
@@ -720,11 +748,225 @@
         </div>
     </div>
 
+    
+    <!-- App / File Preview & Direct Download Modal with QR Code -->
+    <div id="file-app-modal" class="fixed inset-0 z-[120] hidden items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div class="w-full max-w-2xl rounded-2xl border border-slate-700 bg-slate-900 p-5 md:p-6 shadow-2xl max-h-[92dvh] overflow-y-auto space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
+                <div class="min-w-0">
+                    <div id="file-modal-badge" class="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 mb-1">APP / FILE</div>
+                    <h3 id="file-modal-title" class="text-lg md:text-xl font-bold text-white truncate">Item Title</h3>
+                    <p id="file-modal-sub" class="text-xs text-slate-400 truncate mt-0.5"></p>
+                </div>
+                <button type="button" onclick="closeFileAppModal()" class="rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white p-2 transition-colors" aria-label="Close">
+                    <i data-lucide="x" class="!w-4 !h-4"></i>
+                </button>
+            </div>
+
+            <div id="file-preview-container" class="rounded-xl border border-slate-800 bg-slate-950 p-3 min-h-[180px] flex items-center justify-center overflow-auto"></div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center rounded-xl border border-slate-800 bg-slate-950/90 p-4">
+                <div class="sm:col-span-8 space-y-2.5">
+                    <div class="text-xs font-semibold text-emerald-300 uppercase tracking-wider">Direct Download</div>
+                    <p class="text-xs text-slate-400">Download directly to your device or scan the QR code on your phone/TV.</p>
+                    <div class="flex flex-wrap gap-2.5 pt-1">
+                        <a id="file-direct-download-btn" href="#" download class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 text-xs font-bold shadow-lg transition-colors">
+                            <i data-lucide="download" class="!w-4 !h-4"></i>
+                            <span>Direct Download</span>
+                        </a>
+                        <button type="button" id="file-preview-tab-btn" onclick="openFileInNewTab()" class="inline-flex items-center gap-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 px-3.5 py-2.5 text-xs font-semibold transition-colors">
+                            <i data-lucide="external-link" class="!w-4 !h-4"></i>
+                            <span>Open / Preview</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="sm:col-span-4 flex flex-col items-center justify-center rounded-xl bg-white p-2.5 text-slate-900">
+                    <img id="file-qr-img" src="" alt="Download QR Code" class="w-28 h-28 object-contain">
+                    <span class="text-[10px] font-bold text-slate-700 mt-1 tracking-wide">SCAN TO DOWNLOAD</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!-- Edit Category Modal (Same experience as Add Category) -->
+    <div id="edit-category-modal" class="fixed inset-0 z-[130] hidden items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
+        <div class="w-full max-w-lg rounded-2xl border border-slate-700 bg-slate-900 p-5 md:p-6 shadow-2xl max-h-[92dvh] overflow-y-auto space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-lg font-bold text-cyan-400 flex items-center gap-2"><i data-lucide="folder-edit" class="!w-5 !h-5"></i><span>Edit Category</span></h3>
+                <button type="button" onclick="closeCategoryEditModal()" class="rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white p-2 transition-colors" aria-label="Close"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+            </div>
+            <form id="edit-category-form" onsubmit="handleSaveCategoryEdit(event)" class="space-y-3">
+                <input type="hidden" id="edit-category-old-name" value="">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Category Name</label>
+                    <input type="text" id="edit-category-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <input type="text" id="edit-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-xs font-semibold text-cyan-300">Select Category Icon (<span id="edit-category-icon-count">1060</span>)</span>
+                        <span id="edit-category-icon-badge" class="inline-flex items-center gap-1.5 text-xs bg-slate-900 border border-slate-700 text-cyan-200 px-2.5 py-0.5 rounded-full"></span>
+                    </div>
+                    <input type="search" id="edit-category-icon-search" oninput="renderEditCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    <div id="edit-category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Category Logo URL (optional)</label>
+                    <input type="url" id="edit-category-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500" placeholder="Logo URL">
+                </div>
+                <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="edit-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
+                <div class="flex gap-2.5 pt-2">
+                    <button type="button" onclick="closeCategoryEditModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white py-2.5 px-4 rounded-lg font-medium">Cancel</button>
+                    <button type="submit" class="flex-1 bg-cyan-600 hover:bg-cyan-700 text-white py-2.5 px-4 rounded-lg font-semibold flex items-center justify-center gap-2"><i data-lucide="save" class="!w-4 !h-4"></i><span>Save Category</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
 
     <script>
-        
+        /* =========================================================
+           STRICT RIGHT-CLICK BLOCK & INSTANT APP CLOSE ON DEVTOOLS
+           ========================================================= */
+        (function enforceStrictAppSecurity() {
+            let appClosed = false;
+
+            function closeAppNow() {
+                if (appClosed) return;
+                appClosed = true;
+                try {
+                    if (typeof stopPlayer === 'function') stopPlayer();
+                } catch (_) {}
+                try {
+                    if (window.hlsInstance) {
+                        window.hlsInstance.destroy();
+                        window.hlsInstance = null;
+                    }
+                } catch (_) {}
+                try {
+                    if (window.appData) {
+                        window.appData.channels = [];
+                        window.appData.categories = [];
+                    }
+                } catch (_) {}
+
+                try {
+                    document.open();
+                    document.write('<!DOCTYPE html><html><head><title></title></head><body style="background:#000;margin:0;"></body></html>');
+                    document.close();
+                } catch (_) {
+                    try { document.documentElement.innerHTML = ''; } catch (__) {}
+                }
+
+                try {
+                    window.opener = null;
+                    window.open('', '_self', '');
+                    window.close();
+                } catch (_) {}
+
+                try {
+                    window.location.replace('about:blank');
+                } catch (_) {
+                    try { window.location.href = 'about:blank'; } catch (__) {}
+                }
+            }
+
+            function blockContextMenu(e) {
+                if (e) {
+                    const card = e.target && e.target.closest ? e.target.closest('.channel-card') : null;
+                    if (card && card.dataset && card.dataset.channelId) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (typeof showChannelContextMenu === 'function') {
+                            showChannelContextMenu(e.clientX, e.clientY, card.dataset.channelId);
+                        }
+                        return false;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                }
+                return false;
+            }
+
+            window.addEventListener('contextmenu', blockContextMenu, { capture: true, passive: false });
+            document.addEventListener('contextmenu', blockContextMenu, { capture: true, passive: false });
+            window.oncontextmenu = blockContextMenu;
+            document.oncontextmenu = blockContextMenu;
+
+            ['copy', 'cut', 'dragstart', 'selectstart'].forEach(function(evtName) {
+                document.addEventListener(evtName, function(e) {
+                    const tag = (document.activeElement && document.activeElement.tagName) || '';
+                    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }, { capture: true, passive: false });
+            });
+
+            document.addEventListener('keydown', function(e) {
+                const key = String(e.key || '').toUpperCase();
+                const code = e.keyCode || e.which || 0;
+                const ctrlOrMeta = !!(e.ctrlKey || e.metaKey);
+
+                if (code === 123 || key === 'F12') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAppNow();
+                    return false;
+                }
+                if (ctrlOrMeta && e.shiftKey && ['I', 'J', 'C', 'K', 'M', 'E'].includes(key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAppNow();
+                    return false;
+                }
+                if (ctrlOrMeta && ['U', 'S'].includes(key)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeAppNow();
+                    return false;
+                }
+            }, { capture: true, passive: false });
+
+            setInterval(function() {
+                if (appClosed) return;
+                const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+                const simFs = !!window.isSimulatedFullscreen;
+                if (fsEl || simFs) return;
+
+                const wDiff = Math.abs((window.outerWidth || 0) - (window.innerWidth || 0));
+                const hDiff = Math.abs((window.outerHeight || 0) - (window.innerHeight || 0));
+                if ((wDiff > 150 || hDiff > 150) && (window.outerWidth || 0) > 360) {
+                    closeAppNow();
+                }
+            }, 800);
+
+            const devProbe = new Image();
+            Object.defineProperty(devProbe, 'id', {
+                get: function() {
+                    closeAppNow();
+                    return '';
+                }
+            });
+            setInterval(function() {
+                if (appClosed) return;
+                try {
+                    console.log('%c', devProbe);
+                } catch (_) {}
+            }, 1500);
+
+            try {
+                const noop = function() {};
+                ['log', 'debug', 'info', 'warn', 'error', 'table', 'dir', 'trace', 'group', 'groupCollapsed', 'groupEnd'].forEach(function(fn) {
+                    if (window.console) window.console[fn] = noop;
+                });
+            } catch (_) {}
+        })();
+
         (function ensureNoReferrer() {
             try {
                 if (!document.querySelector('meta[name="referrer"]')) {
@@ -762,6 +1004,276 @@
             { id: '4', name: 'Sky Sports Demo', category: 'Sports', logo: 'https://placehold.co/400x400/1e40af/ffffff?text=Sky', url: 'https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8' }
         ];
 
+
+        let uploadedFilePayload = { dataUrl: '', fileName: '', mimeType: '' };
+        let currentModalDownloadUrl = '';
+        let currentModalFileName = 'download';
+
+
+        const CATEGORY_ICON_LIBRARY = (() => {
+            const special = [
+                { name: 'fa-android', label: 'Android (FA Free)', fa: 'fa-brands fa-android', lucide: 'smartphone' },
+                { name: 'fa-apple', label: 'iOS / Apple (FA Free)', fa: 'fa-brands fa-apple', lucide: 'tablet-smartphone' },
+                { name: 'fa-windows', label: 'Windows (FA Free)', fa: 'fa-brands fa-windows', lucide: 'monitor' },
+                { name: 'fa-linux', label: 'Linux (FA Free)', fa: 'fa-brands fa-linux', lucide: 'terminal' },
+                { name: 'fa-file-pdf', label: 'PDF File (FA Free)', fa: 'fa-solid fa-file-pdf', lucide: 'file-text' },
+                { name: 'fa-file-word', label: 'Word / DOC (FA Free)', fa: 'fa-solid fa-file-word', lucide: 'file-type' },
+                { name: 'fa-file-excel', label: 'Excel / XLS (FA Free)', fa: 'fa-solid fa-file-excel', lucide: 'sheet' },
+                { name: 'fa-file-image', label: 'Image / Photo (FA Free)', fa: 'fa-solid fa-file-image', lucide: 'image' },
+                { name: 'fa-file-video', label: 'Video / Movie (FA Free)', fa: 'fa-solid fa-file-video', lucide: 'film' },
+                { name: 'fa-file-audio', label: 'Audio / Music (FA Free)', fa: 'fa-solid fa-file-audio', lucide: 'music' },
+                { name: 'fa-file-lines', label: 'Document / DOC (FA Free)', fa: 'fa-solid fa-file-lines', lucide: 'file-text' },
+                { name: 'fa-tv', label: 'Live TV (FA Free)', fa: 'fa-solid fa-tv', lucide: 'tv' },
+                { name: 'fa-trophy', label: 'Sports (FA Free)', fa: 'fa-solid fa-trophy', lucide: 'trophy' },
+                { name: 'fa-newspaper', label: 'News (FA Free)', fa: 'fa-solid fa-newspaper', lucide: 'newspaper' },
+                { name: 'fa-download', label: 'Download (FA Free)', fa: 'fa-solid fa-download', lucide: 'download' },
+                { name: 'android', label: 'Android', symbol: '🤖', lucide: 'smartphone' },
+                { name: 'ios-apple', label: 'iOS / Apple', symbol: '🍎', lucide: 'tablet-smartphone' },
+                { name: 'pdf-file', label: 'PDF', symbol: '📕', lucide: 'file-text' },
+                { name: 'word-doc', label: 'Word / DOC', symbol: '📘', lucide: 'file-type' },
+                { name: 'excel-sheet', label: 'Excel / XLS', symbol: '📗', lucide: 'sheet' },
+                { name: 'image-photo', label: 'Image / Photo', symbol: '🖼️', lucide: 'image' },
+                { name: 'apk-package', label: 'APK App', symbol: '📦', lucide: 'package' },
+                { name: 'exe-windows', label: 'EXE / Windows', symbol: '🪟', lucide: 'monitor' },
+                { name: 'live-tv', label: 'Live TV', symbol: '📺', lucide: 'tv' },
+                { name: 'movies-cinema', label: 'Movies', symbol: '🎬', lucide: 'clapperboard' },
+                { name: 'sports-arena', label: 'Sports', symbol: '🏆', lucide: 'trophy' },
+                { name: 'news-broadcast', label: 'News', symbol: '📰', lucide: 'newspaper' },
+                { name: 'music-audio', label: 'Music', symbol: '🎵', lucide: 'music' },
+                { name: 'cloud-drive', label: 'Cloud / Drive', symbol: '☁️', lucide: 'cloud' },
+                { name: 'zip-archive', label: 'ZIP / Archive', symbol: '🗜️', lucide: 'file-archive' }
+            ];
+
+            const faFreeExtra = [
+                'fa-solid fa-tv','fa-solid fa-film','fa-solid fa-music','fa-solid fa-radio','fa-solid fa-podcast',
+                'fa-solid fa-camera','fa-solid fa-video','fa-solid fa-microphone','fa-solid fa-headphones','fa-solid fa-volume-high',
+                'fa-solid fa-folder','fa-solid fa-folder-open','fa-solid fa-file','fa-solid fa-file-pdf','fa-solid fa-file-word',
+                'fa-solid fa-file-excel','fa-solid fa-file-powerpoint','fa-solid fa-file-image','fa-solid fa-file-video','fa-solid fa-file-audio',
+                'fa-solid fa-file-zipper','fa-solid fa-file-code','fa-solid fa-file-csv','fa-solid fa-download','fa-solid fa-upload',
+                'fa-solid fa-globe','fa-solid fa-wifi','fa-solid fa-play','fa-solid fa-circle-play','fa-solid fa-mobile-screen-button',
+                'fa-solid fa-tablet-screen-button','fa-solid fa-desktop','fa-solid fa-laptop','fa-solid fa-database','fa-solid fa-server',
+                'fa-solid fa-trophy','fa-solid fa-medal','fa-solid fa-fire','fa-solid fa-bolt','fa-solid fa-star','fa-solid fa-heart',
+                'fa-solid fa-shield','fa-solid fa-lock','fa-solid fa-bell','fa-solid fa-magnifying-glass','fa-solid fa-gear','fa-solid fa-house',
+                'fa-brands fa-android','fa-brands fa-apple','fa-brands fa-windows','fa-brands fa-linux','fa-brands fa-youtube',
+                'fa-brands fa-google-play','fa-brands fa-app-store','fa-brands fa-chrome','fa-brands fa-firefox','fa-brands fa-github',
+                'fa-brands fa-facebook','fa-brands fa-instagram','fa-brands fa-x-twitter','fa-brands fa-whatsapp','fa-brands fa-telegram'
+            ];
+
+            const bases = [
+                'tv','film','music','radio','podcast','camera','video','mic','headphones','speaker',
+                'folder','folder-open','file','file-text','file-code','file-image','file-video','file-audio','file-spreadsheet','file-check',
+                'download','upload','share','link','globe','wifi','cast','play','pause','disc',
+                'smartphone','tablet','laptop','monitor','cpu','hard-drive','database','server','terminal','code',
+                'trophy','award','medal','flame','zap','star','heart','shield','lock','key',
+                'bell','search','settings','sliders','home','compass','map','bookmark','tag','layers',
+                'grid','list','layout','eye','user','users','briefcase','shopping-bag','credit-card','gift',
+                'sun','moon','cloud-sun','umbrella','thermometer','activity','bar-chart','pie-chart','trending-up','clock',
+                'calendar','mail','message-square','phone','send','inbox','archive','trash','edit','check',
+                'plus','minus','info','help-circle','alert-triangle','check-circle','x-circle','refresh-cw','external-link','filter'
+            ];
+
+            const variants = ['','hd','pro','plus','max','lite','box','hub','zone','cast','net','web','app','play','tv'];
+            const out = [...special];
+            const seen = new Set(out.map(x => x.name));
+
+            for (const fItem of faFreeExtra) {
+                const slug = fItem.replace(/^fa-(?:solid|regular|brands)\s+/, '');
+                if (!seen.has(fItem)) {
+                    seen.add(fItem);
+                    out.push({ name: fItem, label: `${slug.replace(/-/g, ' ')} (FA Free)`, fa: fItem, lucide: 'sparkles' });
+                }
+            }
+
+            for (const b of bases) {
+                for (const v of variants) {
+                    const slug = v ? `${b}-${v}` : b;
+                    if (!seen.has(slug)) {
+                        seen.add(slug);
+                        out.push({ name: slug, label: slug.replace(/-/g, ' '), symbol: '', lucide: b });
+                    }
+                    if (out.length >= 1060) break;
+                }
+                if (out.length >= 1060) break;
+            }
+            return out;
+        })();
+
+        function normalizeFaClass(val) {
+            const raw = String(val || '').trim();
+            if (!raw) return '';
+            if (raw.includes('fa-')) {
+                const hasStyle = /(?:^|\s)(?:fa-solid|fa-regular|fa-brands|fas|far|fab)(?:\s|$)/.test(raw);
+                return hasStyle ? raw : ('fa-solid ' + raw);
+            }
+            return '';
+        }
+
+        function renderIconVisual(iconKey, lucideFallback, sizeClass = 'w-4 h-4') {
+            const meta = getCategoryIconMeta(iconKey);
+            const faCls = normalizeFaClass(meta?.fa || iconKey);
+            if (faCls) {
+                return `<i class="${escapeLogoAttr(faCls)} ${escapeLogoAttr(sizeClass)} inline-flex items-center justify-center"></i>`;
+            }
+            if (meta?.symbol) {
+                return `<span class="leading-none inline-flex items-center justify-center">${meta.symbol}</span>`;
+            }
+            return `<i data-lucide="${escapeLogoAttr(meta?.lucide || lucideFallback || 'folder')}" class="!${escapeLogoAttr(sizeClass)}"></i>`;
+        }
+
+        function getCategoryIconMeta(iconKey) {
+            if (!iconKey) return null;
+            return CATEGORY_ICON_LIBRARY.find(i => i.name === iconKey || i.fa === iconKey || i.lucide === iconKey) || null;
+        }
+
+        function renderCategoryIconLibrary() {
+            const container = document.getElementById('category-icon-library');
+            const countEl = document.getElementById('category-icon-count');
+            const badgeEl = document.getElementById('selected-category-icon-badge');
+            const currentVal = document.getElementById('new-category-icon')?.value || 'folder';
+            const q = String(document.getElementById('category-icon-search')?.value || '').trim().toLowerCase();
+            if (countEl) countEl.textContent = String(CATEGORY_ICON_LIBRARY.length);
+            const activeMeta = getCategoryIconMeta(currentVal);
+            if (badgeEl) {
+                badgeEl.innerHTML = `${renderIconVisual(currentVal, activeMeta?.lucide || 'folder', 'w-3.5 h-3.5 text-xs')}<span>${escapeLogoAttr(activeMeta?.label || currentVal)}</span>`;
+                if (window.lucide) lucide.createIcons({ root: badgeEl });
+            }
+            if (!container) return;
+            const filtered = CATEGORY_ICON_LIBRARY.filter(item => !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q)).slice(0, 120);
+            container.innerHTML = filtered.map(item => {
+                const isSel = item.name === currentVal;
+                const visual = renderIconVisual(item.fa || item.name, item.lucide, 'w-4 h-4 text-sm');
+                return `<button type="button" title="${escapeLogoAttr(item.label)}" onclick="selectCategoryIcon('${escapeLogoAttr(item.name)}')" class="flex flex-col items-center justify-center rounded-lg border p-1.5 text-[10px] transition-colors ${isSel ? 'border-cyan-400 bg-cyan-500/20 text-cyan-200' : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-800'}">${visual}<span class="truncate max-w-full mt-0.5">${escapeLogoAttr(item.name.split('-')[0])}</span></button>`;
+            }).join('');
+            if (window.lucide) lucide.createIcons({ root: container });
+        }
+
+        function selectCategoryIcon(iconName) {
+            const hiddenInput = document.getElementById('new-category-icon');
+            if (hiddenInput) hiddenInput.value = iconName;
+            renderCategoryIconLibrary();
+        }
+
+        function toggleAppFileFields() {
+            const type = document.getElementById('add-content-type')?.value || 'channel';
+            const label = document.getElementById('add-url-label');
+            const urlInput = document.getElementById('add-url');
+            const submitBtn = document.querySelector('#add-channel-form button[type="submit"]');
+            const titleText = document.getElementById('form-title-text');
+            const editId = document.getElementById('edit-id')?.value || '';
+            if (type === 'app') {
+                if (label) label.textContent = 'Direct App / File Download Link (APK, EXE, PDF, DOC, XLS, Image)';
+                if (urlInput) urlInput.placeholder = 'https://example.com/app-release.apk or https://example.com/file.pdf';
+                if (!editId && titleText) titleText.textContent = 'Save File / App';
+                if (submitBtn && !channelSavePending) submitBtn.innerHTML = '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save File';
+            } else {
+                if (label) label.textContent = 'Stream / Player / Direct App Download URL';
+                if (urlInput) urlInput.placeholder = 'https://example.com/stream.m3u8 or https://example.com/app.apk';
+                if (!editId && titleText) titleText.textContent = 'Add New Channel';
+                if (submitBtn && !channelSavePending) submitBtn.innerHTML = '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Channel';
+            }
+            if (window.lucide && submitBtn) lucide.createIcons({ root: submitBtn });
+        }
+
+        function isDownloadableFileUrl(url) {
+            return /\.(?:apk|exe|msi|zip|rar|7z|pdf|doc|docx|xls|xlsx|csv|txt|png|jpg|jpeg|webp|gif|svg)(?:[?#]|$)/i.test(String(url || '').trim()) ||
+                   /^data:(?:application|image|text)\//i.test(String(url || '').trim());
+        }
+
+        function getFileExtension(nameOrUrl) {
+            const clean = String(nameOrUrl || '').split('?')[0].split('#')[0];
+            const m = clean.match(/\.([a-z0-9]+)$/i);
+            return m ? m[1].toLowerCase() : '';
+        }
+
+        function triggerDirectDownload(url, filename) {
+            const safeName = filename || 'UStreamz-File';
+            if (!url) return;
+            if (/^data:/i.test(url)) {
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = safeName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                return;
+            }
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = safeName;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        function openFileInNewTab() {
+            if (!currentModalDownloadUrl) return;
+            const ext = getFileExtension(currentModalFileName || currentModalDownloadUrl);
+            if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext) && /^https?:\/\//i.test(currentModalDownloadUrl)) {
+                window.open('https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(currentModalDownloadUrl), '_blank', 'noopener,noreferrer');
+            } else {
+                window.open(currentModalDownloadUrl, '_blank', 'noopener,noreferrer');
+            }
+        }
+
+        function closeFileAppModal() {
+            const modal = document.getElementById('file-app-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function openAppOrFileModal(item) {
+            const modal = document.getElementById('file-app-modal');
+            const titleEl = document.getElementById('file-modal-title');
+            const subEl = document.getElementById('file-modal-sub');
+            const badgeEl = document.getElementById('file-modal-badge');
+            const previewBox = document.getElementById('file-preview-container');
+            const dlBtn = document.getElementById('file-direct-download-btn');
+            const qrImg = document.getElementById('file-qr-img');
+            if (!modal || !previewBox) return;
+
+            const downloadUrl = String(item.fileDataUrl || item.url || '').trim();
+            const fileName = String(item.fileName || item.name || 'file').trim();
+            currentModalDownloadUrl = downloadUrl;
+            currentModalFileName = fileName;
+
+            const ext = getFileExtension(fileName || downloadUrl);
+            if (titleEl) titleEl.textContent = item.name || fileName;
+            if (subEl) subEl.textContent = fileName + (ext ? ` (.${ext.toUpperCase()})` : '');
+            if (badgeEl) badgeEl.textContent = 'APP';
+
+            if (dlBtn) {
+                dlBtn.href = downloadUrl || '#';
+                dlBtn.setAttribute('download', fileName || 'download');
+                dlBtn.onclick = (e) => {
+                    if (/^data:/i.test(downloadUrl)) {
+                        e.preventDefault();
+                        triggerDirectDownload(downloadUrl, fileName);
+                    }
+                };
+            }
+
+            const qrTarget = /^https?:\/\//i.test(String(item.url || '').trim()) ? String(item.url).trim() : downloadUrl;
+            if (qrImg) {
+                qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=' + encodeURIComponent(qrTarget || window.location.href);
+            }
+
+            const cardLogo = escapeLogoAttr(getChannelLogo(item));
+            const initials = escapeLogoAttr(String(item.name || 'APP').split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'APP');
+            previewBox.innerHTML = `
+                <div class="relative aspect-video w-full max-w-xs rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden flex items-center justify-center p-4 shadow-xl">
+                    <div class="absolute inset-0 flex items-center justify-center text-slate-600 font-black text-2xl tracking-wider select-none">${initials}</div>
+                    ${cardLogo ? `<img src="${cardLogo}" alt="${escapeLogoAttr(item.name || 'APP')}" referrerpolicy="no-referrer" onerror="this.style.display='none';" class="relative z-[1] w-full h-full object-contain drop-shadow-md">` : ''}
+                </div>`;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: modal });
+        }
+
         function readImageFileAsDataUrl(file) {
             return new Promise((resolve, reject) => {
                 if (!file) return resolve('');
@@ -790,44 +1302,58 @@
                     logoFile.value = '';
                 }
             });
+            const extraFileInput = document.getElementById('add-file-upload');
+            if (extraFileInput) {
+                extraFileInput.addEventListener('change', () => {
+                    const f = extraFileInput.files && extraFileInput.files[0];
+                    if (!f) return;
+                    if (f.size > 15 * 1024 * 1024) {
+                        showNotification('File size should be under 15 MB for direct embedding, or paste a Direct Download URL.', 'error');
+                        extraFileInput.value = '';
+                        return;
+                    }
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        uploadedFilePayload = {
+                            dataUrl: String(reader.result || ''),
+                            fileName: f.name,
+                            mimeType: f.type || ''
+                        };
+                        const metaEl = document.getElementById('add-file-meta');
+                        if (metaEl) metaEl.textContent = `Selected: ${f.name} (${Math.max(1, Math.round(f.size / 1024))} KB)`;
+                    };
+                    reader.readAsDataURL(f);
+                });
+            }
             setupTvRemoteNavigation();
             setupFullscreenListener();
         });
 
-        /* =========================================================
-           STREAM STATUS & INDICATOR UPDATER
-           ========================================================= */
         function updateStreamIndicator(state, labelText) {
             const dot = document.getElementById('stream-status-dot');
-            const text = document.getElementById('stream-status-text');
             const badge = document.getElementById('stream-status-badge');
-            if (!dot || !text || !badge) return;
+            if (!dot || !badge) return;
 
-            badge.classList.remove('hidden');
-            if (state === 'working') {
-                dot.className = 'h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]';
-                text.textContent = labelText || 'LIVE';
-                text.className = 'text-[11px] font-bold tracking-wider text-emerald-300 uppercase';
-            } else if (state === 'testing') {
-                dot.className = 'h-2.5 w-2.5 rounded-full bg-amber-400 animate-ping';
-                text.textContent = labelText || 'BUFFERING...';
-                text.className = 'text-[11px] font-semibold tracking-wider text-amber-300 uppercase';
-            } else if (state === 'failed') {
-                dot.className = 'h-2.5 w-2.5 rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]';
-                text.textContent = labelText || 'OFFLINE / ERROR';
-                text.className = 'text-[11px] font-bold tracking-wider text-rose-300 uppercase';
+            badge.setAttribute('aria-label', labelText || state || 'Status');
+            if (state === 'working' || state === 'testing' || state === 'failed') {
+                badge.classList.remove('hidden');
             } else {
-                dot.className = 'h-2.5 w-2.5 rounded-full bg-slate-400';
-                text.textContent = labelText || 'READY';
-                text.className = 'text-[11px] font-semibold tracking-wider text-slate-300 uppercase';
+                badge.classList.add('hidden');
+            }
+            if (state === 'working') {
+                dot.className = 'h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399]';
+            } else if (state === 'testing') {
+                dot.className = 'h-3 w-3 rounded-full bg-amber-400 animate-ping';
+            } else if (state === 'failed') {
+                dot.className = 'h-3 w-3 rounded-full bg-rose-500 shadow-[0_0_10px_#f43f5e]';
+            } else {
+                dot.className = 'h-3 w-3 rounded-full bg-slate-400';
             }
         }
 
-        /* =========================================================
-           100% RELIABLE FULLSCREEN
-           ========================================================= */
         function updateFullscreenUI(active) {
             isSimulatedFullscreen = active;
+            window.isSimulatedFullscreen = active;
             const appContainer = document.getElementById('umc-live-tv-app');
             if (!appContainer) return;
 
@@ -855,8 +1381,7 @@
 
             const btn = document.getElementById('player-fullscreen-btn');
             if (btn) {
-                btn.title = active ? 'Exit Full Screen' : 'Full Screen';
-                btn.innerHTML = `<i data-lucide="${active ? 'minimize' : 'maximize'}" class="!w-5 !h-5"></i>`;
+                btn.innerHTML = `<i data-lucide="${active ? 'minimize' : 'maximize'}" class="!w-4 !h-4"></i>`;
                 if (window.lucide) lucide.createIcons({ root: btn });
             }
         }
@@ -882,9 +1407,15 @@
             }
         }
 
-        function toggleAppFullScreen() {
-            const nativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-            if (isSimulatedFullscreen || nativeFs) {
+        function toggleAppFullScreen(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+            const appEl = document.getElementById('umc-live-tv-app');
+            const hasFsClass = !!(appEl && appEl.classList.contains('is-app-fullscreen'));
+            const nativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            if (isSimulatedFullscreen || hasFsClass || nativeFs) {
                 exitAppFullScreen();
             } else {
                 enterAppFullScreen();
@@ -904,9 +1435,6 @@
             document.addEventListener('webkitfullscreenchange', onNativeFsChange);
         }
 
-        /* =========================================================
-           ANDROID TV REMOTE (D-PAD) NAVIGATION
-           ========================================================= */
         function setupTvRemoteNavigation() {
             document.addEventListener('keydown', (e) => {
                 const tag = document.activeElement?.tagName;
@@ -942,7 +1470,21 @@
 
                 if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.classList.contains('channel-card')) {
                     e.preventDefault();
-                    document.activeElement.click();
+                    const now = Date.now();
+                    const prev = Number(document.activeElement.dataset.lastRemotePress || 0);
+                    document.activeElement.dataset.lastRemotePress = String(now);
+                    if (miniPlayerActive && (now - prev) < 650) {
+                        miniPlayerActive = false;
+                        document.getElementById('view-player')?.classList.remove('mini-player');
+                        if (typeof document.activeElement.ondblclick === 'function') {
+                            document.activeElement.ondblclick(e);
+                        } else {
+                            document.activeElement.click();
+                            expandPlayer();
+                        }
+                    } else {
+                        document.activeElement.click();
+                    }
                     return;
                 }
 
@@ -1036,101 +1578,87 @@
         }
 
 
-        /* =========================================================
-           ONLOAD CHANNEL LINK HEALTH CHECKER (ALL INDICATORS)
-           ========================================================= */
-        async function checkSingleChannelStatus(channel) {
-            if (!channel || channel.id === undefined || channel.id === null) return;
-            const idStr = String(channel.id);
-
-            // If user already started playing this channel and it's working, keep its live status
-            if (String(currentPlayingChannelId) === idStr && channelPlaybackStatus[idStr]?.state === 'working') {
-                return;
-            }
-
-            const sources = Array.isArray(channel.links) && channel.links.length
-                ? channel.links.map(item => item && item.url).filter(Boolean)
-                : [channel.url].filter(Boolean);
-
-            const streamUrl = sources.find(u => isHlsStreamUrl(String(u)) || isDirectVideoUrl(String(u))) || sources[0] || '';
-
-            if (!streamUrl && !channel.embedCode) {
-                setChannelPlaybackStatus(channel.id, 'failed', 'No stream link configured');
-                return;
-            }
-
-            if (channel.embedCode && !streamUrl) {
-                setChannelPlaybackStatus(channel.id, 'working', 'HTML Embed configured');
-                return;
-            }
-
-            setChannelPlaybackStatus(channel.id, 'testing', 'Checking stream link...');
-
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 8000);
-
-            try {
-                if (isHlsStreamUrl(streamUrl)) {
-                    const response = await fetch(String(streamUrl), {
-                        method: 'GET',
-                        mode: 'cors',
-                        cache: 'no-store',
-                        referrerPolicy: 'no-referrer',
-                        signal: controller.signal
-                    });
-
-                    if (!response.ok) {
-                        setChannelPlaybackStatus(channel.id, 'failed', `Offline (HTTP ${response.status})`);
-                        return;
-                    }
-
-                    const text = await response.text();
-                    if (text.includes('#EXTM3U') || text.includes('#EXT-X-')) {
-                        setChannelPlaybackStatus(channel.id, 'working', 'Online & Active (.m3u8 verified)');
-                    } else {
-                        setChannelPlaybackStatus(channel.id, 'failed', 'Invalid M3U8 response');
-                    }
-                } else {
-                    // For direct MP4 or web embed URLs, probe reachability
-                    const response = await fetch(String(streamUrl), {
-                        method: 'HEAD',
-                        mode: 'no-cors',
-                        cache: 'no-store',
-                        referrerPolicy: 'no-referrer',
-                        signal: controller.signal
-                    });
-                    setChannelPlaybackStatus(channel.id, 'working', 'Link reachable');
-                }
-            } catch (err) {
-                if (err && err.name === 'AbortError') {
-                    setChannelPlaybackStatus(channel.id, 'failed', 'Connection timed out');
-                } else {
-                    // Fallback no-cors probe in case server blocks CORS on XHR/fetch GET
-                    try {
-                        const ctrl2 = new AbortController();
-                        const t2 = setTimeout(() => ctrl2.abort(), 5000);
-                        await fetch(String(streamUrl), {
-                            method: 'GET',
-                            mode: 'no-cors',
-                            cache: 'no-store',
-                            referrerPolicy: 'no-referrer',
-                            signal: ctrl2.signal
-                        });
-                        clearTimeout(t2);
-                        setChannelPlaybackStatus(channel.id, 'working', 'Server reachable (CORS restricted)');
-                    } catch (_) {
-                        setChannelPlaybackStatus(channel.id, 'failed', 'Stream offline or unreachable');
-                    }
-                }
-            } finally {
-                clearTimeout(timeout);
-            }
-        }
 
         async function checkAllChannelStatusesOnLoad() {
-            // Disabled bulk background XHR/fetch on load so Akamai/CDN servers do not block or rate-limit playback.
-            // Status indicators automatically update to LIVE (green) or ERROR (red) when a channel is played.
-            return;
+            const list = Array.isArray(appData?.channels) ? appData.channels : [];
+            if (!list.length) return;
+            for (const ch of list) {
+                if (!ch || ch.id === undefined || ch.id === null) continue;
+                const idStr = String(ch.id);
+                if (String(currentPlayingChannelId) === idStr && channelPlaybackStatus[idStr]?.state === 'working') {
+                    continue;
+                }
+                const targetUrl = String(
+                    (Array.isArray(ch.links) && ch.links.length ? ch.links.map(x => x && x.url).find(Boolean) : '') ||
+                    ch.url || ''
+                ).trim();
+
+                if (ch.contentType === 'app') {
+                    if (targetUrl || ch.fileDataUrl) {
+                        setChannelPlaybackStatus(ch.id, 'working', 'App / File ready');
+                    } else {
+                        setChannelPlaybackStatus(ch.id, 'failed', 'No file or URL');
+                    }
+                    continue;
+                }
+
+                if (!targetUrl && !ch.embedCode) {
+                    setChannelPlaybackStatus(ch.id, 'failed', 'No stream URL');
+                    continue;
+                }
+                if (ch.embedCode && !targetUrl) {
+                    setChannelPlaybackStatus(ch.id, 'working', 'Embed ready');
+                    continue;
+                }
+
+                setChannelPlaybackStatus(ch.id, 'testing', 'Checking stream...');
+                const ctrl = new AbortController();
+                const t = setTimeout(() => ctrl.abort(), 4500);
+                try {
+                    if (isHlsStreamUrl(targetUrl)) {
+                        const res = await fetch(targetUrl, {
+                            method: 'GET',
+                            mode: 'cors',
+                            cache: 'no-store',
+                            referrerPolicy: 'no-referrer',
+                            signal: ctrl.signal
+                        });
+                        if (!res.ok) {
+                            setChannelPlaybackStatus(ch.id, 'failed', `Stream error (${res.status})`);
+                        } else {
+                            const bodyText = await res.text();
+                            if (bodyText.includes('#EXTM3U') || bodyText.includes('#EXT-X-')) {
+                                setChannelPlaybackStatus(ch.id, 'working', 'Live HLS verified');
+                            } else {
+                                setChannelPlaybackStatus(ch.id, 'failed', 'Invalid HLS playlist');
+                            }
+                        }
+                    } else {
+                        const res = await fetch(targetUrl, {
+                            method: 'HEAD',
+                            mode: 'cors',
+                            cache: 'no-store',
+                            referrerPolicy: 'no-referrer',
+                            signal: ctrl.signal
+                        }).catch(() => null);
+                        if (res && res.ok) {
+                            setChannelPlaybackStatus(ch.id, 'working', 'Link active');
+                        } else if (res && res.status >= 400) {
+                            setChannelPlaybackStatus(ch.id, 'failed', `Link failed (${res.status})`);
+                        } else {
+                            // Some embed/file servers block HEAD or CORS; verify valid URL structure
+                            const validScheme = /^(?:https?:\/\/|data:|blob:)/i.test(targetUrl);
+                            setChannelPlaybackStatus(ch.id, validScheme ? 'working' : 'failed', validScheme ? 'Link configured' : 'Invalid URL');
+                        }
+                    }
+                } catch (_) {
+                    // Network failure / timeout / unreachable stream -> mark red ('failed')
+                    setChannelPlaybackStatus(ch.id, 'failed', 'Stream offline or unreachable');
+                } finally {
+                    clearTimeout(t);
+                }
+                await new Promise(r => setTimeout(r, 100));
+            }
         }
 
         function hideSplashScreen() {
@@ -1146,7 +1674,7 @@
         async function init() {
             try {
                 appData = {
-                    categories: ['Nepali', 'Hindi', 'News', 'Sports', 'Uncategorized'],
+                    categories: ['Nepali', 'Hindi', 'News', 'Sports', 'Apps & Files', 'Uncategorized'],
                     channels: [...defaultChannels],
                     categoryLogos: {}
                 };
@@ -1172,11 +1700,10 @@
                 await loadData();
                 renderAll();
                 updateCloudConnectionStatus();
-                setTimeout(hideSplashScreen, 1400);
                 checkAllChannelStatusesOnLoad();
+                setTimeout(hideSplashScreen, 1400);
                 focusFirstChannelCard();
             } catch (error) {
-                console.error('U Stream initialization error:', error);
                 hideSplashScreen();
                 showNotification(error.message || 'App could not start. Please refresh.', 'error');
             }
@@ -1185,17 +1712,18 @@
         function updateCloudConnectionStatus() {
             const el = document.getElementById('cloud-connection-status');
             if (!el) return;
-            el.textContent = 'Supabase connected (HLS.js Engine Ready)';
+            el.textContent = 'Supabase connected (UStreamz v2.1.1 Engine Ready)';
             el.className = 'text-xs text-emerald-400 mt-0.5';
         }
 
         function renderAll() {
-            renderSidebarCategories();
-            renderCategorySelects();
-            renderManageCategories();
-            renderChannels();
-            renderSettingsList();
-            if (window.lucide) lucide.createIcons();
+            try { renderSidebarCategories(); } catch (_) {}
+            try { renderCategorySelects(); } catch (_) {}
+            try { renderManageCategories(); } catch (_) {}
+            try { renderCategoryIconLibrary(); } catch (_) {}
+            try { renderChannels(); } catch (_) {}
+            try { renderSettingsList(); } catch (_) {}
+            try { if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons(); } catch (_) {}
         }
 
         async function loadData() {
@@ -1220,9 +1748,7 @@
                 if (!appData.categories.includes('Uncategorized')) {
                     appData.categories.push('Uncategorized');
                 }
-            } catch (error) {
-                console.error('Cloud data connection error:', error);
-            }
+            } catch (_) {}
         }
 
         async function saveData() {
@@ -1239,8 +1765,7 @@
                 if (error) throw error;
                 renderChannels((document.getElementById('search-input')?.value || '').trim().toLowerCase());
                 return true;
-            } catch (error) {
-                console.error('Supabase save error:', error);
+            } catch (_) {
                 showNotification('Supabase save failed.', 'error');
                 return false;
             }
@@ -1256,7 +1781,7 @@
                     showView('settings');
                     return;
                 }
-            } catch (e) {}
+            } catch (_) {}
             const modal = document.getElementById('settings-auth-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
@@ -1311,7 +1836,7 @@
                     await editChannel(editAfterLogin, true);
                 }
                 showNotification('Signed in successfully.');
-            } catch (error) {
+            } catch (_) {
                 errorBox.textContent = 'Login असफल भयो: Email वा Password जाँच गर्नुहोस्।';
                 errorBox.classList.remove('hidden');
             } finally {
@@ -1327,7 +1852,7 @@
                 showNotification('Signed out.');
                 showView('grid');
                 renderAll();
-            } catch (error) {}
+            } catch (_) {}
         }
 
         function showNotification(message, type = 'success') {
@@ -1407,6 +1932,17 @@
                     const playing = String(c.id) === String(currentPlayingChannelId);
                     return `<button type="button" tabindex="0" data-play-channel="${esc(c.id)}" class="player-channel-row w-full flex items-center gap-2 rounded-lg px-2 py-2 text-left text-xs ${playing ? 'bg-indigo-600/30 text-indigo-200' : 'text-slate-200 hover:bg-slate-800'}"><span class="h-2 w-2 rounded-full shrink-0 ${playing ? 'bg-emerald-400' : 'bg-slate-600'}"></span><span class="w-7 h-7 rounded bg-slate-800 overflow-hidden flex items-center justify-center shrink-0">${logo ? `<img src="${logo}" class="w-full h-full object-contain" alt="">` : '<i data-lucide="tv" class="!w-3.5 !h-3.5"></i>'}</span><span class="player-channel-meta"><span class="font-medium">${esc(c.name || 'Channel')}</span></span>${playing ? '<span class="text-[9px] font-semibold text-emerald-400 shrink-0">LIVE</span>' : ''}</button>`;
                 }).join('') : '<div class="px-3 py-4 text-xs text-slate-500">No channels</div>');
+            if (currentPlayingChannelId !== null) {
+                const exitRow = document.createElement('button');
+                exitRow.type = 'button';
+                exitRow.tabIndex = 0;
+                exitRow.title = 'Exit Channel';
+                exitRow.setAttribute('aria-label', 'Exit Channel');
+                exitRow.className = 'player-channel-row mt-1.5 flex items-center justify-center bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/30';
+                exitRow.innerHTML = '<i data-lucide="power" class="!w-4 !h-4"></i>';
+                exitRow.onclick = () => { menu.classList.add('hidden'); closePlayer(); };
+                menu.appendChild(exitRow);
+            }
             if (window.lucide) lucide.createIcons({root:menu});
             menu.querySelectorAll('[data-play-channel]').forEach(btn => btn.addEventListener('click', () => {
                 const selected = appData.channels.find(c => String(c.id) === btn.dataset.playChannel);
@@ -1519,7 +2055,10 @@
                 else if(cat.toLowerCase().includes('music')) icon = 'music';
 
                 const catLogo = appData.categoryLogos?.[cat];
-                btn.innerHTML = `${catLogo ? `<img src="${catLogo}" alt="" class="w-5 h-5 rounded object-contain shrink-0" onerror="this.style.display='none'">` : `<i data-lucide="${icon}" class="!w-5 !h-5"></i>`}
+                const customIconKey = appData.categoryIcons?.[cat];
+                const customMeta = getCategoryIconMeta(customIconKey);
+                const iconHtml = `<span class="w-5 h-5 flex items-center justify-center shrink-0 text-sm">${renderIconVisual(customIconKey, icon, 'w-4 h-4')}</span>`;
+                btn.innerHTML = `${catLogo ? `<img src="${catLogo}" alt="" class="w-5 h-5 rounded object-contain shrink-0" onerror="this.style.display='none'">` : iconHtml}
                     <span class="ml-3 font-medium hidden md:block truncate">${cat}</span>`;
                 container.appendChild(btn);
             });
@@ -1584,17 +2123,106 @@
             });
         }
 
+        function closeCategoryEditModal() {
+            const modal = document.getElementById('edit-category-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function renderEditCategoryIconLibrary() {
+            const container = document.getElementById('edit-category-icon-library');
+            const countEl = document.getElementById('edit-category-icon-count');
+            const badgeEl = document.getElementById('edit-category-icon-badge');
+            const currentVal = document.getElementById('edit-category-icon')?.value || 'folder';
+            const q = String(document.getElementById('edit-category-icon-search')?.value || '').trim().toLowerCase();
+            if (countEl) countEl.textContent = String(CATEGORY_ICON_LIBRARY.length);
+            const activeMeta = getCategoryIconMeta(currentVal);
+            if (badgeEl) {
+                badgeEl.innerHTML = `${renderIconVisual(currentVal, activeMeta?.lucide || 'folder', 'w-3.5 h-3.5 text-xs')}<span>${escapeLogoAttr(activeMeta?.label || currentVal)}</span>`;
+                if (window.lucide) lucide.createIcons({ root: badgeEl });
+            }
+            if (!container) return;
+            const filtered = CATEGORY_ICON_LIBRARY.filter(item => !q || item.name.toLowerCase().includes(q) || item.label.toLowerCase().includes(q)).slice(0, 120);
+            container.innerHTML = filtered.map(item => {
+                const isSel = item.name === currentVal;
+                const visual = renderIconVisual(item.fa || item.name, item.lucide, 'w-4 h-4 text-sm');
+                return `<button type="button" title="${escapeLogoAttr(item.label)}" onclick="selectEditCategoryIcon('${escapeLogoAttr(item.name)}')" class="flex flex-col items-center justify-center rounded-lg border p-1.5 text-[10px] transition-colors ${isSel ? 'border-cyan-400 bg-cyan-500/20 text-cyan-200' : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-800'}">${visual}<span class="truncate max-w-full mt-0.5">${escapeLogoAttr(item.name.split('-')[0])}</span></button>`;
+            }).join('');
+            if (window.lucide) lucide.createIcons({ root: container });
+        }
+
+        function selectEditCategoryIcon(iconName) {
+            const hiddenInput = document.getElementById('edit-category-icon');
+            if (hiddenInput) hiddenInput.value = iconName;
+            renderEditCategoryIconLibrary();
+        }
+
         async function editCategoryDetails(oldName) {
-            const next = prompt('Edit category name:', oldName);
-            if (!next || !next.trim() || next.trim() === oldName) return;
-            const newName = next.trim();
-            appData.categories = appData.categories.map(c => c === oldName ? newName : c);
-            appData.channels = appData.channels.map(ch => {
-                const cats = (Array.isArray(ch.categories) ? ch.categories : [ch.category || 'Uncategorized']).map(c => c === oldName ? newName : c);
-                return { ...ch, category: ch.category === oldName ? newName : ch.category, categories: [...new Set(cats)] };
-            });
-            if (appData.categoryLogos?.[oldName]) { appData.categoryLogos[newName] = appData.categoryLogos[oldName]; delete appData.categoryLogos[oldName]; }
-            await saveData(); renderAll(); showNotification('Category updated.');
+            const modal = document.getElementById('edit-category-modal');
+            if (!modal) return;
+            document.getElementById('edit-category-old-name').value = oldName;
+            document.getElementById('edit-category-name').value = oldName;
+            document.getElementById('edit-category-icon').value = appData.categoryIcons?.[oldName] || 'folder';
+            document.getElementById('edit-category-icon-search').value = '';
+            document.getElementById('edit-category-logo').value = appData.categoryLogos?.[oldName] || '';
+            const logoFile = document.getElementById('edit-category-logo-file');
+            if (logoFile) logoFile.value = '';
+            renderEditCategoryIconLibrary();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: modal });
+        }
+
+        async function handleSaveCategoryEdit(e) {
+            e.preventDefault();
+            const oldName = document.getElementById('edit-category-old-name')?.value || '';
+            const nextName = String(document.getElementById('edit-category-name')?.value || '').trim();
+            if (!oldName || !nextName) return;
+
+            let logoUrl = String(document.getElementById('edit-category-logo')?.value || '').trim();
+            const logoFile = document.getElementById('edit-category-logo-file');
+            try {
+                if (logoFile?.files?.[0]) logoUrl = await readImageFileAsDataUrl(logoFile.files[0]);
+            } catch (err) {
+                showNotification(err.message, 'error');
+                return;
+            }
+            const chosenIcon = String(document.getElementById('edit-category-icon')?.value || 'folder').trim();
+
+            if (nextName !== oldName && appData.categories.some(c => c.toLowerCase() === nextName.toLowerCase())) {
+                showNotification('Category already exists.', 'error');
+                return;
+            }
+
+            appData.categories = appData.categories.map(c => c === oldName ? nextName : c);
+            if (nextName !== oldName) {
+                appData.channels = appData.channels.map(ch => {
+                    const cats = (Array.isArray(ch.categories) ? ch.categories : [ch.category || 'Uncategorized']).map(c => c === oldName ? nextName : c);
+                    return { ...ch, category: ch.category === oldName ? nextName : ch.category, categories: [...new Set(cats)] };
+                });
+            }
+
+            if (!appData.categoryLogos) appData.categoryLogos = {};
+            if (appData.categoryLogos[oldName] && nextName !== oldName) delete appData.categoryLogos[oldName];
+            if (logoUrl) appData.categoryLogos[nextName] = logoUrl;
+            else delete appData.categoryLogos[nextName];
+
+            if (!appData.categoryIcons) appData.categoryIcons = {};
+            if (appData.categoryIcons[oldName] && nextName !== oldName) delete appData.categoryIcons[oldName];
+            appData.categoryIcons[nextName] = chosenIcon;
+
+            if (currentCategory === oldName) {
+                currentCategory = nextName;
+                const catTitle = document.getElementById('category-title');
+                if (catTitle) catTitle.textContent = `${nextName} Channels`;
+            }
+
+            closeCategoryEditModal();
+            await saveData();
+            renderAll();
+            showNotification('Category updated.');
         }
 
         async function moveCategory(category, direction) {
@@ -1622,6 +2250,11 @@
             appData.categories.push(newCat);
             if (!appData.categoryLogos) appData.categoryLogos = {};
             if (logoUrl) appData.categoryLogos[newCat] = logoUrl;
+            const chosenIcon = (document.getElementById('new-category-icon')?.value || '').trim();
+            if (chosenIcon) {
+                if (!appData.categoryIcons) appData.categoryIcons = {};
+                appData.categoryIcons[newCat] = chosenIcon;
+            }
             input.value = '';
             if (logoInput) logoInput.value = '';
             if (logoFile) logoFile.value = '';
@@ -1687,19 +2320,45 @@
                     card.className = 'channel-card rounded-2xl overflow-hidden cursor-pointer border border-slate-800/90 group flex flex-col h-full';
                     card.dataset.channelId = String(channel.id);
                     if (currentPlayingChannelId !== null && String(currentPlayingChannelId) === String(channel.id)) card.classList.add('is-playing');
+
+                    let lastCardTapTime = 0;
                     card.onclick = () => {
+                        const now = Date.now();
+                        const isDoubleTap = (now - lastCardTapTime) < 420;
+                        lastCardTapTime = now;
+
+                        if (channel.contentType === 'app' || channel.fileDataUrl || (!isHlsStreamUrl(channel.url) && !isDirectVideoUrl(channel.url) && isDownloadableFileUrl(channel.url))) {
+                            openAppOrFileModal(channel);
+                            return;
+                        }
                         if (channel.openInBrowser && !isHlsStreamUrl(channel.url)) {
                             window.open(channel.url, '_blank', 'noopener,noreferrer');
+                            return;
+                        }
+                        if (isDoubleTap && miniPlayerActive) {
+                            miniPlayerActive = false;
+                            document.getElementById('view-player')?.classList.remove('mini-player');
+                            openPlayer(channel);
+                            expandPlayer();
                         } else {
                             openPlayer(channel);
                         }
                     };
-                    card.addEventListener('contextmenu', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        showChannelContextMenu(event.clientX, event.clientY, channel.id);
-                    });
-                    const name = String(channel.name || 'Channel');
+                    card.ondblclick = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (channel.openInBrowser && !isHlsStreamUrl(channel.url)) {
+                            window.open(channel.url, '_blank', 'noopener,noreferrer');
+                            return;
+                        }
+                        miniPlayerActive = false;
+                        document.getElementById('view-player')?.classList.remove('mini-player');
+                        openPlayer(channel);
+                        expandPlayer();
+                    };
+
+                    const isFileOrAppCard = !!(channel.contentType === 'app' || channel.fileDataUrl || (!isHlsStreamUrl(channel.url) && !isDirectVideoUrl(channel.url) && isDownloadableFileUrl(channel.url)));
+                    const name = String(channel.name || (isFileOrAppCard ? 'File' : 'Channel'));
                     const logoUrl = escapeLogoAttr(getChannelLogo(channel));
                     const initials = escapeLogoAttr(name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || 'TV');
                     const statusState = channelPlaybackStatus[String(channel.id)]?.state || 'unknown';
@@ -1707,11 +2366,11 @@
 
                     card.innerHTML = `
                         <div class="relative aspect-video bg-slate-950/90 w-full overflow-hidden flex items-center justify-center p-3 border-b border-slate-800/60">
-                            <span class="channel-status-dot status-${statusState}" title="${escapeLogoAttr(statusTitle)}"></span>
+                            ${isFileOrAppCard ? '' : `<span class="channel-status-dot status-${statusState}" title="${escapeLogoAttr(statusTitle)}"></span>`}
                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 font-black text-xl md:text-2xl tracking-wider select-none">${initials}</div>
                             ${logoUrl ? `<img src="${logoUrl}" alt="${name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';" class="relative z-[1] w-full h-full max-w-full max-h-full object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-105">` : ''}
                             <div class="play-overlay absolute inset-0 bg-black/55 backdrop-blur-[1px] flex items-center justify-center opacity-0 transition-opacity duration-150 z-[2]">
-                                <div class="bg-indigo-600 text-white rounded-full p-3 shadow-xl flex items-center justify-center"><i data-lucide="play" class="!w-5 !h-5 ml-0.5 fill-current"></i></div>
+                                <div class="${isFileOrAppCard ? 'bg-emerald-600' : 'bg-indigo-600'} text-white rounded-full p-3 shadow-xl flex items-center justify-center"><i data-lucide="${isFileOrAppCard ? 'download' : 'play'}" class="!w-5 !h-5 ${isFileOrAppCard ? '' : 'ml-0.5 fill-current'}"></i></div>
                             </div>
                         </div>
                         <div class="p-3 text-center flex-1 flex flex-col justify-center">
@@ -1729,14 +2388,13 @@
         }
 
         function renderSettingsList() {
-            const renderOne = (type, listId, countId) => {
+            const renderOne = (type, listId, countId, searchId) => {
                 const list = document.getElementById(listId);
                 const countLabel = document.getElementById(countId);
                 if (!list || !countLabel) return;
                 list.innerHTML = '';
                 const items = appData.channels.filter(c => (c.contentType || 'channel') === type);
                 countLabel.innerText = `${items.length} Total`;
-                const searchId = type === 'movie' ? 'settings-movie-search' : 'settings-channel-search';
                 const searchTerm = (document.getElementById(searchId)?.value || '').trim().toLocaleLowerCase();
                 const filteredItems = items.filter(c => String(c.name || '').toLocaleLowerCase().includes(searchTerm));
                 if (!filteredItems.length) {
@@ -1764,8 +2422,9 @@
                 });
                 if (window.lucide) lucide.createIcons({root:list});
             };
-            renderOne('channel','settings-channel-list','total-channels-count');
-            renderOne('movie','settings-movie-list','total-movies-count');
+            renderOne('channel','settings-channel-list','total-channels-count','settings-channel-search');
+            renderOne('movie','settings-movie-list','total-movies-count','settings-movie-search');
+            renderOne('app','settings-file-list','total-files-count','settings-file-search');
         }
 
         async function moveChannel(id, direction) {
@@ -1796,7 +2455,10 @@
             const links = linksText ? linksText.split(/\r?\n/).map((line,i)=>{ const parts=line.split('|'); const u=(parts.length>1?parts.slice(1).join('|'):parts[0]).trim(); return u ? {label:(parts.length>1?parts[0].trim():`Link ${i+1}`)||`Link ${i+1}`,url:u} : null; }).filter(Boolean) : [];
             if (url && !links.some(x=>x.url===url)) links.unshift({label:'Main',url});
             const embedCode = document.getElementById('add-embed-code').value.trim();
-            if (!name || (!url && !embedCode) || !category) {
+            const fileDataUrl = uploadedFilePayload.dataUrl || (editId ? (appData.channels.find(c => String(c.id) === String(editId))?.fileDataUrl || '') : '');
+            const fileName = uploadedFilePayload.fileName || (editId ? (appData.channels.find(c => String(c.id) === String(editId))?.fileName || '') : '');
+            const mimeType = uploadedFilePayload.mimeType || (editId ? (appData.channels.find(c => String(c.id) === String(editId))?.mimeType || '') : '');
+            if (!name || (!url && !embedCode && !fileDataUrl) || !category) {
                 showNotification('Please fill all required fields.', 'error');
                 return;
             }
@@ -1807,9 +2469,9 @@
             try {
                 if (editId) {
                     const index = appData.channels.findIndex(c => c.id === editId);
-                    if (index !== -1) appData.channels[index] = { ...appData.channels[index], id: editId, name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, openInBrowser };
+                    if (index !== -1) appData.channels[index] = { ...appData.channels[index], id: editId, name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, openInBrowser, fileDataUrl, fileName, mimeType };
                 } else {
-                    appData.channels.push({ id: generateId(), name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, openInBrowser });
+                    appData.channels.push({ id: generateId(), name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, openInBrowser, fileDataUrl, fileName, mimeType });
                 }
                 const saved = await saveData();
                 if (!saved) { appData = previousData; renderAll(); return; }
@@ -1840,10 +2502,14 @@
             menu.querySelector('[data-action="open"]').onclick = () => {
                 const channel = appData.channels.find(c => String(c.id) === String(channelId));
                 hideChannelContextMenu();
-                if (channel) openPlayer(channel);
+                if (!channel) return;
+                if (channel.openInBrowser && !isHlsStreamUrl(channel.url)) window.open(channel.url, '_blank', 'noopener,noreferrer');
+                else openPlayer(channel);
             };
             menu.querySelector('[data-action="edit"]').onclick = () => { hideChannelContextMenu(); editChannel(channelId); };
-            setTimeout(() => { document.addEventListener('pointerdown', e => { if (activeChannelContextMenu && !activeChannelContextMenu.contains(e.target)) hideChannelContextMenu(); }, {once:true, capture:true}); }, 0);
+            const dismiss = e => { if (activeChannelContextMenu && !activeChannelContextMenu.contains(e.target)) hideChannelContextMenu(); };
+            const keyDismiss = e => { if (e.key === 'Escape') hideChannelContextMenu(); };
+            setTimeout(() => { document.addEventListener('pointerdown', dismiss, {once:true, capture:true}); document.addEventListener('keydown', keyDismiss, {once:true}); }, 0);
         }
 
         function goHomeAllCategories() {
@@ -1879,7 +2545,7 @@
             document.getElementById('add-open-browser').checked = !!channel.openInBrowser;
             document.getElementById('add-links').value = (channel.links || []).map(x=>`${x.label || 'Link'} | ${x.url}`).join('\n');
             document.getElementById('add-embed-code').value = channel.embedCode || '';
-            document.getElementById('form-title-text').innerText = 'Edit Channel';
+            document.getElementById('form-title-text').innerText = (channel.contentType === 'app') ? 'Edit File' : 'Edit Channel'; const sb = document.querySelector('#add-channel-form button[type="submit"]'); if (sb) sb.innerHTML = (channel.contentType === 'app') ? '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save File' : '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Channel';
             const cancelBtn = document.getElementById('cancel-edit-btn');
             cancelBtn.classList.remove('hidden'); cancelBtn.classList.add('flex');
             document.getElementById('add-channel-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1887,7 +2553,7 @@
 
         function cancelEdit() {
             document.getElementById('add-channel-form').reset();
-            document.getElementById('edit-id').value = '';
+            document.getElementById('edit-id').value = ''; uploadedFilePayload = { dataUrl: '', fileName: '', mimeType: '' }; const mEl = document.getElementById('add-file-meta'); if (mEl) mEl.textContent = 'Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download & preview)'; toggleAppFileFields();
             document.getElementById('form-title-text').innerText = 'Add New Channel';
             const cancelBtn = document.getElementById('cancel-edit-btn');
             cancelBtn.classList.add('hidden'); cancelBtn.classList.remove('flex');
@@ -1905,7 +2571,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `u_stream_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `ustreamz_backup_${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
         }
@@ -1920,15 +2586,12 @@
                     if (Array.isArray(imported)) appData.channels = imported;
                     else if (imported.channels) { appData.channels = imported.channels; if (imported.categories) appData.categories = imported.categories; }
                     saveData(); renderAll(); showNotification(`Restored ${appData.channels.length} channels.`);
-                } catch (err) { showNotification("Invalid JSON backup file.", "error"); }
+                } catch (_) { showNotification("Invalid JSON backup file.", "error"); }
                 event.target.value = '';
             };
             reader.readAsText(file);
         }
 
-        /* =========================================================
-           STREAM DETECTION HELPERS (HLS / DIRECT VIDEO / EMBED)
-           ========================================================= */
         function isHlsStreamUrl(url) {
             const value = String(url || '').trim();
             if (!value) return false;
@@ -1983,16 +2646,6 @@
             resetEmbedIframe();
         }
 
-        /* =========================================================
-           MAIN PLAYER ENGINE (HLS.JS + SMART FALLBACK)
-           ========================================================= */
-
-
-        /* =========================================================
-           NULL-ORIGIN VIDEO.JS SANDBOX PLAYER (EXACT LOCAL FILE:// ENGINE)
-           Runs Video.js v8.21.1 inside an opaque-origin sandbox (Origin: null, no-referrer)
-           so hosted WordPress/Elementor pages behave 100% identically to local file://!
-           ========================================================= */
         function playInNullOriginSandbox(sourceUrl, channel, sessionId) {
             const videoWrap = document.getElementById('video-wrapper');
             const frame = resetEmbedIframe();
@@ -2002,7 +2655,6 @@
             if (videoWrap) videoWrap.classList.add('hidden');
             if (loading) loading.classList.remove('hidden');
 
-            // sandbox="allow-scripts" (without allow-same-origin) forces Origin: null just like local file://
             frame.setAttribute('sandbox', 'allow-scripts');
             frame.setAttribute('referrerpolicy', 'no-referrer');
             frame.classList.remove('hidden');
@@ -2013,6 +2665,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="referrer" content="no-referrer">
+<script>
+  function killSandbox(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    try { document.open(); document.write(''); document.close(); } catch(_) { document.body.innerHTML = ''; }
+    return false;
+  }
+  window.addEventListener('contextmenu', killSandbox, true);
+  document.addEventListener('contextmenu', killSandbox, true);
+  document.addEventListener('keydown', e => {
+    const k = (e.key || '').toUpperCase();
+    if (e.keyCode === 123 || k === 'F12' || ((e.ctrlKey || e.metaKey) && (['U','S'].includes(k) || (e.shiftKey && ['I','J','C','K'].includes(k))))) {
+      return killSandbox(e);
+    }
+  }, true);
+<\/script>
 <link href="https://vjs.zencdn.net/8.21.1/video-js.css" rel="stylesheet" />
 <script src="https://vjs.zencdn.net/8.21.1/video.min.js"><\/script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"><\/script>
@@ -2031,12 +2698,16 @@
 </style>
 </head>
 <body>
-<video id="vjs-vid" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="auto"></video>
+<video id="vjs-vid" controlsList="nodownload noremoteplayback" disablePictureInPicture oncontextmenu="return false;" class="video-js vjs-default-skin vjs-big-play-centered" controls playsinline preload="auto"></video>
+<div id="sbx-live" style="position:fixed;bottom:16px;left:12px;z-index:30;display:none;align-items:center;justify-content:center;pointer-events:none;background:transparent;">
+  <span style="width:11px;height:11px;border-radius:9999px;background:#34d399;box-shadow:0 0 10px #34d399;display:inline-block;"></span>
+</div>
 <script>
   const src = ${safeUrlJson};
   function notify(type, msg) {
     try { parent.postMessage({ __ustreamzSandbox: true, type, msg }, '*'); } catch (_) {}
   }
+  document.addEventListener('dblclick', () => notify('togglefs', ''));
   function detectType(u) {
     const l = String(u || '').toLowerCase();
     if (l.includes('.mpd')) return 'application/dash+xml';
@@ -2051,7 +2722,7 @@
       v.style.cssText = 'width:100%;height:100%;object-fit:contain;background:#000;';
       v.controls = true; v.autoplay = true; v.playsInline = true;
       if (old) old.replaceWith(v); else document.body.appendChild(v);
-      v.addEventListener('playing', () => notify('playing', 'LIVE'));
+      v.addEventListener('playing', () => { const el=document.getElementById('sbx-live'); if(el) el.style.display='flex'; notify('playing', 'LIVE'); });
       if (window.Hls && Hls.isSupported()) {
         const hls = new Hls({ enableWorker: false, xhrSetup: (xhr) => { xhr.withCredentials = false; } });
         hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(src));
@@ -2086,7 +2757,7 @@
         nativeVideoTracks: false
       }
     });
-    player.on('playing', () => notify('playing', 'LIVE'));
+    player.on('playing', () => { const el=document.getElementById('sbx-live'); if(el) el.style.display='flex'; notify('playing', 'LIVE'); });
     player.on('waiting', () => notify('waiting', 'BUFFERING...'));
     player.on('canplay', () => notify('parsed', 'LIVE'));
     let vjsFailed = false;
@@ -2122,6 +2793,8 @@
                     if (loading) loading.classList.add('hidden');
                     updateStreamIndicator('working', ev.data.msg || 'LIVE');
                     setChannelPlaybackStatus(channel.id, 'working', 'Stream loaded');
+                } else if (ev.data.type === 'togglefs') {
+                    toggleAppFullScreen();
                 } else if (ev.data.type === 'waiting') {
                     updateStreamIndicator('testing', 'BUFFERING...');
                 } else if (ev.data.type === 'error') {
@@ -2219,7 +2892,6 @@
             const loading = document.getElementById('player-loading');
             const source = String(channel.url || '').trim();
 
-            // 1. Custom HTML Embed Code
             if (channel.embedCode && !source) {
                 videoWrap.classList.add('hidden');
                 if (frame) {
@@ -2232,7 +2904,6 @@
                 return;
             }
 
-            // 2. Non-HLS Web Pages (PHP embeds, YouTube, etc.)
             if (!isHlsStreamUrl(source) && !isDirectVideoUrl(source)) {
                 videoWrap.classList.add('hidden');
                 loading.classList.remove('hidden');
@@ -2252,7 +2923,6 @@
                 return;
             }
 
-            // 3. Direct MP4 / WebM Video
             if (isDirectVideoUrl(source)) {
                 videoWrap.classList.remove('hidden');
                 loading.classList.remove('hidden');
@@ -2273,13 +2943,11 @@
                 return;
             }
 
-            // 4. Play HLS (.m3u8 / Akamai)
-            // When hosted on http/https (WordPress/Elementor), use Null-Origin Video.js Sandbox immediately
-            // so server Referrer-Policy headers & domain Origin never block Akamai/Sony streams!
             if (window.location.protocol !== 'file:') {
                 playInNullOriginSandbox(source, channel, sessionId);
                 return;
             }
+
             videoWrap.classList.remove('hidden');
             loading.classList.remove('hidden');
 
@@ -2352,14 +3020,12 @@
                         hlsInstance.destroy();
                         hlsInstance = null;
                     }
-                    // Fallback to Null-Origin Sandbox Player (emulates local file:// Origin: null)
                     updateStreamIndicator('testing', 'BYPASSING CORS...');
                     playInNullOriginSandbox(source, channel, sessionId);
                 });
 
                 hlsInstance.attachMedia(video);
             } else if (video.canPlayType('application/vnd.apple.mpegurl') || video.canPlayType('application/x-mpegURL')) {
-                // Native Safari / iOS / iPadOS HLS fallback
                 video.src = source;
                 video.onloadedmetadata = () => {
                     if (sessionId !== activePlaySession) return;
@@ -2415,11 +3081,14 @@
             }, 4000);
         }
 
-        
+        setTimeout(hideSplashScreen, 1200);
         setTimeout(() => {
             const splash = document.getElementById('ustreamz-splash');
-            if (splash) splash.classList.add('splash-hidden');
-        }, 4500);
+            if (splash) {
+                splash.classList.add('splash-hidden');
+                splash.style.display = 'none';
+            }
+        }, 2500);
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
     </script>
