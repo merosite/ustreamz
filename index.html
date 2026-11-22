@@ -96,14 +96,48 @@
         }
 
         /* Android TV Remote & Keyboard Focus */
-        #umc-live-tv-app [tabindex="0"]:focus-visible,
-        #umc-live-tv-app button:focus-visible,
-        #umc-live-tv-app input:focus-visible,
+        #umc-live-tv-app [tabindex="0"]:not(.channel-card):not(#user-account-login-modal):not(#item-password-modal):not(#settings-auth-modal):focus-visible,
+        #umc-live-tv-app button:not(#user-account-login-modal button):not(#settings-auth-modal button):focus-visible,
+        #umc-live-tv-app input:not(#user-account-login-modal input):not(#settings-auth-modal input):focus-visible,
         #umc-live-tv-app select:focus-visible {
-            outline: 3px solid #38bdf8 !important;
+            outline: 2px solid #38bdf8 !important;
             outline-offset: 2px !important;
-            box-shadow: 0 0 0 5px rgba(56, 189, 248, 0.3) !important;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
             z-index: 30;
+        }
+        #umc-live-tv-app #nav-user-login:focus-visible,
+        #umc-live-tv-app #nav-settings:focus-visible,
+        #umc-live-tv-app #admin-user-icon-btn:focus-visible {
+            outline: 2px solid #38bdf8 !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
+        }
+        #umc-live-tv-app .channel-card,
+        #umc-live-tv-app .channel-card:focus,
+        #umc-live-tv-app .channel-card:focus-visible,
+        #user-account-login-modal,
+        #user-account-login-modal:focus,
+        #user-account-login-modal:focus-visible,
+        #item-password-modal,
+        #item-password-modal:focus,
+        #item-password-modal:focus-visible,
+        #settings-auth-modal,
+        #settings-auth-modal:focus,
+        #settings-auth-modal:focus-visible {
+            outline: none !important;
+            outline-offset: 0 !important;
+            box-shadow: none !important;
+        }
+        #user-account-login-modal input:focus,
+        #user-account-login-modal input:focus-visible,
+        #user-account-login-modal button:focus,
+        #user-account-login-modal button:focus-visible,
+        #settings-auth-modal input:focus,
+        #settings-auth-modal input:focus-visible,
+        #settings-auth-modal button:focus,
+        #settings-auth-modal button:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
         }
 
         /* Improved Card Web View */
@@ -380,19 +414,6 @@
             100% { transform: translateX(145%); }
         }
 
-
-        /* WordPress & Elementor Compatibility */
-        .elementor-widget-html #umc-live-tv-app,
-        .elementor-element #umc-live-tv-app,
-        #umc-live-tv-app {
-            width: 100% !important;
-            max-width: 100% !important;
-            min-height: 100dvh;
-            height: 100dvh;
-            position: relative;
-            z-index: 1;
-        }
-
         /* Safe Full-Width Layout for Elementor & Standalone Hosting */
         body.elementor-page .elementor-section,
         body.elementor-page .elementor-container,
@@ -446,16 +467,21 @@
         
         <!-- Logo Area -->
         <button type="button" tabindex="0" onclick="goHomeAllCategories()" title="UStreamz — All Categories" aria-label="UStreamz Home" class="h-14 md:h-16 w-full flex items-center justify-center md:justify-start md:px-6 border-b border-slate-800 shrink-0 text-left hover:bg-slate-800/60 transition-colors">
-            <div class="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30">
+            <div class="p-1.5 rounded-lg bg-indigo-500/15 border border-indigo-500/30 shrink-0">
                 <i data-lucide="tv" class="text-indigo-400 !w-6 !h-6 md:!w-6 md:!h-6"></i>
             </div>
             <span class="ml-3 font-bold text-xl hidden md:block tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-400 to-cyan-300">UStreamz</span>
         </button>
 
+        <!-- Separate User Welcome Section -->
+        <div id="user-welcome-subtitle" class="hidden items-center justify-center md:justify-start gap-2 px-2.5 md:px-5 py-2.5 border-b border-slate-800/90 bg-emerald-950/25 shrink-0">
+            <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 shrink-0"></span>
+            <span id="user-welcome-text" class="hidden md:block text-xs md:text-sm font-semibold text-emerald-300 truncate">Welcome</span>
+        </div>
+
         <!-- Navigation Menu -->
         <nav class="flex-1 py-3 px-2 md:px-3 flex flex-col gap-1.5 overflow-y-auto" id="sidebar-nav">
-            <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1 hidden md:block px-3">Main</div>
-            
+
             <button type="button" tabindex="0" onclick="setCategory('All')" id="nav-All" class="nav-btn w-full flex items-center justify-center md:justify-start px-2.5 md:px-3 py-2.5 md:py-3 rounded-xl bg-indigo-500/10 text-indigo-400 group transition-colors">
                 <i data-lucide="layout-grid" class="!w-5 !h-5"></i>
                 <span class="ml-3 font-medium hidden md:block">All Channels</span>
@@ -480,11 +506,16 @@
             </div>
         </div>
 
-        <!-- Bottom Menu -->
-        <div class="p-2 md:p-3 border-t border-slate-800 shrink-0">
-            <button type="button" tabindex="0" onclick="requestSettings()" id="nav-settings" class="nav-btn w-full flex items-center justify-center md:justify-start px-2.5 md:px-3 py-2.5 md:py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white group transition-colors">
-                <i data-lucide="user" id="sidebar-admin-user-icon" class="!w-5 !h-5 shrink-0"></i>
-                <span id="sidebar-admin-label" class="ml-3 font-medium hidden md:block truncate">Admin</span>
+        <!-- Bottom Menu: User Login above Admin Login -->
+        <div class="p-2 md:p-3 border-t border-slate-800 shrink-0 flex flex-col gap-1.5">
+            <button type="button" tabindex="0" onclick="openUserAccountLoginModal()" id="nav-user-login" class="w-full flex items-center justify-center md:justify-start px-2.5 md:px-3 py-2 md:py-2.5 rounded-xl text-rose-400 hover:bg-slate-800 hover:text-white group transition-colors" title="User Login">
+                <i data-lucide="user-check" class="!w-4 !h-4 md:!w-5 md:!h-5 shrink-0"></i>
+                <span id="sidebar-user-login-label" class="ml-3 text-xs md:text-sm font-medium hidden md:block truncate">User Login</span>
+                <span id="sidebar-user-status-dot" class="hidden ml-auto h-2 w-2 rounded-full bg-emerald-400 shrink-0"></span>
+            </button>
+            <button type="button" tabindex="0" onclick="requestSettings()" id="nav-settings" class="nav-btn w-full flex items-center justify-center md:justify-start px-2.5 md:px-3 py-2 md:py-2.5 rounded-xl text-rose-400 hover:bg-slate-800 hover:text-white group transition-colors" title="Admin Login">
+                <i data-lucide="user" id="sidebar-admin-user-icon" class="!w-4 !h-4 md:!w-5 md:!h-5 shrink-0"></i>
+                <span id="sidebar-admin-label" class="ml-3 text-xs md:text-sm font-medium hidden md:block truncate">Admin</span>
                 <span id="sidebar-admin-status-dot" class="hidden ml-auto h-2.5 w-2.5 rounded-full bg-emerald-400 shrink-0"></span>
             </button>
         </div>
@@ -510,9 +541,36 @@
                         <span id="header-download-app-icon" class="inline-flex items-center justify-center text-sm"><i class="fa-brands fa-android"></i></span>
                         <span id="header-download-app-label" class="hidden sm:inline">Download App</span>
                     </button>
+                    <button type="button" id="admin-home-logout-btn" onclick="signOutSettings()" title="Sign Out" aria-label="Sign Out" class="hidden inline-flex items-center gap-1.5 h-9 md:h-10 px-3 rounded-xl border border-rose-500/40 bg-rose-600/20 hover:bg-rose-600 text-rose-200 hover:text-white text-xs font-semibold transition-colors shrink-0">
+                        <i data-lucide="log-out" class="!w-3.5 !h-3.5"></i><span>Sign Out</span>
+                    </button>
+                    <button type="button" id="user-logout-icon-btn" onclick="logoutUserAccountSession()" title="Sign Out" aria-label="Sign Out" class="hidden inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700 shrink-0">
+                        <i data-lucide="log-out" class="!w-4 !h-4"></i><span>Sign Out</span>
+                    </button>
                 </div>
             </header>
             
+            <div id="grid-bulk-mark-bar" class="hidden items-center justify-between gap-2 px-4 md:px-6 lg:px-10 py-2 bg-amber-950/80 border-b border-amber-500/40 text-xs shrink-0 z-10">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <span class="inline-flex items-center gap-1 font-bold text-amber-300">
+                        <i data-lucide="check-square" class="!w-4 !h-4"></i>
+                        <span>Marked: <span id="grid-marked-count">0</span></span>
+                    </span>
+                    <button type="button" onclick="selectAllVisibleGridCards()" class="rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 px-2.5 py-1 text-[11px] font-semibold text-slate-200 transition-colors">Select All</button>
+                    <button type="button" onclick="clearGridMarkedSelection()" class="rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 px-2.5 py-1 text-[11px] font-semibold text-slate-300 transition-colors">Clear</button>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button type="button" onclick="lockAllGridMarkedChannels()" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-3 py-1.5 text-[11px] font-bold shadow transition-colors">
+                        <i data-lucide="lock" class="!w-3.5 !h-3.5"></i>
+                        <span>Lock Marked</span>
+                    </button>
+                    <button type="button" onclick="unlockAllGridMarkedChannels()" class="inline-flex items-center gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-[11px] font-bold shadow transition-colors">
+                        <i data-lucide="unlock" class="!w-3.5 !h-3.5"></i>
+                        <span>Unlock Marked</span>
+                    </button>
+                    <button type="button" onclick="exitGridBulkMarkMode()" class="rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white px-2 py-1.5 text-[11px] font-semibold transition-colors">Done</button>
+                </div>
+            </div>
             <div id="grid-scroll-container" class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 content-padding-responsive">
                 <div id="channel-grid" class="channel-grid-responsive grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 md:gap-5"></div>
                 <!-- Empty State -->
@@ -589,13 +647,14 @@
                     <p id="cloud-connection-status" class="text-xs text-emerald-400 mt-0.5">Supabase connected (UStreamz v2.1.1 Engine Ready)</p>
                 </div>
                 <div class="ml-auto flex items-center gap-2.5 relative">
+                    <span id="settings-user-icon-status" class="hidden rounded-full border border-emerald-500/40 bg-emerald-500/15 px-3 py-1 text-xs font-semibold text-emerald-300 whitespace-nowrap"></span>
                     <button id="admin-user-icon-btn" type="button" onclick="toggleAdminProfileCard(event)" title="Admin Profile" aria-label="Admin Profile" class="hidden inline-flex items-center justify-center w-9 h-9 rounded-xl border border-emerald-500/40 bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 transition-colors">
                         <i data-lucide="user" class="!w-4 !h-4"></i>
                     </button>
-                    <button type="button" onclick="signOutSettings()" class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm font-medium text-slate-200 hover:bg-slate-700"><i data-lucide="log-out" class="!w-4 !h-4"></i><span>Sign Out</span></button>
+                    <button type="button" onclick="signOutSettings()" class="inline-flex items-center gap-1.5 h-9 md:h-10 px-3 rounded-xl border border-rose-500/40 bg-rose-600/20 hover:bg-rose-600 text-rose-200 hover:text-white text-xs font-semibold transition-colors shrink-0"><i data-lucide="log-out" class="!w-3.5 !h-3.5"></i><span>Sign Out</span></button>
 
                     <!-- Profile Card shown ONLY when clicking User Icon -->
-                    <div id="admin-profile-popover" class="hidden absolute right-0 top-12 z-50 w-72 rounded-2xl border border-slate-700 bg-slate-900 p-4 shadow-2xl space-y-2.5">
+                    <div id="admin-profile-popover" class="hidden absolute right-0 top-12 z-50 w-80 rounded-2xl border border-slate-700 bg-slate-900 p-4 shadow-2xl space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2">
                             <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Admin Profile</span>
                             <button type="button" onclick="closeAdminProfileCard()" class="text-slate-400 hover:text-white p-1 rounded" aria-label="Close profile">
@@ -607,138 +666,304 @@
                             <div id="admin-profile-email-text" class="text-slate-200 break-all font-medium"></div>
                             <div id="admin-profile-conn-text" class="text-[11px] text-slate-400">Supabase connected (UStreamz v2.1.1 Engine Ready)</div>
                         </div>
-                    </div>
-                </div>
-            </header>
-            
-            <div class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-10 w-full settings-padding-responsive">
-                <div class="settings-inner max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-                    
-                    <!-- Left Column: Forms -->
-                    <div class="lg:col-span-5 flex flex-col gap-6">
-                        <div class="settings-card bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl relative">
-                            <h2 class="text-xl font-semibold mb-6 flex items-center text-indigo-400 pb-4 border-b border-slate-800">
-                                <i data-lucide="plus-circle" id="form-icon" class="mr-2"></i> 
-                                <span id="form-title-text">Add New Channel</span>
-                            </h2>
-                            
-                            <form id="add-channel-form" onsubmit="handleAddChannel(event)" class="space-y-4">
-                                <input type="hidden" id="edit-id" value="">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Add to list</label>
-                                    <select id="add-content-type" onchange="toggleAppFileFields()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
-                                        <option value="channel">Channel List</option>
-                                        <option value="movie">Movies Online</option>
-                                        <option value="app">App / Files (APK, EXE, DOC, PDF, Word, Excel, Image)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Channel Name</label>
-                                    <input type="text" id="add-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="e.g., Kantipur HD">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Category (Move to)</label>
-                                    <select id="add-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Additional Categories (select multiple)</label>
-                                    <div id="channel-category-checks" class="flex flex-wrap gap-2 rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Logo URL (Image)</label>
-                                    <input type="url" id="add-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="Logo URL (optional if uploading)">
-                                    <label class="mt-2 flex items-center gap-2 text-xs text-indigo-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload channel logo<input type="file" id="add-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
-                                    <img id="add-logo-preview" class="hidden mt-2 h-14 w-14 rounded-lg border border-slate-700 bg-slate-950 object-contain p-1" alt="Logo preview">
-                                </div>
-                                <div>
-                                    <label id="add-url-label" class="block text-sm font-medium text-slate-400 mb-1">Stream / Player / Direct App Download URL</label>
-                                    <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/stream.m3u8 or https://example.com/app.apk">
-                                </div>
-                                <div id="app-file-upload-box" class="rounded-xl border border-slate-700/80 bg-slate-950/70 p-3.5 space-y-2">
-                                    <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider">Upload App or File (Image, DOC, PDF, Word, Excel, EXE, APK)</label>
-                                    <input type="file" id="add-file-upload" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.exe,.apk,.zip,.rar" class="block w-full text-xs text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-indigo-500 cursor-pointer">
-                                    <div id="add-file-meta" class="text-[11px] text-slate-400">Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download &amp; preview)</div>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">Multiple stream links (Label | URL)</label>
-                                    <textarea id="add-links" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white" placeholder="Main | https://example.com/live.m3u8&#10;Backup | https://example.com/backup.m3u8"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-400 mb-1">HTML Embed Code (optional)</label>
-                                    <textarea id="add-embed-code" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white" placeholder="Paste iframe/player embed HTML here"></textarea>
-                                </div>
-                                <div id="settings-password-section" class="rounded-xl border border-rose-500/50 bg-rose-950/20 p-3.5 space-y-1.5">
-                                    <label class="block text-sm font-semibold text-rose-300">Password (optional — required to play channel or preview/download file)</label>
-                                    <div class="relative">
-                                        <input type="password" id="add-password" autocomplete="new-password" class="w-full bg-slate-950 border border-rose-500/40 rounded-lg px-4 py-2.5 pr-11 text-white focus:outline-none focus:border-rose-500" placeholder="Leave empty for no password">
-                                        <button type="button" id="toggle-add-password-btn" onclick="toggleAddPasswordPreview()" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-rose-300 hover:bg-rose-950/60 hover:text-white transition-colors" aria-label="Toggle password preview" title="Show / Hide Password">
-                                            <i data-lucide="eye" class="!w-4 !h-4"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <label class="flex items-start gap-3 rounded-lg border border-slate-700 bg-slate-950/70 p-3 text-sm text-slate-300">
-                                    <input type="checkbox" id="add-open-browser" class="mt-1 h-4 w-4 rounded border-slate-700 bg-slate-950">
-                                    <span><strong class="block text-slate-200">PHP Embed / Open directly in browser</strong><span class="text-xs text-slate-500">Tick for player.php or embed pages. Opens in a new browser tab.</span></span>
-                                </label>
-                                <div class="flex gap-3 pt-2">
-                                    <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2.5 px-4 rounded-lg items-center justify-center">
-                                        <i data-lucide="x" class="mr-2 !w-4 !h-4"></i> Cancel
-                                    </button>
-                                    <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center">
-                                        <i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Channel
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Category Management -->
-                        <div class="settings-card bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-cyan-400 pb-4 border-b border-slate-800">
-                                <i data-lucide="folder-plus" class="mr-2"></i> Manage Categories
-                            </h2>
-                            <form onsubmit="handleAddCategory(event)" class="flex flex-col gap-2 mb-4">
-                                <select id="new-category-parent" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white"><option value="">Top-level category</option></select>
-                                <input type="text" id="new-category-name" required placeholder="New Category Name" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
-                                <input type="text" id="new-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
-                                <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
-                                    <div class="flex items-center justify-between gap-2">
-                                        <span class="text-xs font-semibold text-cyan-300">Select Category Icon (<span id="category-icon-count">1050+</span>)</span>
-                                        <span id="selected-category-icon-badge" class="inline-flex items-center gap-1.5 text-xs bg-slate-900 border border-slate-700 text-cyan-200 px-2.5 py-0.5 rounded-full"><i data-lucide="folder" class="!w-3.5 !h-3.5"></i><span>folder</span></span>
-                                    </div>
-                                    <input type="search" id="category-icon-search" oninput="renderCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv, app, sport...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
-                                    <div id="category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
-                                </div>
-                                <input type="url" id="new-category-logo" placeholder="Category logo URL (optional)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
-                                <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="new-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
-                                <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center">Add</button>
-                            </form>
-                            <div class="max-h-40 overflow-y-auto pr-1 flex flex-col gap-2" id="settings-category-list"></div>
-                        </div>
-
-                        <!-- Backup/Restore -->
-                        <div class="settings-card bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-emerald-400 pb-4 border-b border-slate-800">
-                                <i data-lucide="database" class="mr-2"></i> Data Backup
-                            </h2>
-                            <div class="flex gap-3">
-                                <button type="button" onclick="exportData()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white py-2.5 px-4 rounded-lg flex items-center justify-center font-medium">
-                                    <i data-lucide="download" class="mr-2 !w-4 !h-4"></i> Export
+                        <!-- Data Backup inside Admin Profile above Login/Session controls -->
+                        <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-3 space-y-2">
+                            <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+                                <i data-lucide="database" class="!w-3.5 !h-3.5"></i>
+                                <span>Data Backup</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <button type="button" onclick="exportData()" class="flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white py-2 px-2.5 rounded-lg flex items-center justify-center gap-1.5 text-xs font-medium transition-colors">
+                                    <i data-lucide="download" class="!w-3.5 !h-3.5"></i>
+                                    <span>Export</span>
                                 </button>
                                 <div class="flex-1 relative">
                                     <input type="file" id="import-file" accept=".json" class="hidden" onchange="importData(event)">
-                                    <label for="import-file" class="w-full h-full cursor-pointer bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white py-2.5 px-4 rounded-lg flex items-center justify-center font-medium">
-                                        <i data-lucide="upload" class="mr-2 !w-4 !h-4"></i> Import
+                                    <label for="import-file" class="w-full h-full cursor-pointer bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white py-2 px-2.5 rounded-lg flex items-center justify-center gap-1.5 text-xs font-medium transition-colors">
+                                        <i data-lucide="upload" class="!w-3.5 !h-3.5"></i>
+                                        <span>Import</span>
                                     </label>
                                 </div>
                             </div>
                         </div>
+                        <div class="pt-1 border-t border-slate-800 flex flex-col gap-1.5">
+                            <button type="button" onclick="closeAdminProfileCard(); openUserAccountLoginModal();" class="w-full rounded-lg border border-emerald-500/40 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors">User Login</button>
+                            <div class="flex items-center justify-between gap-2">
+                                <button type="button" onclick="closeAdminProfileCard(); requestSettings();" class="flex-1 rounded-lg border border-indigo-500/40 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-200 hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors">Admin Login</button>
+                                <button type="button" onclick="closeAdminProfileCard(); signOutSettings();" class="flex-1 rounded-lg border border-slate-700 bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors">Sign Out</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-                        <!-- Download App Settings Card -->
-                        <div class="settings-card bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-emerald-400 pb-4 border-b border-slate-800">
-                                <i class="fa-brands fa-android mr-2 text-lg"></i> Download App Settings
+            <!-- Admin Settings Navigation Menu Bar -->
+            <nav id="settings-admin-menu" aria-label="Admin Settings Menu" class="bg-slate-950/95 border-b border-slate-800 px-3 md:px-6 lg:px-8 py-2 shrink-0 overflow-x-auto md:overflow-x-visible">
+                <div class="max-w-7xl mx-auto flex items-center justify-between gap-1 lg:gap-1.5 min-w-max md:min-w-0 w-full">
+                    <button type="button" data-settings-tab="channels" onclick="setSettingsTab('channels')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap bg-indigo-600 text-white shadow transition-colors">
+                        <i data-lucide="tv" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>Add/Manage Channel</span>
+                    </button>
+                    <button type="button" data-settings-tab="movies" onclick="setSettingsTab('movies')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i data-lucide="clapperboard" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>Add/Manage Movies</span>
+                    </button>
+                    <button type="button" data-settings-tab="files" onclick="setSettingsTab('files')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i data-lucide="file-down" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>Add/Manage Files</span>
+                    </button>
+                    <button type="button" data-settings-tab="categories" onclick="setSettingsTab('categories')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i data-lucide="folder-plus" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>Add/Manage Categories</span>
+                    </button>
+                    <button type="button" data-settings-tab="users" onclick="setSettingsTab('users')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i data-lucide="users" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>User List</span>
+                    </button>
+                    <button type="button" data-settings-tab="download-app" onclick="setSettingsTab('download-app')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i class="fa-brands fa-android text-xs shrink-0"></i>
+                        <span>Download App Manager</span>
+                    </button>
+                </div>
+            </nav>
+            
+            <div id="settings-main-viewport" class="flex-1 min-h-0 overflow-y-auto lg:overflow-hidden p-4 md:p-6 lg:px-8 lg:py-5 w-full settings-padding-responsive">
+                <div class="settings-inner max-w-7xl mx-auto lg:h-full lg:min-h-0 flex flex-col">
+
+                    <!-- Tab Panel 1: Add/Manage Channel, Movies & Files (Shared Form + Respective List) -->
+                    <div id="settings-panel-items" class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 lg:flex-1 lg:h-full lg:min-h-0">
+                        <div class="lg:col-span-5 lg:h-full lg:min-h-0 flex flex-col">
+                            <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl relative lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                                <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-indigo-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                    <i data-lucide="plus-circle" id="form-icon" class="mr-2"></i> 
+                                    <span id="form-title-text">Add New Channel</span>
+                                </h2>
+                                
+                                <form id="add-channel-form" onsubmit="handleAddChannel(event)" class="space-y-4 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
+                                    <input type="hidden" id="edit-id" value="">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-400 mb-1">Add to list (Automatic)</label>
+                                        <select id="add-content-type" disabled class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-4 py-2.5 text-cyan-300 font-semibold cursor-not-allowed opacity-95 focus:outline-none">
+                                            <option value="channel">Channel List</option>
+                                            <option value="movie">Movies Online</option>
+                                            <option value="app">App / Files (APK, EXE, DOC, PDF, Word, Excel, Image)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label id="add-name-label" class="block text-sm font-medium text-slate-400 mb-1">Channel Name</label>
+                                        <input type="text" id="add-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="e.g., Kantipur HD">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-400 mb-1">Category (Move to)</label>
+                                        <select id="add-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"></select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-400 mb-1">Additional Categories (select multiple)</label>
+                                        <div id="channel-category-checks" class="flex flex-wrap gap-2 rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300"></div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-400 mb-1">Logo URL (Image)</label>
+                                        <input type="url" id="add-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="Logo URL (optional if uploading)">
+                                        <label class="mt-2 flex items-center gap-2 text-xs text-indigo-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload channel logo<input type="file" id="add-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
+                                        <img id="add-logo-preview" class="hidden mt-2 h-14 w-14 rounded-lg border border-slate-700 bg-slate-950 object-contain p-1" alt="Logo preview">
+                                    </div>
+                                    <div>
+                                        <label id="add-url-label" class="block text-sm font-medium text-slate-400 mb-1">Stream / Player / Direct App Download URL</label>
+                                        <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/stream.m3u8 or https://example.com/app.apk">
+                                        <!-- Add More Link trigger right below Main Link -->
+                                        <div id="add-more-link-bar" class="mt-2 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/80 px-3 py-2">
+                                            <span class="text-xs font-medium text-slate-300">Add More Link</span>
+                                            <button type="button" id="add-more-link-btn" onclick="handleAddMoreLinkClick()" class="inline-flex items-center gap-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 px-3 py-1 text-xs font-semibold text-white shadow transition-colors">
+                                                <span>+ Add</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="multiple-links-section" class="hidden rounded-xl border border-slate-800 bg-slate-950/80 p-3.5 space-y-2.5">
+                                        <div class="flex flex-wrap items-center justify-between gap-2">
+                                            <label class="block text-xs font-semibold text-indigo-300 uppercase tracking-wider">Additional Stream Links</label>
+                                            <div class="flex items-center gap-1.5">
+                                                <div class="inline-flex rounded-lg border border-slate-700 bg-slate-900 p-0.5 text-[11px]">
+                                                    <button type="button" id="link-label-mode-auto" onclick="setStreamLinkLabelMode('auto')" class="rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors">Auto</button>
+                                                    <button type="button" id="link-label-mode-manual" onclick="setStreamLinkLabelMode('manual')" class="rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors">Manual</button>
+                                                </div>
+                                                <button type="button" onclick="appendExtraLinkRow()" class="inline-flex items-center gap-1 rounded-md bg-slate-800 hover:bg-indigo-600 px-2.5 py-1 text-[11px] font-semibold text-slate-200 hover:text-white transition-colors">
+                                                    <span>+ Add</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="extra-links-rows" class="space-y-2"></div>
+                                        <textarea id="add-links" rows="2" class="hidden w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white" placeholder="Server 1 | https://example.com/live.m3u8&#10;Server 2 | https://example.com/backup.m3u8"></textarea>
+                                    </div>
+                                    <div id="app-file-upload-box" class="hidden rounded-xl border border-slate-700/80 bg-slate-950/70 p-3.5 space-y-2">
+                                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider">Upload App or File (Image, DOC, PDF, Word, Excel, EXE, APK)</label>
+                                        <input type="file" id="add-file-upload" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.exe,.apk,.zip,.rar" class="block w-full text-xs text-slate-300 file:mr-3 file:rounded-lg file:border-0 file:bg-indigo-600 file:px-3 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                                        <div id="add-file-meta" class="text-[11px] text-slate-400">Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download &amp; preview)</div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-400 mb-1">HTML Embed Code (optional)</label>
+                                        <textarea id="add-embed-code" rows="3" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white" placeholder="Paste iframe/player embed HTML here"></textarea>
+                                    </div>
+                                    <div id="settings-password-section" class="rounded-xl border border-rose-500/50 bg-rose-950/20 p-3.5 space-y-1.5">
+                                        <label class="block text-sm font-semibold text-rose-300">Password (optional — required to play channel or preview/download file)</label>
+                                        <div class="relative">
+                                            <input type="password" id="add-password" autocomplete="new-password" class="w-full bg-slate-950 border border-rose-500/40 rounded-lg px-4 py-2.5 pr-11 text-white focus:outline-none focus:border-rose-500" placeholder="Leave empty for no password">
+                                            <button type="button" id="toggle-add-password-btn" onclick="toggleAddPasswordPreview()" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-rose-300 hover:bg-rose-950/60 hover:text-white transition-colors" aria-label="Toggle password preview" title="Show / Hide Password">
+                                                <i data-lucide="eye" class="!w-4 !h-4"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <label class="flex items-start gap-3 rounded-lg border border-slate-700 bg-slate-950/70 p-3 text-sm text-slate-300">
+                                        <input type="checkbox" id="add-open-browser" class="mt-1 h-4 w-4 rounded border-slate-700 bg-slate-950">
+                                        <span><strong class="block text-slate-200">PHP Embed / Open directly in browser</strong><span class="text-xs text-slate-500">Tick for player.php or embed pages. Opens in a new browser tab.</span></span>
+                                    </label>
+                                    <div class="flex gap-3 pt-2">
+                                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden flex-1 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-medium py-2.5 px-4 rounded-lg items-center justify-center">
+                                            <i data-lucide="x" class="mr-2 !w-4 !h-4"></i> Cancel
+                                        </button>
+                                        <button type="submit" class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center">
+                                            <i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Channel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-7 lg:h-full lg:min-h-0 flex flex-col">
+                            <!-- Channel List Card -->
+                            <div id="settings-list-card-channels" class="bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[380px] max-h-[72dvh] lg:max-h-none lg:flex-1 lg:h-full lg:min-h-0">
+                                <h2 class="text-lg md:text-xl font-semibold mb-3.5 flex items-center text-rose-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                    <i data-lucide="tv" class="mr-2"></i> Channel List
+                                    <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-channels-count">0</span>
+                                </h2>
+                                <input type="search" id="settings-channel-search" oninput="renderSettingsList()" placeholder="Search channel by name..." class="shrink-0">
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-3 rounded-xl border border-slate-800 bg-slate-950/80 px-3 py-2 shrink-0">
+                                    <label class="inline-flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                                        <input type="checkbox" onchange="toggleSelectAllSettingsItems('channel', this.checked)" class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-900">
+                                        <span>Select All</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" onclick="bulkLockSelectedItems('channel')" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="lock" class="!w-3 !h-3"></i>
+                                            <span>Lock Selected</span>
+                                        </button>
+                                        <button type="button" onclick="bulkUnlockSelectedItems('channel')" class="inline-flex items-center gap-1 rounded-lg bg-slate-800 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-slate-700 px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="unlock" class="!w-3 !h-3"></i>
+                                            <span>Unlock Selected</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-h-0 overflow-y-auto pr-2" id="settings-channel-list"></div>
+                            </div>
+
+                            <!-- Movies Online Card -->
+                            <div id="settings-list-card-movies" class="hidden bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl flex-col min-h-[380px] max-h-[72dvh] lg:max-h-none lg:flex-1 lg:h-full lg:min-h-0">
+                                <h2 class="text-lg md:text-xl font-semibold mb-3.5 flex items-center text-amber-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                    <i data-lucide="clapperboard" class="mr-2"></i> Movies Online
+                                    <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-movies-count">0</span>
+                                </h2>
+                                <input type="search" id="settings-movie-search" oninput="renderSettingsList()" placeholder="Search movie by name..." class="shrink-0">
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-3 rounded-xl border border-slate-800 bg-slate-950/80 px-3 py-2 shrink-0">
+                                    <label class="inline-flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                                        <input type="checkbox" onchange="toggleSelectAllSettingsItems('movie', this.checked)" class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-900">
+                                        <span>Select All</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" onclick="bulkLockSelectedItems('movie')" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="lock" class="!w-3 !h-3"></i>
+                                            <span>Lock Selected</span>
+                                        </button>
+                                        <button type="button" onclick="bulkUnlockSelectedItems('movie')" class="inline-flex items-center gap-1 rounded-lg bg-slate-800 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-slate-700 px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="unlock" class="!w-3 !h-3"></i>
+                                            <span>Unlock Selected</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-h-0 overflow-y-auto pr-2" id="settings-movie-list"></div>
+                            </div>
+
+                            <!-- Apps & Files Card -->
+                            <div id="settings-list-card-files" class="hidden bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl flex-col min-h-[380px] max-h-[72dvh] lg:max-h-none lg:flex-1 lg:h-full lg:min-h-0">
+                                <h2 class="text-lg md:text-xl font-semibold mb-3.5 flex items-center text-emerald-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                    <i data-lucide="file-down" class="mr-2"></i> Apps &amp; Files
+                                    <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-files-count">0</span>
+                                </h2>
+                                <input type="search" id="settings-file-search" oninput="renderSettingsList()" placeholder="Search app or file by name..." class="shrink-0">
+                                <div class="flex flex-wrap items-center justify-between gap-2 mb-3 rounded-xl border border-slate-800 bg-slate-950/80 px-3 py-2 shrink-0">
+                                    <label class="inline-flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                                        <input type="checkbox" onchange="toggleSelectAllSettingsItems('app', this.checked)" class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-900">
+                                        <span>Select All</span>
+                                    </label>
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" onclick="bulkLockSelectedItems('app')" class="inline-flex items-center gap-1 rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="lock" class="!w-3 !h-3"></i>
+                                            <span>Lock Selected</span>
+                                        </button>
+                                        <button type="button" onclick="bulkUnlockSelectedItems('app')" class="inline-flex items-center gap-1 rounded-lg bg-slate-800 hover:bg-emerald-700 text-emerald-300 hover:text-white border border-slate-700 px-2.5 py-1 text-[11px] font-semibold transition-colors">
+                                            <i data-lucide="unlock" class="!w-3 !h-3"></i>
+                                            <span>Unlock Selected</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex-1 min-h-0 overflow-y-auto pr-2" id="settings-file-list"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Panel 2: Add/Manage Categories (Left: Add Category, Right: Manage Categories) -->
+                    <div id="settings-panel-categories" class="hidden w-full lg:flex-1 lg:h-full lg:min-h-0 flex-col">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 lg:flex-1 lg:h-full lg:min-h-0">
+                            <!-- Left Section: Add Category -->
+                            <div class="lg:col-span-5 lg:h-full lg:min-h-0 flex flex-col">
+                                <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                                    <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-cyan-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                        <i data-lucide="folder-plus" class="mr-2"></i> Add Category
+                                    </h2>
+                                    <form onsubmit="handleAddCategory(event)" class="flex flex-col gap-2.5 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
+                                        <select id="new-category-parent" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white"><option value="">Top-level category</option></select>
+                                        <input type="text" id="new-category-name" required placeholder="New Category Name" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                                        <input type="text" id="new-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                        <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <div class="flex items-center gap-2 min-w-0">
+                                                    <span class="text-xs font-semibold text-cyan-300">Category Icon</span>
+                                                    <span id="selected-category-icon-badge" class="inline-flex items-center gap-1.5 text-xs bg-slate-900 border border-slate-700 text-cyan-200 px-2.5 py-0.5 rounded-full"><i data-lucide="folder" class="!w-3.5 !h-3.5"></i><span>folder</span></span>
+                                                </div>
+                                                <button type="button" id="toggle-category-icon-picker-btn" onclick="toggleCategoryIconPicker()" class="shrink-0 inline-flex items-center gap-1.5 rounded-lg border border-cyan-500/40 bg-cyan-600/20 hover:bg-cyan-600/35 px-2.5 py-1 text-xs font-semibold text-cyan-200 transition-colors">
+                                                    <i data-lucide="grid" class="!w-3.5 !h-3.5"></i>
+                                                    <span id="toggle-category-icon-picker-label">Show Icons (<span id="category-icon-count">1050+</span>)</span>
+                                                </button>
+                                            </div>
+                                            <div id="category-icon-picker-drawer" class="hidden space-y-2 pt-1 border-t border-slate-800/80">
+                                                <input type="search" id="category-icon-search" oninput="renderCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv, app, sport...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                                <div id="category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
+                                            </div>
+                                        </div>
+                                        <input type="url" id="new-category-logo" placeholder="Category logo URL (optional)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                                        <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="new-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
+                                        <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2.5 rounded-lg font-medium flex items-center justify-center">Add Category</button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Right Section: Manage Categories -->
+                            <div class="lg:col-span-7 lg:h-full lg:min-h-0 flex flex-col">
+                                <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl min-h-[360px] max-h-[72dvh] lg:max-h-none lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                                    <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-cyan-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                        <i data-lucide="folder-cog" class="mr-2"></i> Manage Categories
+                                    </h2>
+                                    <div class="flex-1 min-h-0 overflow-y-auto pr-2 flex flex-col gap-2" id="settings-category-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Panel 3: Download App Manager -->
+                    <div id="settings-panel-download-app" class="hidden w-full max-w-3xl mx-auto lg:flex-1 lg:h-full lg:min-h-0 flex-col">
+                        <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                            <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-emerald-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                <i class="fa-brands fa-android mr-2 text-lg"></i> Download App Manager
                             </h2>
-                            <form id="settings-download-app-form" onsubmit="handleSettingsDownloadAppSave(event)" class="space-y-3">
+                            <form id="settings-download-app-form" onsubmit="handleSettingsDownloadAppSave(event)" class="space-y-3 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Button / Section Title</label>
                                     <input type="text" id="settings-dl-app-title" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="Download App">
@@ -762,7 +987,7 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Direct Download Link / URL</label>
-                                    <input type="url" type="text" id="settings-dl-app-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="https://example.com/app.apk">
+                                    <input type="url" id="settings-dl-app-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="https://example.com/app.apk">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Mirror Link / URL (optional)</label>
@@ -777,38 +1002,97 @@
                         </div>
                     </div>
 
-                    <!-- Right Column -->
-                    <div class="lg:col-span-7 flex flex-col gap-6">
-                        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[300px] max-h-[520px]">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-rose-400 pb-4 border-b border-slate-800 shrink-0">
-                                <i data-lucide="tv" class="mr-2"></i> Channel List
-                                <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-channels-count">0</span>
-                            </h2>
-                            <input type="search" id="settings-channel-search" oninput="renderSettingsList()" placeholder="Search channel by name...">
-                            <div class="flex-1 overflow-y-auto pr-2" id="settings-channel-list"></div>
-                        </div>
-                        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[300px] max-h-[520px]">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-amber-400 pb-4 border-b border-slate-800 shrink-0">
-                                <i data-lucide="clapperboard" class="mr-2"></i> Movies Online
-                                <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-movies-count">0</span>
-                            </h2>
-                            <input type="search" id="settings-movie-search" oninput="renderSettingsList()" placeholder="Search movie by name...">
-                            <div class="flex-1 overflow-y-auto pr-2" id="settings-movie-list"></div>
-                        </div>
-                        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl flex flex-col min-h-[300px] max-h-[520px]">
-                            <h2 class="text-xl font-semibold mb-4 flex items-center text-emerald-400 pb-4 border-b border-slate-800 shrink-0">
-                                <i data-lucide="file-down" class="mr-2"></i> Apps &amp; Files
-                                <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-files-count">0</span>
-                            </h2>
-                            <input type="search" id="settings-file-search" oninput="renderSettingsList()" placeholder="Search app or file by name...">
-                            <div class="flex-1 overflow-y-auto pr-2" id="settings-file-list"></div>
+                    <!-- Tab Panel 4: User List (Left: Add User, Right: Manage User) -->
+                    <div id="settings-panel-users" class="hidden w-full lg:flex-1 lg:h-full lg:min-h-0 flex-col">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 md:gap-6 lg:flex-1 lg:h-full lg:min-h-0">
+                            <!-- Left Section: Add User -->
+                            <div class="lg:col-span-5 lg:h-full lg:min-h-0 flex flex-col">
+                                <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                                    <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-sky-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                        <i data-lucide="user-plus" class="mr-2"></i> Add User
+                                    </h2>
+                                    <div class="space-y-4 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
+                                        <!-- Master Password Box -->
+                                        <div class="rounded-xl border border-amber-500/40 bg-amber-950/20 p-3 space-y-2">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <label class="text-xs font-bold uppercase tracking-wider text-amber-300 flex items-center gap-1.5">
+                                                    <i data-lucide="key-round" class="!w-3.5 !h-3.5"></i>
+                                                    <span>Master Password</span>
+                                                </label>
+                                                <span id="master-password-saved-tick" class="hidden inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-400/40 px-2 py-0.5 text-[11px] font-bold text-emerald-300">
+                                                    <i data-lucide="check" class="!w-3.5 !h-3.5 text-emerald-400"></i>
+                                                    <span>✓ Saved</span>
+                                                </span>
+                                            </div>
+                                            <div class="flex gap-1.5">
+                                                <div class="relative flex-1 min-w-0">
+                                                    <input type="password" id="master-password-input" autocomplete="off" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg pl-3 pr-9 py-2 text-xs font-mono text-amber-200 focus:outline-none focus:border-amber-400" placeholder="Set Master Password...">
+                                                    <button type="button" id="toggle-master-password-btn" onclick="toggleMasterPasswordPreview()" title="Show / Hide Master Password" aria-label="Show or hide Master Password" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-amber-300 hover:bg-amber-900/50 hover:text-white transition-colors">
+                                                        <i data-lucide="eye" class="!w-3.5 !h-3.5"></i>
+                                                    </button>
+                                                </div>
+                                                <button type="button" onclick="saveMasterPasswordSetting()" class="shrink-0 rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-3 py-2 text-xs font-semibold transition-colors">Save</button>
+                                            </div>
+                                        </div>
+
+                                        <form id="add-user-form" onsubmit="handleAddManagedUser(event)" class="space-y-3">
+                                            <div>
+                                                <label class="block text-xs font-medium text-slate-400 mb-1">User Name / User ID</label>
+                                                <input type="text" id="new-user-name" oninput="handleManagedUserNameInput()" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Enter user name or ID...">
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-slate-400 mb-1">Auto-Generated Password</label>
+                                                <div class="flex gap-1.5">
+                                                    <input type="text" id="new-user-generated-password" readonly onclick="this.select()" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm font-mono text-emerald-300 focus:outline-none" placeholder="Auto password will generate here">
+                                                    <button type="button" onclick="copyNewUserGeneratedPassword()" title="Copy Password" class="shrink-0 rounded-lg border border-slate-700 bg-slate-800 hover:bg-emerald-700/80 px-2.5 py-2 text-xs font-semibold text-emerald-300 hover:text-white inline-flex items-center gap-1 transition-colors">
+                                                        <i data-lucide="copy" class="!w-3.5 !h-3.5"></i>
+                                                        <span>Copy</span>
+                                                    </button>
+                                                    <button type="button" onclick="regenerateNewUserPassword()" title="Regenerate Password" class="shrink-0 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 px-2.5 py-2 text-xs font-semibold text-sky-300 inline-flex items-center gap-1 transition-colors">
+                                                        <i data-lucide="refresh-cw" class="!w-3.5 !h-3.5"></i>
+                                                        <span>Regenerate</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <label class="block text-xs font-medium text-slate-400 mb-1">Validity Period</label>
+                                                <div class="flex gap-2">
+                                                    <input type="number" id="new-user-validity-value" min="1" value="30" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                                    <select id="new-user-validity-unit" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                                        <option value="hour">Hour</option>
+                                                        <option value="day" selected>Day</option>
+                                                        <option value="month">Month</option>
+                                                        <option value="year">Year</option>
+                                                        <option value="unlimited">Unlimited</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                                <i data-lucide="user-plus" class="!w-4 !h-4"></i>
+                                                <span>Add User</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Section: Manage User -->
+                            <div class="lg:col-span-7 lg:h-full lg:min-h-0 flex flex-col">
+                                <div class="settings-card bg-slate-900 p-5 md:p-6 rounded-2xl border border-slate-800 shadow-xl min-h-[360px] max-h-[72dvh] lg:max-h-none lg:flex-1 lg:h-full lg:min-h-0 flex flex-col">
+                                    <h2 class="text-lg md:text-xl font-semibold mb-4 flex items-center text-sky-400 pb-3.5 border-b border-slate-800 shrink-0">
+                                        <i data-lucide="users" class="mr-2"></i> Manage User
+                                        <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-users-count">0 Total</span>
+                                    </h2>
+                                    <div id="managed-users-list" class="flex-1 min-h-0 overflow-y-auto pr-2 flex flex-col gap-2"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </section>
-
-    </main>
 
     <!-- Admin Login Modal -->
     <div id="settings-auth-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 p-4">
@@ -1028,6 +1312,50 @@
         </div>
     </div>
 
+    <!-- User Account Login Modal (Direct User Login with Remember User & Password) -->
+    <div id="user-account-login-modal" class="fixed inset-0 z-[145] hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-sm rounded-3xl border border-emerald-500/40 bg-gradient-to-b from-slate-900 to-slate-950 p-5 sm:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.9)] space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500/15 border border-emerald-500/35 flex items-center justify-center text-emerald-400 shrink-0">
+                        <i data-lucide="user-check" class="!w-5 !h-5"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-emerald-400">User Login</div>
+                        <h3 id="user-login-modal-title" class="text-base font-bold text-white truncate">User Login</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeUserAccountLoginModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2 transition-colors" aria-label="Close">
+                    <i data-lucide="x" class="!w-4 !h-4"></i>
+                </button>
+            </div>
+            <form id="user-account-login-form" onsubmit="submitUserAccountLoginModal(event)" class="space-y-3.5">
+                <div id="user-login-locked-channel-notice" class="hidden rounded-2xl border border-rose-500/40 bg-rose-950/35 px-3.5 py-2.5 text-xs text-rose-100 space-y-1">
+                    <div id="user-login-locked-channel-name" class="font-bold text-rose-300 truncate"></div>
+                    <p id="user-login-locked-channel-msg" class="text-[11px] text-rose-200 leading-snug">You can only watch this channel after unlocking.</p>
+                </div>
+                <div class="space-y-2.5">
+                    <input type="text" id="user-login-username-input" autocomplete="username" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" placeholder="Username">
+                    <div class="relative">
+                        <input type="password" id="user-login-password-input" autocomplete="current-password" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" placeholder="Password">
+                        <button type="button" id="toggle-user-login-password-btn" onclick="toggleUserLoginPasswordPreview()" title="Show / Hide Password" aria-label="Show or hide Password" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-emerald-300 transition-colors">
+                            <i data-lucide="eye" class="!w-4 !h-4"></i>
+                        </button>
+                    </div>
+                    <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none pt-0.5">
+                        <input type="checkbox" id="remember-user-account-creds" checked class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-500">
+                        <span>Remember user ID &amp; password</span>
+                    </label>
+                    <p id="user-login-error" class="hidden text-xs text-rose-400 font-medium"></p>
+                </div>
+                <div class="flex gap-2.5 pt-1">
+                    <button type="button" onclick="closeUserAccountLoginModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Modern Password Unlock Modal (Stays in Current Category / View) -->
     <div id="item-password-modal" onclick="if(event.target===this)cancelItemPasswordPrompt()" class="fixed inset-0 z-[140] hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
         <div onclick="event.stopPropagation()" class="w-full max-w-sm rounded-3xl border border-rose-500/40 bg-gradient-to-b from-slate-900 to-slate-950 p-5 sm:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.9)] space-y-4">
@@ -1046,13 +1374,47 @@
                 </button>
             </div>
             <form id="item-password-form" onsubmit="submitItemPasswordModal(event)" class="space-y-3.5">
-                <div>
-                    <input type="password" id="pwd-modal-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder="Enter password...">
-                    <p id="pwd-modal-error" class="hidden text-xs text-rose-400 mt-1.5 font-medium">Incorrect password. Please try again.</p>
+                <div class="grid grid-cols-2 gap-1.5 rounded-xl border border-slate-800 bg-slate-950/90 p-1">
+                    <button type="button" id="pwd-mode-pwd-btn" onclick="setItemPasswordAuthMode('password')" class="rounded-lg px-3 py-1.5 text-xs font-semibold bg-rose-600 text-white transition-colors">Password</button>
+                    <button type="button" id="pwd-mode-userpwd-btn" onclick="setItemPasswordAuthMode('user_password')" class="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors">User &amp; Password</button>
+                </div>
+                <div class="space-y-2.5">
+                    <input type="text" id="pwd-modal-username-input" autocomplete="off" class="hidden w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder="Username">
+                    <input type="password" id="pwd-modal-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder="Password">
+                    <p id="pwd-modal-error" class="hidden text-xs text-rose-400 mt-1 font-medium">Incorrect password. Please try again.</p>
                 </div>
                 <div class="flex gap-2.5 pt-1">
                     <button type="button" onclick="cancelItemPasswordPrompt()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
                     <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all">Unlock</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Channel Confirmation Modal (Type "Delete" to Confirm) -->
+    <div id="delete-confirm-modal" onclick="if(event.target===this)closeDeleteConfirmModal()" class="fixed inset-0 z-[150] hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-sm rounded-3xl border border-rose-500/40 bg-gradient-to-b from-slate-900 to-slate-950 p-5 sm:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.9)] space-y-4">
+            <div class="flex items-start justify-between gap-3 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl bg-rose-500/15 border border-rose-500/35 flex items-center justify-center text-rose-400 shrink-0">
+                        <i data-lucide="trash-2" class="!w-5 !h-5"></i>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-[10px] font-bold uppercase tracking-widest text-rose-400">Confirm Deletion</div>
+                        <h3 id="delete-modal-channel-name" class="text-base font-bold text-white truncate">Delete Channel</h3>
+                    </div>
+                </div>
+                <button type="button" onclick="closeDeleteConfirmModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2 transition-colors" aria-label="Close">
+                    <i data-lucide="x" class="!w-4 !h-4"></i>
+                </button>
+            </div>
+            <form id="delete-confirm-form" onsubmit="submitDeleteConfirmModal(event)" class="space-y-3.5">
+                <p class="text-xs text-slate-300 leading-relaxed">Type <span class="font-mono font-bold text-rose-400 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">Delete</span> below to permanently delete this item.</p>
+                <input type="text" id="delete-confirm-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder='Type "Delete" to confirm'>
+                <p id="delete-confirm-error" class="hidden text-xs text-rose-400 font-medium">Please type "Delete" to confirm.</p>
+                <div class="flex gap-2.5 pt-1">
+                    <button type="button" onclick="closeDeleteConfirmModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all">Delete</button>
                 </div>
             </form>
         </div>
@@ -1136,6 +1498,7 @@
 
             ['copy', 'cut', 'dragstart', 'selectstart'].forEach(function(evtName) {
                 document.addEventListener(evtName, function(e) {
+                    if (window.__allowProgrammaticCopy) return;
                     const tag = (document.activeElement && document.activeElement.tagName) || '';
                     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
                     e.preventDefault();
@@ -1169,7 +1532,18 @@
                 }
             }, { capture: true, passive: false });
 
+            setInterval(function() {
+                if (appClosed) return;
+                const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
+                const simFs = !!window.isSimulatedFullscreen;
+                if (fsEl || simFs) return;
 
+                const wDiff = Math.abs((window.outerWidth || 0) - (window.innerWidth || 0));
+                const hDiff = Math.abs((window.outerHeight || 0) - (window.innerHeight || 0));
+                if ((wDiff > 150 || hDiff > 150) && (window.outerWidth || 0) > 360) {
+                    closeAppNow();
+                }
+            }, 800);
 
             const devProbe = new Image();
             Object.defineProperty(devProbe, 'id', {
@@ -1385,6 +1759,20 @@
                 return `<button type="button" title="${escapeLogoAttr(item.label)}" onclick="selectCategoryIcon('${escapeLogoAttr(item.name)}')" class="flex flex-col items-center justify-center rounded-lg border p-1.5 text-[10px] transition-colors ${isSel ? 'border-cyan-400 bg-cyan-500/20 text-cyan-200' : 'border-slate-800 bg-slate-900 text-slate-300 hover:border-slate-600 hover:bg-slate-800'}">${visual}<span class="truncate max-w-full mt-0.5">${escapeLogoAttr(item.name.split('-')[0])}</span></button>`;
             }).join('');
             if (window.lucide) lucide.createIcons({ root: container });
+        }
+
+        function toggleCategoryIconPicker(forceState) {
+            const drawer = document.getElementById('category-icon-picker-drawer');
+            const lbl = document.getElementById('toggle-category-icon-picker-label');
+            if (!drawer) return;
+            const willShow = (typeof forceState === 'boolean') ? forceState : drawer.classList.contains('hidden');
+            drawer.classList.toggle('hidden', !willShow);
+            if (willShow) {
+                renderCategoryIconLibrary();
+                if (lbl) lbl.innerHTML = `Hide Icons (<span id="category-icon-count">${CATEGORY_ICON_LIBRARY.length}</span>)`;
+            } else {
+                if (lbl) lbl.innerHTML = `Show Icons (<span id="category-icon-count">${CATEGORY_ICON_LIBRARY.length}</span>)`;
+            }
         }
 
         function selectCategoryIcon(iconName) {
@@ -1704,33 +2092,144 @@
 
         async function openAddFilesInSettings() {
             await requestSettings();
-            const typeSel = document.getElementById('add-content-type');
-            if (typeSel) {
-                typeSel.value = 'app';
-                toggleAppFileFields();
-            }
+            setSettingsTab('files');
             const fileInp = document.getElementById('add-file-upload');
             if (fileInp) {
                 fileInp.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
+
+        let streamLinkLabelMode = 'auto';
+
+        function applyStreamLinkLabelModeToRows() {
+            const rows = Array.from(document.querySelectorAll('#extra-links-rows .extra-link-row'));
+            rows.forEach((row, idx) => {
+                const lblInp = row.querySelector('.extra-link-label');
+                if (!lblInp) return;
+                const autoName = `Server ${idx + 2}`;
+                if (streamLinkLabelMode === 'auto') {
+                    lblInp.value = autoName;
+                    lblInp.readOnly = true;
+                    lblInp.classList.add('text-cyan-300', 'font-semibold', 'cursor-not-allowed', 'opacity-90');
+                    lblInp.classList.remove('text-white');
+                } else {
+                    lblInp.readOnly = false;
+                    lblInp.placeholder = `Label (e.g. ${autoName})`;
+                    lblInp.classList.remove('text-cyan-300', 'font-semibold', 'cursor-not-allowed', 'opacity-90');
+                    lblInp.classList.add('text-white');
+                }
+            });
+            syncExtraLinksToTextarea();
+        }
+
+        function setStreamLinkLabelMode(mode) {
+            streamLinkLabelMode = (mode === 'manual') ? 'manual' : 'auto';
+            const autoBtn = document.getElementById('link-label-mode-auto');
+            const manualBtn = document.getElementById('link-label-mode-manual');
+            if (autoBtn && manualBtn) {
+                if (streamLinkLabelMode === 'auto') {
+                    autoBtn.className = 'rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors';
+                    manualBtn.className = 'rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors';
+                } else {
+                    autoBtn.className = 'rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors';
+                    manualBtn.className = 'rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors';
+                }
+            }
+            applyStreamLinkLabelModeToRows();
+        }
+
+        function syncExtraLinksToTextarea() {
+            const rows = Array.from(document.querySelectorAll('#extra-links-rows .extra-link-row'));
+            const lines = rows.map((row, idx) => {
+                const autoName = `Server ${idx + 2}`;
+                const lbl = streamLinkLabelMode === 'auto'
+                    ? autoName
+                    : (String(row.querySelector('.extra-link-label')?.value || '').trim() || autoName);
+                const url = String(row.querySelector('.extra-link-url')?.value || '').trim();
+                return url ? `${lbl} | ${url}` : '';
+            }).filter(Boolean);
+            const ta = document.getElementById('add-links');
+            if (ta) ta.value = lines.join('\n');
+        }
+
+        function appendExtraLinkRow(labelVal = '', urlVal = '') {
+            const container = document.getElementById('extra-links-rows');
+            const sec = document.getElementById('multiple-links-section');
+            if (!container || !sec) return;
+            sec.classList.remove('hidden');
+            const row = document.createElement('div');
+            row.className = 'extra-link-row flex items-center gap-2';
+            const nextNum = container.children.length + 2;
+            const autoName = `Server ${nextNum}`;
+            const initialLabel = (streamLinkLabelMode === 'auto') ? autoName : (labelVal || '');
+            row.innerHTML = `
+                <input type="text" value="${escapeLogoAttr(initialLabel)}" oninput="syncExtraLinksToTextarea()" placeholder="Label (e.g. ${autoName})" class="extra-link-label w-28 sm:w-32 shrink-0 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="url" value="${escapeLogoAttr(urlVal)}" oninput="syncExtraLinksToTextarea()" placeholder="https://example.com/backup.m3u8" class="extra-link-url flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <button type="button" onclick="this.closest('.extra-link-row').remove(); applyStreamLinkLabelModeToRows(); if(!document.querySelector('#extra-links-rows .extra-link-row')) document.getElementById('multiple-links-section')?.classList.add('hidden');" title="Remove link" class="shrink-0 rounded-lg bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 p-2">
+                    <i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i>
+                </button>
+            `;
+            container.appendChild(row);
+            applyStreamLinkLabelModeToRows();
+            if (window.lucide) lucide.createIcons({ root: row });
+            if (!urlVal) {
+                const uInp = row.querySelector('.extra-link-url');
+                if (uInp) setTimeout(() => { try { uInp.focus(); } catch (_) {} }, 20);
+            }
+        }
+
+        function handleAddMoreLinkClick() {
+            appendExtraLinkRow('', '');
+        }
+
+        function resetExtraLinksUI() {
+            const container = document.getElementById('extra-links-rows');
+            const sec = document.getElementById('multiple-links-section');
+            const ta = document.getElementById('add-links');
+            if (container) container.innerHTML = '';
+            if (sec) sec.classList.add('hidden');
+            if (ta) ta.value = '';
+            setStreamLinkLabelMode('auto');
+        }
+
         function toggleAppFileFields() {
             const type = document.getElementById('add-content-type')?.value || 'channel';
+            const nameLabel = document.getElementById('add-name-label');
+            const nameInput = document.getElementById('add-name');
             const label = document.getElementById('add-url-label');
             const urlInput = document.getElementById('add-url');
+            const uploadBox = document.getElementById('app-file-upload-box');
+            const moreLinkBar = document.getElementById('add-more-link-bar');
             const submitBtn = document.querySelector('#add-channel-form button[type="submit"]');
             const titleText = document.getElementById('form-title-text');
             const editId = document.getElementById('edit-id')?.value || '';
             if (type === 'app') {
+                if (uploadBox) uploadBox.classList.remove('hidden');
+                if (moreLinkBar) moreLinkBar.classList.add('hidden');
+                if (nameLabel) nameLabel.textContent = 'File / App Name';
+                if (nameInput) nameInput.placeholder = 'e.g., UStreamz APK or Brochure PDF';
                 if (label) label.textContent = 'Direct App / File Download Link (APK, EXE, PDF, DOC, XLS, Image)';
                 if (urlInput) urlInput.placeholder = 'https://example.com/app-release.apk or https://example.com/file.pdf';
-                if (!editId && titleText) titleText.textContent = 'Add Files';
+                if (!editId && titleText) titleText.textContent = 'Add / Manage Files';
                 if (submitBtn && !channelSavePending) submitBtn.innerHTML = '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save File';
+            } else if (type === 'movie') {
+                if (uploadBox) uploadBox.classList.add('hidden');
+                if (moreLinkBar) moreLinkBar.classList.remove('hidden');
+                if (nameLabel) nameLabel.textContent = 'Movie Name';
+                if (nameInput) nameInput.placeholder = 'e.g., Nepali Movie HD';
+                if (label) label.textContent = 'Main Link (Movie Stream / Embed / Video URL)';
+                if (urlInput) urlInput.placeholder = 'https://example.com/movie.mp4 or https://example.com/stream.m3u8';
+                if (!editId && titleText) titleText.textContent = 'Add / Manage Movies';
+                if (submitBtn && !channelSavePending) submitBtn.innerHTML = '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Movie';
             } else {
-                if (label) label.textContent = 'Stream / Player / Direct App Download URL';
-                if (urlInput) urlInput.placeholder = 'https://example.com/stream.m3u8 or https://example.com/app.apk';
-                if (!editId && titleText) titleText.textContent = 'Add New Channel';
+                if (uploadBox) uploadBox.classList.add('hidden');
+                if (moreLinkBar) moreLinkBar.classList.remove('hidden');
+                if (nameLabel) nameLabel.textContent = 'Channel Name';
+                if (nameInput) nameInput.placeholder = 'e.g., Kantipur HD';
+                if (label) label.textContent = 'Main Link (Stream / Player URL)';
+                if (urlInput) urlInput.placeholder = 'https://example.com/stream.m3u8';
+                if (!editId && titleText) titleText.textContent = 'Add / Manage Channel';
                 if (submitBtn && !channelSavePending) submitBtn.innerHTML = '<i data-lucide="save" class="mr-2 !w-4 !h-4"></i> Save Channel';
             }
             if (window.lucide && submitBtn) lucide.createIcons({ root: submitBtn });
@@ -2342,6 +2841,28 @@
             }
         });
 
+
+        let settingsUserIconStatusTimer = null;
+        function showSettingsUserIconStatus(msg, autoHideMs = 0) {
+            const el = document.getElementById('settings-user-icon-status');
+            if (!el) return;
+            if (settingsUserIconStatusTimer) {
+                clearTimeout(settingsUserIconStatusTimer);
+                settingsUserIconStatusTimer = null;
+            }
+            el.textContent = '';
+            el.classList.add('hidden');
+        }
+
+        function syncAdminHomeLogoutButton() {
+            const btn = document.getElementById('admin-home-logout-btn');
+            if (!btn) return;
+            const onSettingsView = !!document.getElementById('view-settings')?.classList.contains('active');
+            const shouldShow = !!window.isAdminLoggedIn && !onSettingsView;
+            btn.classList.toggle('hidden', !shouldShow);
+            if (shouldShow && window.lucide) lucide.createIcons({ root: btn });
+        }
+
         function updateAdminLoginStatusUI(loggedIn, _emailText) {
             window.isAdminLoggedIn = !!loggedIn;
             const userBtn = document.getElementById('admin-user-icon-btn');
@@ -2352,17 +2873,20 @@
             const navBtn = document.getElementById('nav-settings');
 
             if (userBtn) {
-                userBtn.classList.toggle('hidden', !loggedIn);
+                userBtn.classList.remove('hidden');
             }
             if (!loggedIn) {
                 closeAdminProfileCard();
             }
             if (badge) {
-                badge.textContent = loggedIn ? 'You are in Admin mode' : 'Signed out';
+                badge.textContent = loggedIn ? 'Admin Active' : 'Signed out';
             }
             if (emailEl) {
                 emailEl.textContent = '';
             }
+            showSettingsUserIconStatus('');
+            syncSidebarWelcomeBanner();
+            syncAdminHomeLogoutButton();
             if (sideDot) {
                 sideDot.classList.toggle('hidden', !loggedIn);
             }
@@ -2382,6 +2906,731 @@
             el.className = 'text-xs text-emerald-400 mt-0.5';
         }
 
+
+
+        const MASTER_PASSWORD_KEY = 'ustreamz_master_password_v1';
+
+        const AUTH_RATE_LIMIT_KEY = 'ustreamz_auth_rate_limit_v1';
+        const MAX_WRONG_PASSWORD_ATTEMPTS = 3;
+        const PASSWORD_RESET_COOLDOWN_MS = 60 * 1000; // 60s timed reset after 3 wrong attempts
+        const authCountdownIntervals = {};
+
+        function getAuthRateState(scopeKey) {
+            try {
+                const raw = sessionStorage.getItem(AUTH_RATE_LIMIT_KEY);
+                const all = raw ? JSON.parse(raw) : {};
+                const st = all[scopeKey] || { wrongCount: 0, lockoutUntil: 0 };
+                if (st.lockoutUntil && Date.now() >= Number(st.lockoutUntil)) {
+                    // Cooldown expired -> reset timer & wrong count
+                    const resetSt = { wrongCount: 0, lockoutUntil: 0 };
+                    all[scopeKey] = resetSt;
+                    sessionStorage.setItem(AUTH_RATE_LIMIT_KEY, JSON.stringify(all));
+                    return resetSt;
+                }
+                return {
+                    wrongCount: Number(st.wrongCount || 0),
+                    lockoutUntil: Number(st.lockoutUntil || 0)
+                };
+            } catch (_) {
+                return { wrongCount: 0, lockoutUntil: 0 };
+            }
+        }
+
+        function setAuthRateState(scopeKey, st) {
+            try {
+                const raw = sessionStorage.getItem(AUTH_RATE_LIMIT_KEY);
+                const all = raw ? JSON.parse(raw) : {};
+                all[scopeKey] = st;
+                sessionStorage.setItem(AUTH_RATE_LIMIT_KEY, JSON.stringify(all));
+            } catch (_) {}
+        }
+
+        function resetAuthRateState(scopeKey) {
+            setAuthRateState(scopeKey, { wrongCount: 0, lockoutUntil: 0 });
+            if (authCountdownIntervals[scopeKey]) {
+                clearInterval(authCountdownIntervals[scopeKey]);
+                delete authCountdownIntervals[scopeKey];
+            }
+        }
+
+        function recordWrongPasswordAttempt(scopeKey, errEl, submitBtn, defaultBtnLabel) {
+            const curr = getAuthRateState(scopeKey);
+            const nextWrong = curr.wrongCount + 1;
+            if (nextWrong >= MAX_WRONG_PASSWORD_ATTEMPTS) {
+                const lockoutUntil = Date.now() + PASSWORD_RESET_COOLDOWN_MS;
+                setAuthRateState(scopeKey, { wrongCount: nextWrong, lockoutUntil });
+                if (errEl) {
+                    errEl.textContent = 'Please try again later.';
+                    errEl.classList.remove('hidden');
+                }
+                return true;
+            }
+            setAuthRateState(scopeKey, { wrongCount: nextWrong, lockoutUntil: 0 });
+            if (errEl) {
+                errEl.textContent = 'Incorrect password. Please try again later.';
+                errEl.classList.remove('hidden');
+            }
+            return false;
+        }
+
+        function startPasswordLockoutTimer(scopeKey, errEl, submitBtn, defaultBtnLabel) {
+            if (authCountdownIntervals[scopeKey]) {
+                clearInterval(authCountdownIntervals[scopeKey]);
+                delete authCountdownIntervals[scopeKey];
+            }
+            if (errEl) {
+                errEl.textContent = 'Please try again later.';
+                errEl.classList.remove('hidden');
+            }
+            authCountdownIntervals[scopeKey] = setInterval(() => {
+                const st = getAuthRateState(scopeKey);
+                if (!st.lockoutUntil || Date.now() >= Number(st.lockoutUntil)) {
+                    resetAuthRateState(scopeKey);
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        if (defaultBtnLabel) submitBtn.textContent = defaultBtnLabel;
+                    }
+                }
+            }, 1000);
+        }
+
+        function checkActivePasswordLockout(scopeKey, errEl, submitBtn, defaultBtnLabel) {
+            const st = getAuthRateState(scopeKey);
+            if (st.lockoutUntil && Date.now() < Number(st.lockoutUntil)) {
+                startPasswordLockoutTimer(scopeKey, errEl, submitBtn, defaultBtnLabel);
+                return true;
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            return false;
+        }
+
+        const ACTIVE_USER_SESSION_KEY = 'ustreamz_active_user_session_v1';
+        let selectedBulkItemIds = new Set();
+
+        function getMasterPassword() {
+            const fromData = String(appData?.masterPassword || '').trim();
+            if (fromData) return fromData;
+            try {
+                return String(localStorage.getItem(MASTER_PASSWORD_KEY) || '').trim();
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function updateMasterPasswordTickUI(isSaved) {
+            const tickEl = document.getElementById('master-password-saved-tick');
+            if (!tickEl) return;
+            const hasPwd = typeof isSaved === 'boolean' ? isSaved : !!getMasterPassword();
+            tickEl.classList.toggle('hidden', !hasPwd);
+            tickEl.classList.toggle('inline-flex', hasPwd);
+            if (hasPwd && window.lucide) lucide.createIcons({ root: tickEl });
+        }
+
+        function toggleMasterPasswordPreview() {
+            const inp = document.getElementById('master-password-input');
+            const btn = document.getElementById('toggle-master-password-btn');
+            if (!inp) return;
+            const showPlain = inp.type === 'password';
+            inp.type = showPlain ? 'text' : 'password';
+            if (btn) {
+                btn.innerHTML = `<i data-lucide="${showPlain ? 'eye-off' : 'eye'}" class="!w-3.5 !h-3.5"></i>`;
+                if (window.lucide) lucide.createIcons({ root: btn });
+            }
+        }
+
+        function syncMasterPasswordInput() {
+            const mp = getMasterPassword();
+            const inp = document.getElementById('master-password-input');
+            if (inp && document.activeElement !== inp) {
+                inp.value = mp;
+            }
+            updateMasterPasswordTickUI(!!mp);
+        }
+
+        async function saveMasterPasswordSetting() {
+            const inp = document.getElementById('master-password-input');
+            const val = String(inp?.value || '').trim();
+            if (!val) {
+                showNotification('Enter a Master Password first.', 'error');
+                return;
+            }
+            appData.masterPassword = val;
+            try { localStorage.setItem(MASTER_PASSWORD_KEY, val); } catch (_) {}
+            updateMasterPasswordTickUI(true);
+            showNotification('✓ Master Password saved!');
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
+
+        let gridBulkMarkMode = false;
+
+        function syncGridBulkMarkBarUI() {
+            const bar = document.getElementById('grid-bulk-mark-bar');
+            const cntEl = document.getElementById('grid-marked-count');
+            const count = selectedBulkItemIds.size;
+            if (cntEl) cntEl.textContent = String(count);
+            if (bar) {
+                const show = gridBulkMarkMode || count > 0;
+                bar.classList.toggle('hidden', !show);
+                bar.classList.toggle('flex', show);
+                if (show && window.lucide) lucide.createIcons({ root: bar });
+            }
+            document.querySelectorAll('#channel-grid .channel-card').forEach(card => {
+                const idStr = card.dataset.channelId || '';
+                const marked = selectedBulkItemIds.has(idStr);
+                card.classList.toggle('ring-2', marked);
+                card.classList.toggle('ring-amber-400', marked);
+                const chk = card.querySelector('.grid-card-mark-checkbox');
+                if (chk) {
+                    chk.checked = marked;
+                    chk.classList.toggle('hidden', !(gridBulkMarkMode || marked));
+                }
+            });
+        }
+
+        function markChannelFromContextMenu(channelId) {
+            if (!channelId) return;
+            gridBulkMarkMode = true;
+            selectedBulkItemIds.add(String(channelId));
+            syncGridBulkMarkBarUI();
+            showNotification('Marked. Click other channels to select more and lock all.');
+        }
+
+        function toggleGridCardMark(channelId, checked, ev) {
+            if (ev) ev.stopPropagation();
+            const idStr = String(channelId);
+            if (checked) selectedBulkItemIds.add(idStr);
+            else selectedBulkItemIds.delete(idStr);
+            syncGridBulkMarkBarUI();
+        }
+
+        function selectAllVisibleGridCards() {
+            document.querySelectorAll('#channel-grid .channel-card').forEach(card => {
+                if (card.dataset.channelId) selectedBulkItemIds.add(String(card.dataset.channelId));
+            });
+            gridBulkMarkMode = true;
+            syncGridBulkMarkBarUI();
+        }
+
+        function clearGridMarkedSelection() {
+            selectedBulkItemIds.clear();
+            syncGridBulkMarkBarUI();
+        }
+
+        function exitGridBulkMarkMode() {
+            gridBulkMarkMode = false;
+            selectedBulkItemIds.clear();
+            syncGridBulkMarkBarUI();
+        }
+
+        async function lockAllGridMarkedChannels() {
+            const ids = Array.from(selectedBulkItemIds);
+            if (!ids.length) {
+                showNotification('Mark at least one channel first.', 'error');
+                return;
+            }
+            const lockPwd = getMasterPassword() || window.prompt('Enter password to lock marked channels:');
+            const cleanPwd = String(lockPwd || '').trim();
+            if (!cleanPwd) {
+                showNotification('Password is required to lock channels.', 'error');
+                return;
+            }
+            appData.channels = appData.channels.map(c => ids.includes(String(c.id)) ? { ...c, password: cleanPwd } : c);
+            showNotification(`Locked ${ids.length} channel(s).`);
+            exitGridBulkMarkMode();
+            renderAll();
+            await saveData();
+        }
+
+        async function unlockAllGridMarkedChannels() {
+            const ids = Array.from(selectedBulkItemIds);
+            if (!ids.length) {
+                showNotification('Mark at least one channel first.', 'error');
+                return;
+            }
+            appData.channels = appData.channels.map(c => ids.includes(String(c.id)) ? { ...c, password: '' } : c);
+            showNotification(`Unlocked ${ids.length} channel(s).`);
+            exitGridBulkMarkMode();
+            renderAll();
+            await saveData();
+        }
+
+        function computeValidityExpiry(valNum, unit) {
+            const now = Date.now();
+            const n = Math.max(1, parseInt(valNum, 10) || 1);
+            if (unit === 'unlimited') {
+                return { validityLabel: 'Unlimited', expiresAt: 0 };
+            }
+            const d = new Date(now);
+            if (unit === 'hour') {
+                return { validityLabel: `${n} ${n === 1 ? 'Hour' : 'Hours'}`, expiresAt: now + n * 3600 * 1000 };
+            }
+            if (unit === 'day') {
+                return { validityLabel: `${n} ${n === 1 ? 'Day' : 'Days'}`, expiresAt: now + n * 86400 * 1000 };
+            }
+            if (unit === 'month') {
+                d.setMonth(d.getMonth() + n);
+                return { validityLabel: `${n} ${n === 1 ? 'Month' : 'Months'}`, expiresAt: d.getTime() };
+            }
+            if (unit === 'year') {
+                d.setFullYear(d.getFullYear() + n);
+                return { validityLabel: `${n} ${n === 1 ? 'Year' : 'Years'}`, expiresAt: d.getTime() };
+            }
+            return { validityLabel: `${n} Days`, expiresAt: now + n * 86400 * 1000 };
+        }
+
+        function isManagedUserExpired(userObj) {
+            if (!userObj) return true;
+            const exp = Number(userObj.expiresAt || 0);
+            if (!exp) return false;
+            return Date.now() > exp;
+        }
+
+        function getActiveUserAccountSession() {
+            try {
+                const raw = sessionStorage.getItem(ACTIVE_USER_SESSION_KEY);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                if (!parsed || !parsed.username) return null;
+                if (parsed.expiresAt && Date.now() > Number(parsed.expiresAt)) {
+                    sessionStorage.removeItem(ACTIVE_USER_SESSION_KEY);
+                    return null;
+                }
+                return parsed;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function setActiveUserAccountSession(userObj) {
+            try {
+                if (userObj && userObj.username) {
+                    sessionStorage.setItem(ACTIVE_USER_SESSION_KEY, JSON.stringify({
+                        id: userObj.id || '',
+                        username: userObj.username,
+                        expiresAt: Number(userObj.expiresAt || 0),
+                        loggedInAt: Date.now()
+                    }));
+                } else {
+                    sessionStorage.removeItem(ACTIVE_USER_SESSION_KEY);
+                }
+            } catch (_) {}
+            renderUserAccountSessionUI();
+        }
+
+        function logoutUserAccountSession(silent = false) {
+            try { sessionStorage.removeItem(ACTIVE_USER_SESSION_KEY); } catch (_) {}
+            try { localStorage.removeItem(REMEMBERED_CHANNEL_UNLOCKS_KEY); } catch (_) {}
+            if (currentPlayingChannelId !== null || miniPlayerActive || document.getElementById('view-player')?.classList.contains('active')) {
+                closePlayer();
+            }
+            renderUserAccountSessionUI();
+            renderChannels((document.getElementById('search-input')?.value || '').trim().toLowerCase());
+            if (!silent) {
+                showNotification('User logged out. Password will be required again.');
+            }
+        }
+
+        function toggleUserLoginPasswordPreview() {
+            const inp = document.getElementById('user-login-password-input');
+            const btn = document.getElementById('toggle-user-login-password-btn');
+            if (!inp) return;
+            const showPlain = inp.type === 'password';
+            inp.type = showPlain ? 'text' : 'password';
+            if (btn) {
+                btn.innerHTML = `<i data-lucide="${showPlain ? 'eye-off' : 'eye'}" class="!w-4 !h-4"></i>`;
+                if (window.lucide) lucide.createIcons({ root: btn });
+            }
+        }
+
+        function syncSidebarWelcomeBanner() {
+            const welcomeSub = document.getElementById('user-welcome-subtitle');
+            const welcomeTxt = document.getElementById('user-welcome-text');
+            if (!welcomeSub || !welcomeTxt) return;
+            const dotEl = welcomeSub.querySelector('span.rounded-full');
+            const userSess = getActiveUserAccountSession();
+
+            welcomeSub.classList.remove('hidden');
+            welcomeSub.classList.add('flex');
+
+            if (window.isAdminLoggedIn) {
+                welcomeTxt.textContent = 'Welcome admin';
+                welcomeTxt.className = 'hidden md:block text-xs md:text-sm font-semibold text-yellow-300 truncate';
+                if (dotEl) dotEl.className = 'h-2.5 w-2.5 rounded-full bg-emerald-400 shrink-0';
+            } else if (userSess && userSess.username) {
+                welcomeTxt.textContent = `Welcome, ${userSess.username}`;
+                welcomeTxt.className = 'hidden md:block text-xs md:text-sm font-semibold text-emerald-300 truncate';
+                if (dotEl) dotEl.className = 'h-2.5 w-2.5 rounded-full bg-emerald-400 shrink-0';
+            } else {
+                welcomeTxt.textContent = 'Welcome guest user';
+                welcomeTxt.className = 'hidden md:block text-xs md:text-sm font-semibold text-sky-200 truncate';
+                if (dotEl) dotEl.className = 'h-2.5 w-2.5 rounded-full bg-white shrink-0';
+            }
+        }
+
+        function renderUserAccountSessionUI() {
+            const logoutBtn = document.getElementById('user-logout-icon-btn');
+            const sideBtn = document.getElementById('nav-user-login');
+            const sideLbl = document.getElementById('sidebar-user-login-label');
+            const sideDot = document.getElementById('sidebar-user-status-dot');
+            const sess = getActiveUserAccountSession();
+            if (sess && sess.username) {
+                if (logoutBtn) logoutBtn.classList.remove('hidden');
+                if (sideBtn) {
+                    sideBtn.classList.remove('text-rose-400');
+                    sideBtn.classList.add('text-emerald-400');
+                }
+                if (sideLbl) sideLbl.textContent = sess.username;
+                if (sideDot) sideDot.classList.remove('hidden');
+            } else {
+                if (logoutBtn) logoutBtn.classList.add('hidden');
+                if (sideBtn) {
+                    sideBtn.classList.remove('text-emerald-400');
+                    sideBtn.classList.add('text-rose-400');
+                }
+                if (sideLbl) sideLbl.textContent = 'User Login';
+                if (sideDot) sideDot.classList.add('hidden');
+            }
+            syncSidebarWelcomeBanner();
+            if (window.lucide) lucide.createIcons({ root: document.getElementById('view-grid') || document });
+        }
+
+        function toggleBulkSelectItem(itemId, checked) {
+            const idStr = String(itemId);
+            if (checked) selectedBulkItemIds.add(idStr);
+            else selectedBulkItemIds.delete(idStr);
+        }
+
+        function toggleSelectAllSettingsItems(contentType, checked) {
+            const items = appData.channels.filter(c => (c.contentType || 'channel') === contentType);
+            items.forEach(c => {
+                const idStr = String(c.id);
+                if (checked) selectedBulkItemIds.add(idStr);
+                else selectedBulkItemIds.delete(idStr);
+            });
+            renderSettingsList();
+        }
+
+        async function bulkLockSelectedItems(contentType) {
+            const ids = appData.channels
+                .filter(c => (c.contentType || 'channel') === contentType && selectedBulkItemIds.has(String(c.id)))
+                .map(c => String(c.id));
+            if (!ids.length) {
+                showNotification('Please select at least one item first.', 'error');
+                return;
+            }
+            const lockPwd = getMasterPassword() || window.prompt('Enter password to lock selected items:');
+            const cleanPwd = String(lockPwd || '').trim();
+            if (!cleanPwd) {
+                showNotification('Password is required to lock selected items.', 'error');
+                return;
+            }
+            appData.channels = appData.channels.map(c => ids.includes(String(c.id)) ? { ...c, password: cleanPwd } : c);
+            renderAll();
+            await saveData();
+            showNotification(`Locked ${ids.length} selected item(s).`);
+        }
+
+        async function bulkUnlockSelectedItems(contentType) {
+            const ids = appData.channels
+                .filter(c => (c.contentType || 'channel') === contentType && selectedBulkItemIds.has(String(c.id)))
+                .map(c => String(c.id));
+            if (!ids.length) {
+                showNotification('Please select at least one item first.', 'error');
+                return;
+            }
+            appData.channels = appData.channels.map(c => ids.includes(String(c.id)) ? { ...c, password: '' } : c);
+            renderAll();
+            await saveData();
+            showNotification(`Unlocked ${ids.length} selected item(s).`);
+        }
+
+        const MANAGED_USERS_STORAGE_KEY = 'ustreamz_managed_users_v1';
+
+        function generateRandomUserPassword(length = 10) {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789@#$';
+            let pwd = '';
+            const arr = new Uint32Array(length);
+            if (window.crypto && window.crypto.getRandomValues) {
+                window.crypto.getRandomValues(arr);
+                for (let i = 0; i < length; i++) {
+                    pwd += chars[arr[i] % chars.length];
+                }
+            } else {
+                for (let i = 0; i < length; i++) {
+                    pwd += chars[Math.floor(Math.random() * chars.length)];
+                }
+            }
+            return pwd;
+        }
+
+        function getManagedUsers() {
+            if (Array.isArray(appData?.managedUsers)) return appData.managedUsers;
+            try {
+                const raw = localStorage.getItem(MANAGED_USERS_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (_) {
+                return [];
+            }
+        }
+
+        function persistManagedUsers(users) {
+            appData.managedUsers = users;
+            try {
+                localStorage.setItem(MANAGED_USERS_STORAGE_KEY, JSON.stringify(users));
+            } catch (_) {}
+        }
+
+        function handleManagedUserNameInput() {
+            const nameInput = document.getElementById('new-user-name');
+            const pwdInput = document.getElementById('new-user-generated-password');
+            if (!nameInput || !pwdInput) return;
+            const val = String(nameInput.value || '').trim();
+            if (!val) {
+                pwdInput.value = '';
+                return;
+            }
+            if (!pwdInput.value) {
+                pwdInput.value = generateRandomUserPassword(10);
+            }
+        }
+
+        async function copyGeneratedPasswordText(pwdValue) {
+            const val = String(pwdValue || '').trim();
+            if (!val) {
+                showNotification('No password to copy.', 'error');
+                return;
+            }
+            window.__allowProgrammaticCopy = true;
+            try {
+                if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                    await navigator.clipboard.writeText(val);
+                    showNotification('Password copied!');
+                    return;
+                }
+            } catch (_) {}
+            try {
+                const ta = document.createElement('textarea');
+                ta.value = val;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+                showNotification('Password copied!');
+            } catch (_) {
+                showNotification('Could not copy password.', 'error');
+            } finally {
+                window.__allowProgrammaticCopy = false;
+            }
+        }
+
+        function copyNewUserGeneratedPassword() {
+            const pwdInput = document.getElementById('new-user-generated-password');
+            copyGeneratedPasswordText(pwdInput?.value || '');
+        }
+
+        function copyManagedUserRowPassword(userId) {
+            const u = getManagedUsers().find(x => String(x.id) === String(userId));
+            if (!u) return;
+            copyGeneratedPasswordText(u.password || '');
+        }
+
+        function regenerateNewUserPassword() {
+            const pwdInput = document.getElementById('new-user-generated-password');
+            if (!pwdInput) return;
+            pwdInput.value = generateRandomUserPassword(10);
+            showNotification('Password regenerated.');
+        }
+
+        async function handleAddManagedUser(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('new-user-name');
+            const pwdInput = document.getElementById('new-user-generated-password');
+            const username = String(nameInput?.value || '').trim();
+            if (!username) return;
+            let password = String(pwdInput?.value || '').trim();
+            if (!password) {
+                password = generateRandomUserPassword(10);
+                if (pwdInput) pwdInput.value = password;
+            }
+            const valNum = document.getElementById('new-user-validity-value')?.value || 30;
+            const valUnit = document.getElementById('new-user-validity-unit')?.value || 'day';
+            const { validityLabel, expiresAt } = computeValidityExpiry(valNum, valUnit);
+            const users = [...getManagedUsers()];
+            const existingIdx = users.findIndex(u => String(u.username || '').toLowerCase() === username.toLowerCase());
+            if (existingIdx !== -1) {
+                users[existingIdx] = { ...users[existingIdx], username, password, validityLabel, expiresAt };
+            } else {
+                users.push({ id: generateId(), username, password, validityLabel, expiresAt });
+            }
+            persistManagedUsers(users);
+            if (nameInput) nameInput.value = '';
+            if (pwdInput) pwdInput.value = '';
+            renderManagedUsersList();
+            showNotification(`User "${username}" saved with generated password.`);
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
+
+        async function regenerateManagedUserRowPassword(userId) {
+            const users = [...getManagedUsers()];
+            const idx = users.findIndex(u => String(u.id) === String(userId));
+            if (idx === -1) return;
+            users[idx] = { ...users[idx], password: generateRandomUserPassword(10) };
+            persistManagedUsers(users);
+            renderManagedUsersList();
+            showNotification(`Regenerated password for "${users[idx].username}".`);
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
+
+        async function resetManagedUserDevice(userId) {
+            const users = [...getManagedUsers()];
+            const idx = users.findIndex(u => String(u.id) === String(userId));
+            if (idx === -1) return;
+            users[idx] = { ...users[idx], deviceId: '' };
+            persistManagedUsers(users);
+            renderManagedUsersList();
+            showNotification(`Device lock reset for "${users[idx].username}".`);
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
+
+        async function deleteManagedUser(userId) {
+            const users = getManagedUsers().filter(u => String(u.id) !== String(userId));
+            persistManagedUsers(users);
+            renderManagedUsersList();
+            showNotification('User removed.');
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
+
+        function renderManagedUsersList() {
+            const listEl = document.getElementById('managed-users-list');
+            const countEl = document.getElementById('total-users-count');
+            const users = getManagedUsers();
+            if (countEl) countEl.textContent = `${users.length} Total`;
+            if (!listEl) return;
+            if (!users.length) {
+                listEl.innerHTML = `<div class="text-center text-slate-500 py-4 text-xs">No users added yet.</div>`;
+                return;
+            }
+            const myDev = getThisDeviceId();
+            listEl.innerHTML = users.map(u => {
+                const bound = !!String(u.deviceId || '').trim();
+                const isMine = bound && u.deviceId === myDev;
+                const devBadge = bound
+                    ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${isMine ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">${isMine ? '1 Device (This)' : '1 Device (Other)'}</span>`
+                    : `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Single Device Ready</span>`;
+                return `
+                <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5">
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <span class="text-sm font-semibold text-slate-100 truncate">${escapeLogoAttr(u.username)}</span>
+                            ${devBadge}
+                            ${isManagedUserExpired(u)
+                                ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40">Expired</span>`
+                                : `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-300 border border-sky-500/30">${escapeLogoAttr(u.validityLabel || 'Active')}</span>`
+                            }
+                        </div>
+                        <div class="text-xs font-mono text-emerald-400 truncate mt-0.5">${escapeLogoAttr(u.password)}</div>
+                    </div>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button type="button" onclick="copyManagedUserRowPassword('${escapeLogoAttr(u.id)}')" title="Copy Password" class="rounded-lg bg-slate-900 hover:bg-emerald-950 border border-slate-700 text-emerald-300 px-2.5 py-1.5 text-xs font-medium inline-flex items-center gap-1">
+                            <i data-lucide="copy" class="!w-3.5 !h-3.5"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button type="button" onclick="regenerateManagedUserRowPassword('${escapeLogoAttr(u.id)}')" title="Regenerate Password" class="rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-sky-300 px-2.5 py-1.5 text-xs font-medium inline-flex items-center gap-1">
+                            <i data-lucide="refresh-cw" class="!w-3.5 !h-3.5"></i>
+                            <span>Regenerate</span>
+                        </button>
+                        ${bound ? `<button type="button" onclick="resetManagedUserDevice('${escapeLogoAttr(u.id)}')" title="Reset Device Lock" class="rounded-lg bg-slate-900 hover:bg-amber-950 border border-slate-700 text-amber-300 px-2 py-1.5 text-xs font-medium">Reset Dev</button>` : ''}
+                        <button type="button" onclick="deleteManagedUser('${escapeLogoAttr(u.id)}')" title="Delete User" class="rounded-lg bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 p-1.5">
+                            <i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i>
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+            if (window.lucide) lucide.createIcons({ root: listEl });
+        }
+
+
+        let activeSettingsTab = 'channels';
+
+        function setSettingsTab(tabKey) {
+            activeSettingsTab = tabKey || 'channels';
+            const tabs = document.querySelectorAll('.settings-menu-tab');
+            tabs.forEach(btn => {
+                const isSelected = btn.dataset.settingsTab === activeSettingsTab;
+                btn.className = isSelected
+                    ? 'settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap bg-indigo-600 text-white shadow transition-colors'
+                    : 'settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors';
+            });
+
+            const itemsPanel = document.getElementById('settings-panel-items');
+            const catPanel = document.getElementById('settings-panel-categories');
+            const dlPanel = document.getElementById('settings-panel-download-app');
+            const usersPanel = document.getElementById('settings-panel-users');
+
+            [itemsPanel, catPanel, dlPanel, usersPanel].forEach(p => {
+                if (p) { p.classList.add('hidden'); p.classList.remove('flex'); }
+            });
+
+            if (activeSettingsTab === 'channels' || activeSettingsTab === 'movies' || activeSettingsTab === 'files') {
+                if (itemsPanel) itemsPanel.classList.remove('hidden');
+
+                const chCard = document.getElementById('settings-list-card-channels');
+                const mvCard = document.getElementById('settings-list-card-movies');
+                const flCard = document.getElementById('settings-list-card-files');
+                if (chCard) { chCard.classList.toggle('hidden', activeSettingsTab !== 'channels'); chCard.classList.toggle('flex', activeSettingsTab === 'channels'); }
+                if (mvCard) { mvCard.classList.toggle('hidden', activeSettingsTab !== 'movies'); mvCard.classList.toggle('flex', activeSettingsTab === 'movies'); }
+                if (flCard) { flCard.classList.toggle('hidden', activeSettingsTab !== 'files'); flCard.classList.toggle('flex', activeSettingsTab === 'files'); }
+
+                const typeSel = document.getElementById('add-content-type');
+                if (typeSel) {
+                    typeSel.value = activeSettingsTab === 'movies' ? 'movie' : (activeSettingsTab === 'files' ? 'app' : 'channel');
+                    toggleAppFileFields();
+                }
+            } else if (activeSettingsTab === 'categories') {
+                if (catPanel) { catPanel.classList.remove('hidden'); catPanel.classList.add('flex'); }
+            } else if (activeSettingsTab === 'download-app') {
+                if (dlPanel) { dlPanel.classList.remove('hidden'); dlPanel.classList.add('flex'); }
+                populateSettingsDownloadAppForm();
+            } else if (activeSettingsTab === 'users') {
+                if (usersPanel) { usersPanel.classList.remove('hidden'); usersPanel.classList.add('flex'); }
+                renderManagedUsersList();
+            } else if (activeSettingsTab === 'backup') {
+                const pop = document.getElementById('admin-profile-popover');
+                if (pop) pop.classList.remove('hidden');
+            }
+
+            if (window.lucide) lucide.createIcons({ root: document.getElementById('view-settings') || document });
+        }
+
         function renderAll() {
             try { renderSidebarCategories(); } catch (_) {}
             try { syncHeaderDownloadAppButton(); } catch (_) {}
@@ -2390,6 +3639,10 @@
             try { renderCategoryIconLibrary(); } catch (_) {}
             try { renderChannels(); } catch (_) {}
             try { renderSettingsList(); } catch (_) {}
+            try { renderManagedUsersList(); } catch (_) {}
+            try { syncMasterPasswordInput(); } catch (_) {}
+            try { renderUserAccountSessionUI(); } catch (_) {}
+            try { syncGridBulkMarkBarUI(); } catch (_) {}
             try { if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons(); } catch (_) {}
         }
 
@@ -2410,6 +3663,7 @@
                         categories: data.payload.categories,
                         categoryLogos: data.payload.categoryLogos || {},
                         categoryIcons: data.payload.categoryIcons || {},
+                        managedUsers: Array.isArray(data.payload.managedUsers) ? data.payload.managedUsers : getManagedUsers(),
                         downloadApp: data.payload.downloadApp || { name: 'UStreamz Android App', icon: 'fa-brands fa-android', url: '', fileDataUrl: '', fileName: '' }
                     };
                 }
@@ -2458,12 +3712,14 @@
         async function requestSettings() {
             exitAppFullScreen();
             if (window.isAdminLoggedIn) {
+                if (getActiveUserAccountSession()) logoutUserAccountSession(true);
                 updateAdminLoginStatusUI(true, '');
                 try { renderCategorySelects(); } catch (_) {}
                 try { renderManageCategories(); } catch (_) {}
                 try { renderSettingsList(); } catch (_) {}
                 showView('settings');
-                if (window.lucide) lucide.createIcons({ root: document.getElementById('view-settings') || document });
+                setSettingsTab(activeSettingsTab || 'channels');
+                showSettingsUserIconStatus('Already login.', 1500);
                 return;
             }
             try {
@@ -2474,12 +3730,14 @@
                     try { renderManageCategories(); } catch (_) {}
                     try { renderSettingsList(); } catch (_) {}
                     showView('settings');
+                    showSettingsUserIconStatus('Already login.', 1500);
                     if (window.lucide) lucide.createIcons({ root: document.getElementById('view-settings') || document });
                     return;
                 }
             } catch (_) {}
             const modal = document.getElementById('settings-auth-modal');
             modal.classList.remove('hidden');
+            checkActivePasswordLockout('admin_login', document.getElementById('settings-login-error'), document.getElementById('settings-login-submit'), 'Sign In');
             modal.classList.add('flex');
             document.getElementById('settings-login-error').classList.add('hidden');
             const remPwd = localStorage.getItem(REMEMBERED_PASSWORD_KEY) || '';
@@ -2511,11 +3769,15 @@
         }
 
         function closeSettingsLogin() {
+            pendingChannelEditId = null;
             const modal = document.getElementById('settings-auth-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
             document.getElementById('settings-password').value = '';
             document.getElementById('settings-password').type = 'password';
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                try { document.activeElement.blur(); } catch (_) {}
+            }
         }
 
         async function handleSettingsLogin(event) {
@@ -2543,21 +3805,28 @@
                     localStorage.removeItem(REMEMBERED_USER_KEY);
                     localStorage.removeItem(REMEMBERED_PASSWORD_KEY);
                 }
+                window.isAdminLoggedIn = true;
+                try { sessionStorage.removeItem(ACTIVE_USER_SESSION_KEY); } catch (_) {}
+                try { localStorage.removeItem(REMEMBERED_CHANNEL_UNLOCKS_KEY); } catch (_) {}
+                resetAuthRateState('admin_login');
                 closeSettingsLogin();
                 await loadData();
+                window.isAdminLoggedIn = true;
                 renderAll();
-                checkIsAdminLoggedIn().then((ok) => updateAdminLoginStatusUI(ok, '')).catch(() => updateAdminLoginStatusUI(false, ''));
+                updateAdminLoginStatusUI(true, email);
                 showView('settings');
                 const editAfterLogin = pendingChannelEditId;
                 pendingChannelEditId = null;
                 if (editAfterLogin !== null && editAfterLogin !== undefined) {
                     await editChannel(editAfterLogin, true);
                 }
-                updateAdminLoginStatusUI(true, email);
                 showNotification('You are in Admin mode');
             } catch (_) {
-                errorBox.textContent = 'Login असफल भयो: Email वा Password जाँच गर्नुहोस्।';
-                errorBox.classList.remove('hidden');
+                const lockedOut = recordWrongPasswordAttempt('admin_login', errorBox, submit, 'Sign In');
+                if (!lockedOut) {
+                    errorBox.textContent = errorBox.textContent || 'Login असफल भयो: Email वा Password जाँच गर्नुहोस्।';
+                    errorBox.classList.remove('hidden');
+                }
             } finally {
                 settingsLoginPending = false;
                 submit.disabled = false;
@@ -2567,25 +3836,48 @@
 
         async function signOutSettings() {
             try {
-                await supabaseClient.auth.signOut();
+                window.isAdminLoggedIn = false;
                 isAdminLoggedIn = false;
                 updateAdminLoginStatusUI(false, '');
+                if (supabaseClient) await supabaseClient.auth.signOut();
                 showNotification('Logged out — Admin status off.');
                 showView('grid');
                 renderAll();
-            } catch (_) {}
+                updateAdminLoginStatusUI(false, '');
+            } catch (_) {
+                window.isAdminLoggedIn = false;
+                updateAdminLoginStatusUI(false, '');
+            }
         }
+
+        let activeToastHideTimer = null;
+        let activeToastRemoveTimer = null;
 
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
+            if (!container) return;
+            if (activeToastHideTimer) { clearTimeout(activeToastHideTimer); activeToastHideTimer = null; }
+            if (activeToastRemoveTimer) { clearTimeout(activeToastRemoveTimer); activeToastRemoveTimer = null; }
+            container.innerHTML = '';
+
             const toast = document.createElement('div');
             let bgClass = type === 'error' ? 'bg-rose-900 border-rose-700 text-rose-100' : 'bg-emerald-900 border-emerald-700 text-emerald-100';
             let iconName = type === 'error' ? 'alert-circle' : 'check-circle';
-            toast.className = `${bgClass} border px-4 py-3 rounded-xl shadow-2xl flex items-center max-w-sm pointer-events-auto`;
-            toast.innerHTML = `<i data-lucide="${iconName}" class="mr-3 shrink-0"></i><span class="font-medium text-sm leading-tight">${message}</span>`;
+            toast.style.transition = 'opacity 80ms linear, transform 80ms linear';
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0) scale(1)';
+            toast.className = `${bgClass} border px-3.5 py-2 rounded-xl shadow-2xl flex items-center max-w-sm pointer-events-auto`;
+            toast.innerHTML = `<i data-lucide="${iconName}" class="mr-2 shrink-0 !w-4 !h-4"></i><span class="font-medium text-xs sm:text-sm leading-tight">${message}</span>`;
             container.appendChild(toast);
             if (window.lucide) lucide.createIcons({ root: toast });
-            setTimeout(() => toast.remove(), 3000);
+
+            activeToastHideTimer = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-4px) scale(0.98)';
+                activeToastRemoveTimer = setTimeout(() => {
+                    try { toast.remove(); } catch (_) {}
+                }, 85);
+            }, 650);
         }
 
         function generateId() {
@@ -2594,6 +3886,11 @@
 
         function updateNavState() {
             document.querySelectorAll('.nav-btn').forEach(btn => {
+                if (btn.id === 'nav-settings') {
+                    btn.classList.remove('bg-indigo-500/10', 'text-indigo-400', 'bg-slate-800', 'text-white', 'text-slate-400', 'text-emerald-400', 'text-rose-400');
+                    btn.classList.add(window.isAdminLoggedIn ? 'text-emerald-400' : 'text-rose-400');
+                    return;
+                }
                 btn.classList.remove('bg-indigo-500/10', 'text-indigo-400', 'bg-slate-800', 'text-white');
                 btn.classList.add('text-slate-400');
             });
@@ -2605,8 +3902,9 @@
                 }
             } else if (document.getElementById('view-settings').classList.contains('active')) {
                 const activeBtn = document.getElementById('nav-settings');
-                activeBtn.classList.add('bg-slate-800', 'text-white');
-                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-slate-800');
+                activeBtn.classList.remove('text-slate-400', 'text-rose-400');
+                activeBtn.classList.add(window.isAdminLoggedIn ? 'text-emerald-400' : 'text-rose-400');
             }
         }
 
@@ -2693,6 +3991,7 @@
                 playerView.classList.remove('mini-player');
             }
             updateNavState();
+            syncAdminHomeLogoutButton();
         }
 
         function minimizePlayer() {
@@ -2830,10 +4129,12 @@
                 div.className = 'flex justify-between items-center gap-2 bg-slate-950 p-2.5 rounded-lg border border-slate-800';
                 const count = appData.channels.filter(c => (Array.isArray(c.categories) ? c.categories : [c.category]).includes(cat)).length;
                 const idx = appData.categories.indexOf(cat);
+                const catBadgeVisual = getCategoryIconBadgeHtml(cat);
                 div.innerHTML = `
-                    <div class="flex items-center gap-2 min-w-0">
-                        <span class="text-sm font-medium text-slate-300 truncate">${cat}</span>
-                        <span class="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded-full">${count}</span>
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="w-7 h-7 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0">${catBadgeVisual}</span>
+                        <span class="text-sm font-medium text-slate-200 truncate">${cat}</span>
+                        <span class="text-xs text-slate-500 bg-slate-900 px-2 py-0.5 rounded-full shrink-0">${count}</span>
                     </div>
                     <div class="flex items-center gap-1 shrink-0">
                         <button type="button" data-move="-1" class="text-slate-400 hover:text-cyan-300 disabled:opacity-30 p-1 rounded" ${idx===0?'disabled':''}><i data-lucide="chevron-up" class="!w-4 !h-4"></i></button>
@@ -2848,6 +4149,7 @@
                 if (deleteButton) deleteButton.addEventListener('click', () => deleteCategory(cat));
                 list.appendChild(div);
             });
+            if (window.lucide) lucide.createIcons({ root: list });
         }
 
         function closeCategoryEditModal() {
@@ -3067,7 +4369,16 @@
                     if (currentPlayingChannelId !== null && String(currentPlayingChannelId) === String(channel.id)) card.classList.add('is-playing');
 
                     let lastCardTapTime = 0;
-                    card.onclick = () => {
+                    card.onclick = (ev) => {
+                        if (gridBulkMarkMode) {
+                            ev.preventDefault();
+                            ev.stopPropagation();
+                            const idStr = String(channel.id);
+                            if (selectedBulkItemIds.has(idStr)) selectedBulkItemIds.delete(idStr);
+                            else selectedBulkItemIds.add(idStr);
+                            syncGridBulkMarkBarUI();
+                            return;
+                        }
                         const now = Date.now();
                         const isDoubleTap = (now - lastCardTapTime) < 420;
                         lastCardTapTime = now;
@@ -3110,10 +4421,19 @@
                     const statusTitle = channelPlaybackStatus[String(channel.id)]?.detail || 'Click to play';
 
                     const hasPwd = !!String(channel.password || '').trim();
-                    const pwdBadgeHtml = hasPwd ? `<span title="Password protected" aria-label="Password protected" class="absolute left-2 top-2 z-[6] inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-600/90 text-white border border-rose-300/40 shadow-md"><i data-lucide="lock" class="!w-3 !h-3"></i></span>` : '';
+                    const isUserLoggedIn = !!getActiveUserAccountSession();
+                    const isMarkedCard = selectedBulkItemIds.has(String(channel.id));
+                    if (isMarkedCard) card.classList.add('ring-2', 'ring-amber-400');
+                    const markChkHtml = `<input type="checkbox" ${isMarkedCard ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleGridCardMark('${escapeLogoAttr(channel.id)}', this.checked, event)" class="grid-card-mark-checkbox ${(gridBulkMarkMode || isMarkedCard) ? '' : 'hidden'} absolute left-2 bottom-2 z-[7] h-4 w-4 rounded border-amber-300 bg-slate-950 text-amber-500 cursor-pointer">`;
+                    const pwdBadgeHtml = hasPwd
+                        ? (isUserLoggedIn
+                            ? `<span title="Unlocked (User Logged In)" aria-label="Unlocked" class="absolute left-2 top-2 z-[6] inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-600/90 text-white border border-emerald-300/40 shadow-md"><i data-lucide="unlock" class="!w-3 !h-3"></i></span>`
+                            : `<span title="Password protected" aria-label="Password protected" class="absolute left-2 top-2 z-[6] inline-flex items-center justify-center w-6 h-6 rounded-full bg-rose-600/90 text-white border border-rose-300/40 shadow-md"><i data-lucide="lock" class="!w-3 !h-3"></i></span>`)
+                        : '';
                     card.innerHTML = `
                         <div class="relative aspect-video bg-slate-950/90 w-full overflow-hidden flex items-center justify-center p-3 border-b border-slate-800/60">
                             ${pwdBadgeHtml}
+                            ${markChkHtml}
                             ${isFileOrAppCard ? '' : `<span class="channel-status-dot status-${statusState}" title="${escapeLogoAttr(statusTitle)}"></span>`}
                             <div class="absolute inset-0 flex items-center justify-center text-slate-600 font-black text-xl md:text-2xl tracking-wider select-none">${initials}</div>
                             ${logoUrl ? `<img src="${logoUrl}" alt="${name}" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.style.display='none';" class="relative z-[1] w-full h-full max-w-full max-h-full object-contain drop-shadow-md transition-transform duration-200 group-hover:scale-105">` : ''}
@@ -3152,13 +4472,16 @@
                 (appData.channelManualOrder ? [...filteredItems] : [...filteredItems].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),undefined,{sensitivity:'base'}))).forEach(channel => {
                     const item = document.createElement('div');
                     item.className = 'flex items-center justify-between p-3 mb-2 bg-slate-950 border border-slate-800 rounded-xl hover:border-slate-700 cursor-pointer';
-                    item.addEventListener('click', ev => { if (!ev.target.closest('button')) editChannel(channel.id); });
+                    item.addEventListener('click', ev => { if (!ev.target.closest('button') && !ev.target.closest('input[type="checkbox"]')) editChannel(channel.id); });
                     const logoUrl = escapeLogoAttr(getChannelLogo(channel));
                     const initials = escapeLogoAttr(String(channel.name || 'TV').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase() || 'TV');
+                    const isCheckedBulk = selectedBulkItemIds.has(String(channel.id)) ? 'checked' : '';
+                    const isLockedItem = !!String(channel.password || '').trim();
                     item.innerHTML = `
                         <div class="flex items-center overflow-hidden mr-3 min-w-0">
+                            <input type="checkbox" ${isCheckedBulk} onchange="toggleBulkSelectItem('${escapeLogoAttr(channel.id)}', this.checked)" class="mr-2.5 h-4 w-4 shrink-0 rounded border-slate-600 bg-slate-900">
                             <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 overflow-hidden p-1 relative"><span class="absolute text-slate-400 text-xs font-bold">${initials}</span>${logoUrl ? `<img src="${logoUrl}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';" class="relative z-[1] w-full h-full object-contain">` : ''}</div>
-                            <div class="ml-3 overflow-hidden"><h4 class="font-medium text-sm text-slate-200 truncate">${channel.name}</h4><span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">${channel.category || 'Uncategorized'}</span></div>
+                            <div class="ml-3 overflow-hidden"><h4 class="font-medium text-sm text-slate-200 truncate flex items-center gap-1.5"><span>${channel.name}</span>${isLockedItem ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">Locked</span>' : ''}</h4><span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full">${channel.category || 'Uncategorized'}</span></div>
                         </div>
                         <div class="flex items-center gap-1 shrink-0">
                             <button type="button" onclick="moveChannel('${channel.id}',-1)" class="text-slate-400 hover:text-cyan-300 p-2"><i data-lucide="chevron-up" class="!w-4 !h-4"></i></button>
@@ -3188,7 +4511,9 @@
             if (channelSavePending) return;
             const editId = document.getElementById('edit-id').value;
             const name = document.getElementById('add-name').value.trim();
-            const contentType = document.getElementById('add-content-type').value || 'channel';
+            const contentType = activeSettingsTab === 'movies' ? 'movie' : (activeSettingsTab === 'files' ? 'app' : 'channel');
+            const typeSelEl = document.getElementById('add-content-type');
+            if (typeSelEl) typeSelEl.value = contentType;
             const category = document.getElementById('add-category').value;
             let logo = document.getElementById('add-logo').value.trim();
             const logoFile = document.getElementById('add-logo-file');
@@ -3199,9 +4524,10 @@
             const openInBrowser = document.getElementById('add-open-browser').checked;
             const selectedCategories = Array.from(document.querySelectorAll('#channel-category-checks input:checked')).map(x=>x.value);
             if (!selectedCategories.includes(category)) selectedCategories.unshift(category);
+            syncExtraLinksToTextarea();
             const linksText = document.getElementById('add-links').value.trim();
             const links = linksText ? linksText.split(/\r?\n/).map((line,i)=>{ const parts=line.split('|'); const u=(parts.length>1?parts.slice(1).join('|'):parts[0]).trim(); return u ? {label:(parts.length>1?parts[0].trim():`Link ${i+1}`)||`Link ${i+1}`,url:u} : null; }).filter(Boolean) : [];
-            if (url && !links.some(x=>x.url===url)) links.unshift({label:'Main',url});
+            if (url && !links.some(x=>x.url===url)) links.unshift({label: (streamLinkLabelMode === 'auto' ? 'Server 1' : 'Main'), url});
             const embedCode = document.getElementById('add-embed-code').value.trim();
             const itemPassword = String(document.getElementById('add-password')?.value || '').trim();
             const fileDataUrl = uploadedFilePayload.dataUrl || (editId ? (appData.channels.find(c => String(c.id) === String(editId))?.fileDataUrl || '') : '');
@@ -3225,7 +4551,7 @@
                 const saved = await saveData();
                 if (!saved) { appData = previousData; renderAll(); return; }
                 renderAll();
-                if (editId) cancelEdit();
+                cancelEdit();
                 showNotification(`"${name}" saved.`);
             } finally {
                 channelSavePending = false;
@@ -3391,6 +4717,7 @@
                     <div class="flex flex-wrap gap-1">${chCats.map(c => `<span class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">${escapeLogoAttr(c)}</span>`).join('')}</div>
                 </div>`;
                 rows += `<button type="button" data-act="open" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-100 hover:bg-slate-800"><i data-lucide="play" class="!w-3.5 !h-3.5 text-indigo-400"></i><span>Open</span></button>`;
+                rows += `<button type="button" data-act="mark-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-300 hover:bg-slate-800"><i data-lucide="check-square" class="!w-3.5 !h-3.5"></i><span>Mark</span></button>`;
                 rows += `<button type="button" data-act="ch-add-cat" class="w-full flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-indigo-300 hover:bg-slate-800"><span class="flex items-center gap-2"><i data-lucide="folder-check" class="!w-3.5 !h-3.5"></i><span>Additional Categories</span></span><i data-lucide="chevron-right" class="!w-3.5 !h-3.5 text-slate-400"></i></button>`;
                 if (isLocked) {
                     rows += `<button type="button" data-act="unlock-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-emerald-300 hover:bg-emerald-950/60"><i data-lucide="unlock" class="!w-3.5 !h-3.5"></i><span>Unlock</span></button>`;
@@ -3440,11 +4767,26 @@
                 const channel = appData.channels.find(c => String(c.id) === String(channelId));
                 if (channel) openChannelSmartSubPanel(menu, channel);
             };
+            const markChBtn = menu.querySelector('[data-act="mark-ch"]');
+            if (markChBtn) markChBtn.onclick = (ev) => {
+                ev.stopPropagation();
+                hideChannelContextMenu();
+                markChannelFromContextMenu(channelId);
+            };
             const lockChBtn = menu.querySelector('[data-act="lock-ch"]');
             if (lockChBtn) lockChBtn.onclick = async (ev) => {
                 ev.stopPropagation();
                 const channel = appData.channels.find(c => String(c.id) === String(channelId));
                 if (!channel) return;
+                const savedMasterPwd = getMasterPassword();
+                if (savedMasterPwd) {
+                    channel.password = savedMasterPwd;
+                    showNotification(`"${channel.name}" locked.`);
+                    hideChannelContextMenu();
+                    renderAll();
+                    await saveData();
+                    return;
+                }
                 if (menu.querySelector('[data-lock-pwd-input]')) return;
                 const lockBox = document.createElement('div');
                 lockBox.className = 'mt-1.5 rounded-xl border border-amber-500/40 bg-slate-950 p-2 space-y-1.5';
@@ -3464,10 +4806,10 @@
                         return;
                     }
                     channel.password = pwdVal;
+                    showNotification(`"${channel.name}" locked.`);
                     hideChannelContextMenu();
                     renderAll();
                     await saveData();
-                    showNotification(`"${channel.name}" locked with password.`);
                 };
             };
             const unlockChBtn = menu.querySelector('[data-act="unlock-ch"]');
@@ -3476,15 +4818,15 @@
                 const channel = appData.channels.find(c => String(c.id) === String(channelId));
                 if (!channel) return;
                 channel.password = '';
+                showNotification(`"${channel.name}" unlocked.`);
                 hideChannelContextMenu();
                 renderAll();
                 await saveData();
-                showNotification(`"${channel.name}" unlocked (password removed).`);
             };
             const editChBtn = menu.querySelector('[data-act="edit-ch"]');
             if (editChBtn) editChBtn.onclick = () => { hideChannelContextMenu(); editChannel(channelId); };
             const delChBtn = menu.querySelector('[data-act="del-ch"]');
-            if (delChBtn) delChBtn.onclick = async () => { hideChannelContextMenu(); deleteChannel(channelId); await saveData(); };
+            if (delChBtn) delChBtn.onclick = () => { hideChannelContextMenu(); deleteChannel(channelId); };
 
             const createFolderBtn = menu.querySelector('[data-act="create-folder"]');
             if (createFolderBtn) createFolderBtn.onclick = async () => {
@@ -3609,7 +4951,13 @@
             document.getElementById('add-logo').value = channel.logo || '';
             document.getElementById('add-url').value = channel.url || '';
             document.getElementById('add-open-browser').checked = !!channel.openInBrowser;
-            document.getElementById('add-links').value = (channel.links || []).map(x=>`${x.label || 'Link'} | ${x.url}`).join('\n');
+            resetExtraLinksUI();
+            const extraOnlyLinks = (channel.links || []).filter(x => x && x.url && String(x.url).trim() !== String(channel.url || '').trim());
+            if (extraOnlyLinks.length) {
+                const isAutoPattern = extraOnlyLinks.every((x, i) => String(x.label || '').trim().toLowerCase() === `server ${i + 2}`);
+                setStreamLinkLabelMode(isAutoPattern ? 'auto' : 'manual');
+                extraOnlyLinks.forEach(x => appendExtraLinkRow(x.label || '', x.url));
+            }
             document.getElementById('add-embed-code').value = channel.embedCode || '';
             const pwdEl = document.getElementById('add-password'); if (pwdEl) pwdEl.value = channel.password || '';
             document.getElementById('form-title-text').innerText = (channel.contentType === 'app') ? 'Edit File' : 'Edit Channel';
@@ -3619,6 +4967,8 @@
             cancelBtn.classList.remove('hidden'); cancelBtn.classList.add('flex');
 
             showView('settings');
+            const targetTab = (channel.contentType === 'movie') ? 'movies' : ((channel.contentType === 'app') ? 'files' : 'channels');
+            setSettingsTab(targetTab);
             const formEl = document.getElementById('add-channel-form');
             if (formEl) formEl.scrollIntoView({ behavior: 'auto', block: 'start' });
             if (window.lucide) lucide.createIcons({ root: formEl || document });
@@ -3626,17 +4976,77 @@
 
         function cancelEdit() {
             document.getElementById('add-channel-form').reset();
-            document.getElementById('edit-id').value = ''; const pwdReset = document.getElementById('add-password'); if (pwdReset) pwdReset.value = ''; uploadedFilePayload = { dataUrl: '', fileName: '', mimeType: '' }; const mEl = document.getElementById('add-file-meta'); if (mEl) mEl.textContent = 'Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download & preview)'; toggleAppFileFields();
-            document.getElementById('form-title-text').innerText = 'Add New Channel';
+            document.getElementById('edit-id').value = '';
+            const pwdReset = document.getElementById('add-password');
+            if (pwdReset) pwdReset.value = '';
+            uploadedFilePayload = { dataUrl: '', fileName: '', mimeType: '' };
+            resetExtraLinksUI();
+            const mEl = document.getElementById('add-file-meta');
+            if (mEl) mEl.textContent = 'Supports Image, PDF, DOC/DOCX, XLS/XLSX, EXE, APK, etc. (Direct download & preview)';
+            const typeSel = document.getElementById('add-content-type');
+            if (typeSel) typeSel.value = activeSettingsTab === 'movies' ? 'movie' : (activeSettingsTab === 'files' ? 'app' : 'channel');
+            toggleAppFileFields();
             const cancelBtn = document.getElementById('cancel-edit-btn');
             cancelBtn.classList.add('hidden'); cancelBtn.classList.remove('flex');
         }
 
+        let pendingDeleteChannelId = null;
+
         function deleteChannel(id) {
-            const channel = appData.channels.find(c => c.id === id);
+            const channel = appData.channels.find(c => String(c.id) === String(id));
             if (!channel) return;
-            appData.channels = appData.channels.filter(c => c.id !== id);
-            saveData(); renderAll(); showNotification(`"${channel.name}" deleted.`);
+            pendingDeleteChannelId = channel.id;
+            const modal = document.getElementById('delete-confirm-modal');
+            const nameEl = document.getElementById('delete-modal-channel-name');
+            const inp = document.getElementById('delete-confirm-input');
+            const errEl = document.getElementById('delete-confirm-error');
+            if (nameEl) nameEl.textContent = `Delete "${channel.name}"?`;
+            if (inp) inp.value = '';
+            if (errEl) errEl.classList.add('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                modal.style.display = 'flex';
+                modal.style.zIndex = '2147483647';
+                if (window.lucide) lucide.createIcons({ root: modal });
+                setTimeout(() => { try { inp && inp.focus(); } catch (_) {} }, 30);
+            }
+        }
+
+        function closeDeleteConfirmModal() {
+            pendingDeleteChannelId = null;
+            const modal = document.getElementById('delete-confirm-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modal.style.display = 'none';
+            }
+        }
+
+        async function submitDeleteConfirmModal(e) {
+            if (e) e.preventDefault();
+            const inp = document.getElementById('delete-confirm-input');
+            const errEl = document.getElementById('delete-confirm-error');
+            const typed = String(inp?.value || '').trim();
+            if (typed !== 'Delete') {
+                if (errEl) {
+                    errEl.textContent = 'Please type "Delete" to confirm.';
+                    errEl.classList.remove('hidden');
+                }
+                return;
+            }
+            const idToDelete = pendingDeleteChannelId;
+            if (!idToDelete) {
+                closeDeleteConfirmModal();
+                return;
+            }
+            const channel = appData.channels.find(c => String(c.id) === String(idToDelete));
+            closeDeleteConfirmModal();
+            if (!channel) return;
+            appData.channels = appData.channels.filter(c => String(c.id) !== String(idToDelete));
+            await saveData();
+            renderAll();
+            showNotification(`"${channel.name}" deleted.`);
         }
 
         function exportData() {
@@ -3888,22 +5298,282 @@
 
         let pendingPasswordAction = null;
 
+        const REMEMBERED_USER_ACCT_NAME_KEY = 'ustreamz_remembered_user_acct_name_v1';
+        const REMEMBERED_USER_ACCT_PWD_KEY = 'ustreamz_remembered_user_acct_pwd_v1';
+
+        function openUserAccountLoginModal(lockedChannelItem) {
+            const existingUserSess = getActiveUserAccountSession();
+            if (existingUserSess && existingUserSess.username && !lockedChannelItem) {
+                showNotification('Already signed in.');
+                return;
+            }
+            const modal = document.getElementById('user-account-login-modal');
+            const titleEl = document.getElementById('user-login-modal-title');
+            const noticeBox = document.getElementById('user-login-locked-channel-notice');
+            const noticeNameEl = document.getElementById('user-login-locked-channel-name');
+            const noticeMsgEl = document.getElementById('user-login-locked-channel-msg');
+            const uInp = document.getElementById('user-login-username-input');
+            const pInp = document.getElementById('user-login-password-input');
+            const remChk = document.getElementById('remember-user-account-creds');
+            const errEl = document.getElementById('user-login-error');
+            if (!modal || !pInp) return;
+
+            if (lockedChannelItem && lockedChannelItem.name) {
+                if (titleEl) titleEl.textContent = 'User Login';
+                if (noticeNameEl) noticeNameEl.textContent = `Channel: ${lockedChannelItem.name}`;
+                if (noticeMsgEl) noticeMsgEl.textContent = `This channel can only be watched after unlocking.`;
+                if (noticeBox) noticeBox.classList.remove('hidden');
+            } else {
+                if (titleEl) titleEl.textContent = 'User Login';
+                if (noticeBox) noticeBox.classList.add('hidden');
+            }
+
+            let savedName = '';
+            let savedPwd = '';
+            try {
+                savedName = String(localStorage.getItem(REMEMBERED_USER_ACCT_NAME_KEY) || '').trim();
+                savedPwd = String(localStorage.getItem(REMEMBERED_USER_ACCT_PWD_KEY) || '').trim();
+            } catch (_) {}
+
+            if (uInp) uInp.value = savedName;
+            pInp.value = savedPwd;
+            if (remChk) remChk.checked = !!(savedName || savedPwd || true);
+            if (errEl) errEl.classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            modal.style.display = 'flex';
+            modal.style.zIndex = '2147483647';
+            if (window.lucide) lucide.createIcons({ root: modal });
+            setTimeout(() => { try { pInp.focus(); } catch (_) {} }, 30);
+        }
+
+        function closeUserAccountLoginModal() {
+            pendingPasswordAction = null;
+            const modal = document.getElementById('user-account-login-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modal.style.display = 'none';
+            }
+            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+                try { document.activeElement.blur(); } catch (_) {}
+            }
+        }
+
+        async function submitUserAccountLoginModal(e) {
+            if (e) e.preventDefault();
+            const uInp = document.getElementById('user-login-username-input');
+            const pInp = document.getElementById('user-login-password-input');
+            const remChk = document.getElementById('remember-user-account-creds');
+            const errEl = document.getElementById('user-login-error');
+            const subBtn = e?.target?.querySelector('button[type="submit"]') || null;
+            if (checkActivePasswordLockout('user_login', errEl, subBtn, 'Login')) {
+                showNotification('Password reset timer active after 3 wrong attempts.', 'error');
+                return;
+            }
+
+            const enteredUser = String(uInp?.value || '').trim();
+            const enteredPwd = String(pInp?.value || '').trim();
+            const masterPwd = getMasterPassword();
+            const users = [...getManagedUsers()];
+            const thisDev = getThisDeviceId();
+
+            let matchedUserIdx = -1;
+            if (enteredUser) {
+                matchedUserIdx = users.findIndex(u =>
+                    String(u.username || '').trim().toLowerCase() === enteredUser.toLowerCase() &&
+                    String(u.password || '').trim() === enteredPwd
+                );
+            } else {
+                matchedUserIdx = users.findIndex(u => String(u.password || '').trim() === enteredPwd);
+            }
+
+            const isMasterMatch = !!(masterPwd && enteredPwd === masterPwd);
+
+            if (matchedUserIdx !== -1 && isManagedUserExpired(users[matchedUserIdx])) {
+                if (errEl) {
+                    errEl.textContent = `User "${users[matchedUserIdx].username}" validity has expired.`;
+                    errEl.classList.remove('hidden');
+                }
+                showNotification('User validity expired.', 'error');
+                return;
+            }
+
+            if (!isMasterMatch && matchedUserIdx === -1) {
+                const subBtn = document.querySelector('#user-account-login-form button[type="submit"]');
+                const triggeredReset = recordWrongPasswordAttempt('user_login', errEl, subBtn, 'Login');
+                showNotification('Incorrect user password. Please try again later.', 'error');
+                return;
+            }
+            resetAuthRateState('user_login');
+
+            if (matchedUserIdx !== -1) {
+                const mUser = users[matchedUserIdx];
+                if (mUser.deviceId && mUser.deviceId !== thisDev) {
+                    if (errEl) {
+                        errEl.textContent = `User "${mUser.username}" is already active on another device (1 device only).`;
+                        errEl.classList.remove('hidden');
+                    }
+                    showNotification('This user is already active on another device.', 'error');
+                    return;
+                }
+                if (!mUser.deviceId) {
+                    users[matchedUserIdx] = { ...mUser, deviceId: thisDev };
+                    persistManagedUsers(users);
+                    renderManagedUsersList();
+                    try {
+                        if (supabaseClient) {
+                            const { data: sData } = await supabaseClient.auth.getSession();
+                            if (sData?.session) await saveData();
+                        }
+                    } catch (_) {}
+                }
+                try {
+                    if (supabaseClient) await supabaseClient.auth.signOut();
+                } catch (_) {}
+                updateAdminLoginStatusUI(false, '');
+                setActiveUserAccountSession(users[matchedUserIdx]);
+            } else {
+                try {
+                    if (supabaseClient) await supabaseClient.auth.signOut();
+                } catch (_) {}
+                updateAdminLoginStatusUI(false, '');
+                setActiveUserAccountSession({ id: 'master', username: enteredUser || 'Master User', expiresAt: 0 });
+            }
+
+            try {
+                if (remChk && remChk.checked) {
+                    const saveName = matchedUserIdx !== -1 ? users[matchedUserIdx].username : enteredUser;
+                    localStorage.setItem(REMEMBERED_USER_ACCT_NAME_KEY, saveName);
+                    localStorage.setItem(REMEMBERED_USER_ACCT_PWD_KEY, enteredPwd);
+                } else {
+                    localStorage.removeItem(REMEMBERED_USER_ACCT_NAME_KEY);
+                    localStorage.removeItem(REMEMBERED_USER_ACCT_PWD_KEY);
+                }
+            } catch (_) {}
+
+            pendingPasswordAction = null;
+            closeUserAccountLoginModal();
+            currentCategory = 'All';
+            const catTitleEl = document.getElementById('category-title');
+            if (catTitleEl) catTitleEl.textContent = 'All Channels';
+            showView('grid');
+            renderAll();
+            const activeName = matchedUserIdx !== -1 ? users[matchedUserIdx].username : (enteredUser || 'Master User');
+            showNotification(`Logged in as "${activeName}" — all channels unlocked.`);
+        }
+
+        const REMEMBERED_CHANNEL_UNLOCKS_KEY = 'ustreamz_remembered_channel_unlocks_v1';
+
+        function getRememberedChannelUnlocks() {
+            try {
+                const raw = localStorage.getItem(REMEMBERED_CHANNEL_UNLOCKS_KEY);
+                const parsed = raw ? JSON.parse(raw) : {};
+                return (parsed && typeof parsed === 'object') ? parsed : {};
+            } catch (_) {
+                return {};
+            }
+        }
+
+        function rememberChannelUnlock(channelId, passwordValue) {
+            if (channelId === undefined || channelId === null || channelId === '') return;
+            try {
+                const map = getRememberedChannelUnlocks();
+                map[String(channelId)] = String(passwordValue || '').trim();
+                localStorage.setItem(REMEMBERED_CHANNEL_UNLOCKS_KEY, JSON.stringify(map));
+            } catch (_) {}
+        }
+
+        function isChannelUnlockRemembered(item, requiredPwd) {
+            if (!item || item.id === undefined || item.id === null || item.id === '') return false;
+            try {
+                const map = getRememberedChannelUnlocks();
+                return map[String(item.id)] === String(requiredPwd || '').trim();
+            } catch (_) {
+                return false;
+            }
+        }
+
+        const THIS_DEVICE_ID_KEY = 'ustreamz_single_device_id_v1';
+
+        function getThisDeviceId() {
+            try {
+                let devId = localStorage.getItem(THIS_DEVICE_ID_KEY);
+                if (!devId) {
+                    devId = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+                    localStorage.setItem(THIS_DEVICE_ID_KEY, devId);
+                }
+                return devId;
+            } catch (_) {
+                return 'dev_fallback';
+            }
+        }
+
+        let itemPasswordAuthMode = 'password';
+
+        function setItemPasswordAuthMode(mode) {
+            itemPasswordAuthMode = (mode === 'user_password') ? 'user_password' : 'password';
+            const pwdBtn = document.getElementById('pwd-mode-pwd-btn');
+            const userPwdBtn = document.getElementById('pwd-mode-userpwd-btn');
+            const userInp = document.getElementById('pwd-modal-username-input');
+            const pwdInp = document.getElementById('pwd-modal-input');
+            const errEl = document.getElementById('pwd-modal-error');
+
+            if (pwdBtn && userPwdBtn) {
+                if (itemPasswordAuthMode === 'user_password') {
+                    pwdBtn.className = 'rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors';
+                    userPwdBtn.className = 'rounded-lg px-3 py-1.5 text-xs font-semibold bg-rose-600 text-white transition-colors';
+                } else {
+                    pwdBtn.className = 'rounded-lg px-3 py-1.5 text-xs font-semibold bg-rose-600 text-white transition-colors';
+                    userPwdBtn.className = 'rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors';
+                }
+            }
+
+            if (userInp) {
+                if (itemPasswordAuthMode === 'user_password') {
+                    userInp.classList.remove('hidden');
+                    userInp.setAttribute('required', 'required');
+                } else {
+                    userInp.classList.add('hidden');
+                    userInp.removeAttribute('required');
+                    userInp.value = '';
+                }
+            }
+
+            if (errEl) errEl.classList.add('hidden');
+            setTimeout(() => {
+                try {
+                    if (itemPasswordAuthMode === 'user_password' && userInp) userInp.focus();
+                    else if (pwdInp) pwdInp.focus();
+                } catch (_) {}
+            }, 30);
+        }
+
         function openItemPasswordModal(item, actionType) {
             const modal = document.getElementById('item-password-modal');
             const titleEl = document.getElementById('pwd-modal-title');
+            const userInp = document.getElementById('pwd-modal-username-input');
             const inputEl = document.getElementById('pwd-modal-input');
             const errEl = document.getElementById('pwd-modal-error');
             if (!modal || !inputEl) return false;
             pendingPasswordAction = { item, actionType };
             if (titleEl) titleEl.textContent = item?.name ? `Unlock "${item.name}"` : 'Enter Password';
             if (errEl) errEl.classList.add('hidden');
-            inputEl.value = '';
+            let remU = '';
+            let remP = '';
+            try {
+                remU = String(localStorage.getItem(REMEMBERED_USER_ACCT_NAME_KEY) || '').trim();
+                remP = String(localStorage.getItem(REMEMBERED_USER_ACCT_PWD_KEY) || '').trim();
+            } catch (_) {}
+            if (userInp) userInp.value = remU;
+            inputEl.value = remP;
+            setItemPasswordAuthMode(itemPasswordAuthMode || 'password');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             modal.style.display = 'flex';
             modal.style.zIndex = '2147483647';
             if (window.lucide) lucide.createIcons({ root: modal });
-            setTimeout(() => { try { inputEl.focus(); } catch (_) {} }, 50);
             return true;
         }
 
@@ -3917,18 +5587,86 @@
             pendingPasswordAction = null;
         }
 
-        function submitItemPasswordModal(e) {
+        async function submitItemPasswordModal(e) {
             if (e) e.preventDefault();
             if (!pendingPasswordAction) return;
             const { item, actionType } = pendingPasswordAction;
             const requiredPwd = String(item?.password || '').trim();
+            const enteredUser = String(document.getElementById('pwd-modal-username-input')?.value || '').trim();
             const entered = String(document.getElementById('pwd-modal-input')?.value || '').trim();
             const errEl = document.getElementById('pwd-modal-error');
-            if (entered !== requiredPwd) {
-                if (errEl) errEl.classList.remove('hidden');
+
+            const users = [...getManagedUsers()];
+            const thisDev = getThisDeviceId();
+            let matchedUserIdx = -1;
+
+            if (itemPasswordAuthMode === 'user_password') {
+                if (!enteredUser) {
+                    if (errEl) {
+                        errEl.textContent = 'Please enter user name.';
+                        errEl.classList.remove('hidden');
+                    }
+                    return;
+                }
+                matchedUserIdx = users.findIndex(u =>
+                    String(u.username || '').trim().toLowerCase() === enteredUser.toLowerCase() &&
+                    String(u.password || '').trim() === entered
+                );
+            } else {
+                matchedUserIdx = users.findIndex(u => String(u.password || '').trim() === entered);
+            }
+
+            const masterPwd = getMasterPassword();
+            const isMasterPwdMatch = !!(masterPwd && entered === masterPwd);
+            const isDirectChannelPwd = (itemPasswordAuthMode === 'password' && entered === requiredPwd);
+
+            if (matchedUserIdx !== -1 && isManagedUserExpired(users[matchedUserIdx])) {
+                if (errEl) {
+                    errEl.textContent = `User "${users[matchedUserIdx].username}" validity has expired.`;
+                    errEl.classList.remove('hidden');
+                }
+                showNotification('User validity expired.', 'error');
+                return;
+            }
+
+            if (!isMasterPwdMatch && !isDirectChannelPwd && matchedUserIdx === -1) {
+                if (errEl) {
+                    errEl.textContent = 'Incorrect user name or password. Please try again.';
+                    errEl.classList.remove('hidden');
+                }
                 showNotification('Incorrect password.', 'error');
                 return;
             }
+
+            if (matchedUserIdx !== -1) {
+                const mUser = users[matchedUserIdx];
+                if (mUser.deviceId && mUser.deviceId !== thisDev) {
+                    if (errEl) {
+                        errEl.textContent = `User "${mUser.username}" is already active on another device (1 device only).`;
+                        errEl.classList.remove('hidden');
+                    }
+                    showNotification('This user is already active on another device.', 'error');
+                    return;
+                }
+                if (!mUser.deviceId) {
+                    users[matchedUserIdx] = { ...mUser, deviceId: thisDev };
+                    persistManagedUsers(users);
+                    renderManagedUsersList();
+                    try {
+                        if (supabaseClient) {
+                            const { data: sData } = await supabaseClient.auth.getSession();
+                            if (sData?.session) await saveData();
+                        }
+                    } catch (_) {}
+                }
+            }
+
+            if (matchedUserIdx !== -1) {
+                setActiveUserAccountSession(users[matchedUserIdx]);
+            } else if (isMasterPwdMatch) {
+                setActiveUserAccountSession({ id: 'master', username: 'Master User', expiresAt: 0 });
+            }
+            rememberChannelUnlock(item?.id, requiredPwd);
             const modal = document.getElementById('item-password-modal');
             if (modal) {
                 modal.classList.add('hidden');
@@ -3947,7 +5685,10 @@
         function verifyItemPassword(item, actionType) {
             const requiredPwd = String(item?.password || '').trim();
             if (!requiredPwd) return true;
-            openItemPasswordModal(item, actionType);
+            if (getActiveUserAccountSession()) return true;
+            if (isChannelUnlockRemembered(item, requiredPwd)) return true;
+            pendingPasswordAction = { item, actionType };
+            openUserAccountLoginModal(item);
             return false;
         }
 
