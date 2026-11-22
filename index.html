@@ -147,12 +147,12 @@
             background: linear-gradient(180deg, #0f172a 0%, #090d16 100%);
         }
         .channel-card.is-premium-user {
-            background: linear-gradient(155deg, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.14) 50%, rgba(15, 23, 42, 0.96) 100%) !important;
-            border-color: rgba(251, 191, 36, 0.45) !important;
+            background: var(--prem-card-bg) !important;
+            border-color: var(--prem-card-border) !important;
         }
         .channel-card.is-premium-user:hover {
-            border-color: rgba(251, 191, 36, 0.85) !important;
-            box-shadow: 0 12px 28px -8px rgba(245, 158, 11, 0.32) !important;
+            border-color: var(--prem-card-hover-border) !important;
+            box-shadow: var(--prem-card-hover-shadow) !important;
         }
 
         .channel-card:hover {
@@ -166,10 +166,17 @@
         }
 
         #umc-live-tv-app.sidebar-hidden > aside { display: none !important; }
+        #umc-live-tv-app {
+            --prem-card-bg: linear-gradient(155deg, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.14) 50%, rgba(15, 23, 42, 0.96) 100%);
+            --prem-card-border: rgba(251, 191, 36, 0.45);
+            --prem-card-hover-border: rgba(251, 191, 36, 0.85);
+            --prem-card-hover-shadow: 0 12px 28px -8px rgba(245, 158, 11, 0.32);
+            --prem-sidebar-bg: linear-gradient(180deg, rgba(245, 158, 11, 0.20) 0%, rgba(16, 185, 129, 0.12) 45%, rgba(15, 23, 42, 0.98) 100%);
+            --prem-sidebar-border: rgba(251, 191, 36, 0.45);
+        }
         #umc-live-tv-app > aside.is-premium-sidebar {
-            background: linear-gradient(180deg, rgba(250, 204, 21, 0.28) 0%, rgba(245, 158, 11, 0.18) 45%, rgba(20, 16, 6, 0.98) 100%) !important;
-            border-right-color: rgba(250, 204, 21, 0.7) !important;
-            box-shadow: inset -1px 0 0 rgba(250, 204, 21, 0.22), 4px 0 24px rgba(245, 158, 11, 0.16) !important;
+            background: var(--prem-sidebar-bg) !important;
+            border-right-color: var(--prem-sidebar-border) !important;
         }
 
         #sidebar-reveal-btn { display:none; position:absolute; left:0; top:50%; transform:translateY(-50%); z-index:100000; opacity:.75; }
@@ -697,6 +704,33 @@
                             <div id="admin-profile-email-text" class="text-slate-200 break-all font-medium"></div>
                             <div id="admin-profile-conn-text" class="text-[11px] text-slate-400">Supabase connected (UStreamz v2.1.1 Engine Ready)</div>
                         </div>
+                        <!-- Premium Color Customizer inside Admin Profile -->
+                        <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-3 space-y-2.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                                    <i data-lucide="palette" class="!w-3.5 !h-3.5"></i>
+                                    <span>Premium Color</span>
+                                </span>
+                                <button type="button" onclick="resetPremiumColorsToDefault()" class="text-[11px] text-slate-400 hover:text-white underline">Reset</button>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <label class="flex items-center justify-between gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-slate-300">
+                                    <span>Card</span>
+                                    <input type="color" id="admin-prem-card-color" value="#f59e0b" oninput="applyPremiumColorsFromInputs(true)" class="h-5 w-7 cursor-pointer rounded border-0 bg-transparent p-0">
+                                </label>
+                                <label class="flex items-center justify-between gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-slate-300">
+                                    <span>Sidebar</span>
+                                    <input type="color" id="admin-prem-sidebar-color" value="#eab308" oninput="applyPremiumColorsFromInputs(true)" class="h-5 w-7 cursor-pointer rounded border-0 bg-transparent p-0">
+                                </label>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="setPremiumColorPreset('#f59e0b', '#eab308')" class="flex-1 rounded-md border border-amber-500/30 bg-amber-500/15 py-1 text-[10px] font-semibold text-amber-200 hover:bg-amber-500/25">Default</button>
+                                <button type="button" onclick="setPremiumColorPreset('#6366f1', '#4f46e5')" class="flex-1 rounded-md border border-indigo-500/30 bg-indigo-500/15 py-1 text-[10px] font-semibold text-indigo-200 hover:bg-indigo-500/25">Indigo</button>
+                                <button type="button" onclick="setPremiumColorPreset('#10b981', '#059669')" class="flex-1 rounded-md border border-emerald-500/30 bg-emerald-500/15 py-1 text-[10px] font-semibold text-emerald-200 hover:bg-emerald-500/25">Emerald</button>
+                                <button type="button" onclick="setPremiumColorPreset('#f43f5e', '#e11d48')" class="flex-1 rounded-md border border-rose-500/30 bg-rose-500/15 py-1 text-[10px] font-semibold text-rose-200 hover:bg-rose-500/25">Rose</button>
+                            </div>
+                        </div>
+
                         <!-- Data Backup inside Admin Profile above Login/Session controls -->
                         <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-3 space-y-2">
                             <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
@@ -1043,6 +1077,33 @@
                                         <i data-lucide="user-plus" class="mr-2"></i> Add User
                                     </h2>
                                     <div class="space-y-4 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
+                                        <!-- Premium Color Customizer in Admin Settings -->
+                                        <div class="rounded-xl border border-indigo-500/30 bg-slate-950/90 p-3 space-y-2">
+                                            <div class="flex items-center justify-between gap-2">
+                                                <span class="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+                                                    <i data-lucide="palette" class="!w-3.5 !h-3.5"></i>
+                                                    <span>Premium Theme Color</span>
+                                                </span>
+                                                <button type="button" onclick="resetPremiumColorsToDefault()" class="text-[11px] text-slate-400 hover:text-white underline">Reset Default</button>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                                <label class="flex items-center justify-between gap-2 rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-slate-300">
+                                                    <span>Card Color</span>
+                                                    <input type="color" id="settings-prem-card-color" value="#f59e0b" oninput="applyPremiumColorsFromSettingsInputs(true)" class="h-5 w-8 cursor-pointer rounded border-0 bg-transparent p-0">
+                                                </label>
+                                                <label class="flex items-center justify-between gap-2 rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-slate-300">
+                                                    <span>Sidebar Color</span>
+                                                    <input type="color" id="settings-prem-sidebar-color" value="#eab308" oninput="applyPremiumColorsFromSettingsInputs(true)" class="h-5 w-8 cursor-pointer rounded border-0 bg-transparent p-0">
+                                                </label>
+                                            </div>
+                                            <div class="flex items-center gap-1.5">
+                                                <button type="button" onclick="setPremiumColorPreset('#f59e0b', '#eab308')" class="flex-1 rounded-md border border-amber-500/30 bg-amber-500/15 py-1 text-[10px] font-semibold text-amber-200 hover:bg-amber-500/25">Default Premium</button>
+                                                <button type="button" onclick="setPremiumColorPreset('#6366f1', '#4f46e5')" class="flex-1 rounded-md border border-indigo-500/30 bg-indigo-500/15 py-1 text-[10px] font-semibold text-indigo-200 hover:bg-indigo-500/25">Indigo</button>
+                                                <button type="button" onclick="setPremiumColorPreset('#10b981', '#059669')" class="flex-1 rounded-md border border-emerald-500/30 bg-emerald-500/15 py-1 text-[10px] font-semibold text-emerald-200 hover:bg-emerald-500/25">Emerald</button>
+                                                <button type="button" onclick="setPremiumColorPreset('#f43f5e', '#e11d48')" class="flex-1 rounded-md border border-rose-500/30 bg-rose-500/15 py-1 text-[10px] font-semibold text-rose-200 hover:bg-rose-500/25">Rose</button>
+                                            </div>
+                                        </div>
+
                                         <!-- Master Password Box -->
                                         <div class="rounded-xl border border-amber-500/40 bg-amber-950/20 p-3 space-y-2">
                                             <div class="flex items-center justify-between gap-2">
@@ -2624,8 +2685,7 @@
             const focusTarget = (el) => {
                 if (!el) return false;
                 try {
-                    if (el.id === 'search-input') el.removeAttribute('readonly');
-                    el.focus();
+                    el.focus({ preventScroll: false });
                     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     return true;
                 } catch (_) {
@@ -2686,7 +2746,8 @@
                 }
 
                 if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) return;
-                if (isInput && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) return;
+                const isSearchInputFocused = (document.activeElement && document.activeElement.id === 'search-input');
+                if (isInput && !isSearchInputFocused && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) return;
 
                 const playerView = document.getElementById('view-player');
                 if (playerView && playerView.classList.contains('active') && !miniPlayerActive) {
@@ -3092,6 +3153,90 @@
         }
 
 
+
+        const PREMIUM_COLORS_STORAGE_KEY = 'ustreamz_premium_colors_v1';
+        const DEFAULT_PREMIUM_COLORS = { card: '#f59e0b', sidebar: '#eab308', useDefaultGradient: true };
+
+        function hexToRgbTuple(hex) {
+            const clean = String(hex || '').replace('#', '').trim();
+            if (!/^[0-9a-fA-F]{6}$/.test(clean)) return '245, 158, 11';
+            const r = parseInt(clean.slice(0, 2), 16);
+            const g = parseInt(clean.slice(2, 4), 16);
+            const b = parseInt(clean.slice(4, 6), 16);
+            return `${r}, ${g}, ${b}`;
+        }
+
+        function getPremiumColorsConfig() {
+            let localCfg = null;
+            try {
+                const raw = localStorage.getItem(PREMIUM_COLORS_STORAGE_KEY);
+                if (raw) localCfg = JSON.parse(raw);
+            } catch (_) {}
+            return {
+                ...DEFAULT_PREMIUM_COLORS,
+                ...(appData?.premiumColors || {}),
+                ...(localCfg || {})
+            };
+        }
+
+        function applyPremiumColorsToApp(cfg, persist = false) {
+            const appEl = document.getElementById('umc-live-tv-app');
+            const merged = { ...DEFAULT_PREMIUM_COLORS, ...(cfg || {}) };
+            if (persist) {
+                appData.premiumColors = merged;
+                try { localStorage.setItem(PREMIUM_COLORS_STORAGE_KEY, JSON.stringify(merged)); } catch (_) {}
+            }
+            if (!appEl) return;
+            if (merged.useDefaultGradient && merged.card === DEFAULT_PREMIUM_COLORS.card && merged.sidebar === DEFAULT_PREMIUM_COLORS.sidebar) {
+                appEl.style.setProperty('--prem-card-bg', 'linear-gradient(155deg, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.14) 50%, rgba(15, 23, 42, 0.96) 100%)');
+                appEl.style.setProperty('--prem-card-border', 'rgba(251, 191, 36, 0.45)');
+                appEl.style.setProperty('--prem-card-hover-border', 'rgba(251, 191, 36, 0.85)');
+                appEl.style.setProperty('--prem-card-hover-shadow', '0 12px 28px -8px rgba(245, 158, 11, 0.32)');
+                appEl.style.setProperty('--prem-sidebar-bg', 'linear-gradient(180deg, rgba(245, 158, 11, 0.20) 0%, rgba(16, 185, 129, 0.12) 45%, rgba(15, 23, 42, 0.98) 100%)');
+                appEl.style.setProperty('--prem-sidebar-border', 'rgba(251, 191, 36, 0.45)');
+            } else {
+                const cRgb = hexToRgbTuple(merged.card);
+                const sRgb = hexToRgbTuple(merged.sidebar);
+                appEl.style.setProperty('--prem-card-bg', `linear-gradient(155deg, rgba(${cRgb}, 0.28) 0%, rgba(${cRgb}, 0.10) 50%, rgba(15, 23, 42, 0.96) 100%)`);
+                appEl.style.setProperty('--prem-card-border', `rgba(${cRgb}, 0.55)`);
+                appEl.style.setProperty('--prem-card-hover-border', `rgba(${cRgb}, 0.9)`);
+                appEl.style.setProperty('--prem-card-hover-shadow', `0 12px 28px -8px rgba(${cRgb}, 0.35)`);
+                appEl.style.setProperty('--prem-sidebar-bg', `linear-gradient(180deg, rgba(${sRgb}, 0.28) 0%, rgba(${sRgb}, 0.12) 45%, rgba(15, 23, 42, 0.98) 100%)`);
+                appEl.style.setProperty('--prem-sidebar-border', `rgba(${sRgb}, 0.55)`);
+            }
+            const idsCard = ['admin-prem-card-color', 'settings-prem-card-color'];
+            const idsSide = ['admin-prem-sidebar-color', 'settings-prem-sidebar-color'];
+            idsCard.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && document.activeElement !== el) el.value = merged.card || DEFAULT_PREMIUM_COLORS.card;
+            });
+            idsSide.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && document.activeElement !== el) el.value = merged.sidebar || DEFAULT_PREMIUM_COLORS.sidebar;
+            });
+        }
+
+        function applyPremiumColorsFromInputs(persist = true) {
+            const cardCol = document.getElementById('admin-prem-card-color')?.value || DEFAULT_PREMIUM_COLORS.card;
+            const sideCol = document.getElementById('admin-prem-sidebar-color')?.value || DEFAULT_PREMIUM_COLORS.sidebar;
+            applyPremiumColorsToApp({ card: cardCol, sidebar: sideCol, useDefaultGradient: false }, persist);
+        }
+
+        function applyPremiumColorsFromSettingsInputs(persist = true) {
+            const cardCol = document.getElementById('settings-prem-card-color')?.value || DEFAULT_PREMIUM_COLORS.card;
+            const sideCol = document.getElementById('settings-prem-sidebar-color')?.value || DEFAULT_PREMIUM_COLORS.sidebar;
+            applyPremiumColorsToApp({ card: cardCol, sidebar: sideCol, useDefaultGradient: false }, persist);
+        }
+
+        function setPremiumColorPreset(cardHex, sidebarHex) {
+            const isDef = (cardHex === DEFAULT_PREMIUM_COLORS.card && sidebarHex === DEFAULT_PREMIUM_COLORS.sidebar);
+            applyPremiumColorsToApp({ card: cardHex, sidebar: sidebarHex, useDefaultGradient: isDef }, true);
+            showNotification(isDef ? 'Default premium color applied.' : 'Premium color updated.');
+        }
+
+        function resetPremiumColorsToDefault() {
+            setPremiumColorPreset(DEFAULT_PREMIUM_COLORS.card, DEFAULT_PREMIUM_COLORS.sidebar);
+        }
 
         const MASTER_PASSWORD_KEY = 'ustreamz_master_password_v1';
 
@@ -3826,6 +3971,7 @@
         }
 
         function renderAll() {
+            try { applyPremiumColorsToApp(getPremiumColorsConfig(), false); } catch (_) {}
             try { renderSidebarCategories(); } catch (_) {}
             try { syncHeaderDownloadAppButton(); } catch (_) {}
             try { renderCategorySelects(); } catch (_) {}
