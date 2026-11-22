@@ -96,9 +96,9 @@
         }
 
         /* Android TV Remote & Keyboard Focus */
-        #umc-live-tv-app [tabindex="0"]:not(.channel-card):not(#user-account-login-modal):not(#item-password-modal):not(#settings-auth-modal):focus-visible,
+        #umc-live-tv-app [tabindex="0"]:not(.channel-card):not(#search-input):not(#user-account-login-modal):not(#item-password-modal):not(#settings-auth-modal):focus-visible,
         #umc-live-tv-app button:not(#user-account-login-modal button):not(#settings-auth-modal button):focus-visible,
-        #umc-live-tv-app input:not(#user-account-login-modal input):not(#settings-auth-modal input):focus-visible,
+        #umc-live-tv-app input:not(#search-input):not(#user-account-login-modal input):not(#settings-auth-modal input):focus-visible,
         #umc-live-tv-app select:focus-visible {
             outline: 2px solid #38bdf8 !important;
             outline-offset: 2px !important;
@@ -146,6 +146,15 @@
             will-change: transform;
             background: linear-gradient(180deg, #0f172a 0%, #090d16 100%);
         }
+        .channel-card.is-premium-user {
+            background: linear-gradient(155deg, rgba(245, 158, 11, 0.22) 0%, rgba(16, 185, 129, 0.14) 50%, rgba(15, 23, 42, 0.96) 100%) !important;
+            border-color: rgba(251, 191, 36, 0.45) !important;
+        }
+        .channel-card.is-premium-user:hover {
+            border-color: rgba(251, 191, 36, 0.85) !important;
+            box-shadow: 0 12px 28px -8px rgba(245, 158, 11, 0.32) !important;
+        }
+
         .channel-card:hover {
             transform: translateY(-4px);
             border-color: rgba(99, 102, 241, 0.8);
@@ -157,6 +166,12 @@
         }
 
         #umc-live-tv-app.sidebar-hidden > aside { display: none !important; }
+        #umc-live-tv-app > aside.is-premium-sidebar {
+            background: linear-gradient(180deg, rgba(250, 204, 21, 0.28) 0%, rgba(245, 158, 11, 0.18) 45%, rgba(20, 16, 6, 0.98) 100%) !important;
+            border-right-color: rgba(250, 204, 21, 0.7) !important;
+            box-shadow: inset -1px 0 0 rgba(250, 204, 21, 0.22), 4px 0 24px rgba(245, 158, 11, 0.16) !important;
+        }
+
         #sidebar-reveal-btn { display:none; position:absolute; left:0; top:50%; transform:translateY(-50%); z-index:100000; opacity:.75; }
         #sidebar-reveal-btn:hover, #sidebar-reveal-btn:focus { opacity:1; }
         #umc-live-tv-app.sidebar-hidden #sidebar-reveal-btn { display:flex; }
@@ -298,8 +313,22 @@
             padding:0 12px !important; border:1px solid #334155 !important; border-radius:12px !important;
             background:#0f172a !important; transition: border-color 0.2s ease;
         }
+        #umc-live-tv-app .tv-search-box,
+        #umc-live-tv-app .tv-search-box:focus,
         #umc-live-tv-app .tv-search-box:focus-within {
-            border-color:#38bdf8 !important;
+            border-color:#334155 !important;
+            outline:none !important;
+            outline-offset:0 !important;
+            box-shadow:none !important;
+        }
+        #umc-live-tv-app #search-input,
+        #umc-live-tv-app #search-input:focus,
+        #umc-live-tv-app #search-input:focus-visible,
+        #umc-live-tv-app #search-input:active {
+            border:0 !important;
+            outline:none !important;
+            outline-offset:0 !important;
+            box-shadow:none !important;
         }
         #umc-live-tv-app .tv-search-icon { flex:0 0 auto !important; color:#94a3b8 !important; }
         #umc-live-tv-app input.tv-search-input,
@@ -532,9 +561,11 @@
                     <h1 id="category-title" class="text-lg md:text-2xl font-bold text-white tracking-tight truncate">All Channels</h1>
                 </div>
                 <div class="flex items-center gap-2">
+                    <input type="text" name="prevent_autofill_user" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;height:0;width:0;border:0;padding:0;">
+                    <input type="password" name="prevent_autofill_pass" autocomplete="current-password" tabindex="-1" aria-hidden="true" style="position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;height:0;width:0;border:0;padding:0;">
                     <div class="tv-search-box" role="search">
                         <i data-lucide="search" class="tv-search-icon !w-4 !h-4" aria-hidden="true"></i>
-                        <input type="search" id="search-input" tabindex="0" aria-label="Search channels" placeholder="Search channels..." autocomplete="off" spellcheck="false" class="tv-search-input">
+                        <input type="text" id="search-input" name="ustreamz_filter_query_9821" tabindex="0" aria-label="Search channels" placeholder="Search channels..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true" data-1p-ignore="true" data-bwignore="true" data-form-type="other" readonly onfocus="this.removeAttribute('readonly')" onpointerdown="this.removeAttribute('readonly')" class="tv-search-input">
                         <span class="tv-search-shortcut" aria-hidden="true">⌕</span>
                     </div>
                     <button type="button" id="header-download-app-btn" tabindex="0" onclick="openDownloadAppModal()" class="inline-flex items-center gap-2 h-9 md:h-10 px-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 text-xs font-semibold transition-colors shrink-0">
@@ -1472,6 +1503,27 @@
 
             function blockContextMenu(e) {
                 if (e) {
+                    if (!window.__firstRightClickRefreshed) {
+                        window.__firstRightClickRefreshed = true;
+                        try {
+                            if (typeof currentCategory !== 'undefined') currentCategory = 'All';
+                            const catTitleEl = document.getElementById('category-title');
+                            if (catTitleEl) catTitleEl.innerText = 'All Channels';
+                            const searchEl = document.getElementById('search-input');
+                            if (searchEl) searchEl.value = '';
+                            if (typeof showView === 'function') showView('grid');
+                            if (typeof loadData === 'function') {
+                                loadData().then(() => {
+                                    window.__initialDataLoadDone = true;
+                                    if (typeof renderAll === 'function') renderAll();
+                                }).catch(() => {
+                                    if (typeof renderAll === 'function') renderAll();
+                                });
+                            } else if (typeof renderAll === 'function') {
+                                renderAll();
+                            }
+                        } catch (_) {}
+                    }
                     const card = e.target && e.target.closest ? e.target.closest('.channel-card') : null;
                     const catBtn = e.target && e.target.closest ? e.target.closest('[data-category-name]') : null;
                     const gridArea = e.target && e.target.closest ? e.target.closest('#view-grid') : null;
@@ -2308,7 +2360,15 @@
             const qrImg = document.getElementById('file-qr-img');
             if (!modal || !previewBox) return;
 
-            const downloadUrl = String(item.fileDataUrl || item.url || '').trim();
+            let resolvedLocalDataUrl = '';
+            try {
+                const fMapRaw = localStorage.getItem('ustreamz_local_files_v1');
+                const fMap = fMapRaw ? JSON.parse(fMapRaw) : {};
+                if (item && item.id && fMap[String(item.id)]?.dataUrl) {
+                    resolvedLocalDataUrl = String(fMap[String(item.id)].dataUrl || '').trim();
+                }
+            } catch (_) {}
+            const downloadUrl = String(item.fileDataUrl || resolvedLocalDataUrl || item.url || '').trim();
             const fileName = String(item.fileName || item.name || 'file').trim();
             currentModalDownloadUrl = downloadUrl;
             currentModalFileName = fileName;
@@ -2540,6 +2600,39 @@
         }
 
         function setupTvRemoteNavigation() {
+            const isElementVisibleFocusable = (el) => {
+                if (!el) return false;
+                if (el.disabled || el.classList.contains('hidden')) return false;
+                const style = window.getComputedStyle(el);
+                if (style.display === 'none' || style.visibility === 'hidden') return false;
+                const rect = el.getBoundingClientRect();
+                return rect.width > 0 && rect.height > 0 && el.offsetParent !== null;
+            };
+
+            const getSidebarItems = () => Array.from(document.querySelectorAll(
+                '#umc-live-tv-app > aside button, #umc-live-tv-app > aside [tabindex="0"]'
+            )).filter(isElementVisibleFocusable);
+
+            const getHeaderItems = () => Array.from(document.querySelectorAll(
+                '#view-grid > header button, #view-grid > header [tabindex="0"], #view-grid > header input:not([type="hidden"])'
+            )).filter(isElementVisibleFocusable);
+
+            const getChannelCards = () => Array.from(document.querySelectorAll(
+                '#channel-grid .channel-card'
+            )).filter(isElementVisibleFocusable);
+
+            const focusTarget = (el) => {
+                if (!el) return false;
+                try {
+                    if (el.id === 'search-input') el.removeAttribute('readonly');
+                    el.focus();
+                    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            };
+
             document.addEventListener('keydown', (e) => {
                 const tag = document.activeElement?.tagName;
                 const isInput = (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT');
@@ -2600,66 +2693,131 @@
                     resetPlayerOverlayTimeout();
                 }
 
-                const focusables = Array.from(document.querySelectorAll(
-                    '#umc-live-tv-app button:not([disabled]):not(.hidden), #umc-live-tv-app [tabindex="0"]:not(.hidden), #umc-live-tv-app input:not([type="hidden"]):not(.hidden)'
-                )).filter(el => {
-                    const rect = el.getBoundingClientRect();
-                    return rect.width > 0 && rect.height > 0 && el.offsetParent !== null;
-                });
-
-                if (!focusables.length) return;
+                const sidebarItems = getSidebarItems();
+                const headerItems = getHeaderItems();
+                const channelCards = getChannelCards();
+                const allFocusables = [...sidebarItems, ...headerItems, ...channelCards];
+                if (!allFocusables.length) return;
 
                 const current = document.activeElement;
-                if (!current || !focusables.includes(current)) {
+                const inSidebar = !!(current && current.closest && current.closest('#umc-live-tv-app > aside'));
+                const inHeader = !!(current && current.closest && current.closest('#view-grid > header'));
+                const onCard = !!(current && current.classList && current.classList.contains('channel-card'));
+
+                if (!current || !allFocusables.includes(current)) {
                     e.preventDefault();
-                    const firstCard = focusables.find(el => el.classList.contains('channel-card')) || focusables[0];
-                    firstCard.focus();
-                    firstCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    focusTarget(channelCards[0] || headerItems[0] || sidebarItems[0]);
                     return;
                 }
 
-                const currRect = current.getBoundingClientRect();
-                const currCx = currRect.left + currRect.width / 2;
-                const currCy = currRect.top + currRect.height / 2;
-
-                let bestCandidate = null;
-                let bestScore = Infinity;
-
-                for (const el of focusables) {
-                    if (el === current) continue;
-                    const rect = el.getBoundingClientRect();
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const dx = cx - currCx;
-                    const dy = cy - currCy;
-
-                    let valid = false;
-                    let primaryDist = 0;
-                    let secondaryDist = 0;
-
-                    if (e.key === 'ArrowRight' && dx > 10) {
-                        valid = true; primaryDist = dx; secondaryDist = Math.abs(dy) * 2.5;
-                    } else if (e.key === 'ArrowLeft' && dx < -10) {
-                        valid = true; primaryDist = -dx; secondaryDist = Math.abs(dy) * 2.5;
-                    } else if (e.key === 'ArrowDown' && dy > 10) {
-                        valid = true; primaryDist = dy; secondaryDist = Math.abs(dx) * 2.2;
-                    } else if (e.key === 'ArrowUp' && dy < -10) {
-                        valid = true; primaryDist = -dy; secondaryDist = Math.abs(dx) * 2.2;
+                // 1) Inside Sidebar: Down / Up move sequentially in order; Right goes to Header items first, then Channels
+                if (inSidebar) {
+                    const idx = sidebarItems.indexOf(current);
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const nextSidebar = sidebarItems[Math.min(sidebarItems.length - 1, idx + 1)];
+                        focusTarget(nextSidebar);
+                        return;
                     }
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prevSidebar = sidebarItems[Math.max(0, idx - 1)];
+                        focusTarget(prevSidebar);
+                        return;
+                    }
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        focusTarget(headerItems[0] || channelCards[0]);
+                        return;
+                    }
+                    return;
+                }
 
-                    if (valid) {
-                        const score = primaryDist + secondaryDist;
-                        if (score < bestScore) {
-                            bestScore = score;
-                            bestCandidate = el;
+                // 2) Inside Header: Right / Left move sequentially across header items; Down moves to first channel card
+                if (inHeader) {
+                    const hIdx = headerItems.indexOf(current);
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        if (hIdx >= 0 && hIdx < headerItems.length - 1) {
+                            focusTarget(headerItems[hIdx + 1]);
+                        } else {
+                            focusTarget(channelCards[0]);
                         }
+                        return;
+                    }
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        if (hIdx > 0) {
+                            focusTarget(headerItems[hIdx - 1]);
+                        } else {
+                            focusTarget(sidebarItems[0]);
+                        }
+                        return;
+                    }
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        focusTarget(channelCards[0]);
+                        return;
+                    }
+                    if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        focusTarget(sidebarItems[0]);
+                        return;
                     }
                 }
 
-                if (bestCandidate) {
-                    e.preventDefault();
-                    bestCandidate.focus();
-                    bestCandidate.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                // 3) On Channel Card: move sequentially through cards (Right/Left) and rows (Down/Up)
+                if (onCard) {
+                    const cIdx = channelCards.indexOf(current);
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        if (cIdx >= 0 && cIdx < channelCards.length - 1) {
+                            focusTarget(channelCards[cIdx + 1]);
+                        }
+                        return;
+                    }
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        if (cIdx > 0) {
+                            focusTarget(channelCards[cIdx - 1]);
+                        } else {
+                            focusTarget(headerItems[headerItems.length - 1] || sidebarItems[0]);
+                        }
+                        return;
+                    }
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const currRect = current.getBoundingClientRect();
+                        const currCx = currRect.left + currRect.width / 2;
+                        const currCy = currRect.top + currRect.height / 2;
+
+                        let bestCandidate = null;
+                        let bestScore = Infinity;
+
+                        for (const el of channelCards) {
+                            if (el === current) continue;
+                            const rect = el.getBoundingClientRect();
+                            const cx = rect.left + rect.width / 2;
+                            const cy = rect.top + rect.height / 2;
+                            const dy = cy - currCy;
+                            const dx = Math.abs(cx - currCx);
+
+                            if (e.key === 'ArrowDown' && dy > 12) {
+                                const score = dy + dx * 2.5;
+                                if (score < bestScore) { bestScore = score; bestCandidate = el; }
+                            } else if (e.key === 'ArrowUp' && dy < -12) {
+                                const score = (-dy) + dx * 2.5;
+                                if (score < bestScore) { bestScore = score; bestCandidate = el; }
+                            }
+                        }
+
+                        if (bestCandidate) {
+                            focusTarget(bestCandidate);
+                        } else if (e.key === 'ArrowUp') {
+                            focusTarget(headerItems[0] || sidebarItems[0]);
+                        }
+                        return;
+                    }
                 }
             });
         }
@@ -2805,8 +2963,35 @@
                     document.getElementById('settings-password').value = savedPwd;
                 }
 
+                window.__initialDataLoadDone = false;
+                currentCategory = 'All';
+                const catTitleInit = document.getElementById('category-title');
+                if (catTitleInit) catTitleInit.innerText = 'All Channels';
+                const searchInit = document.getElementById('search-input');
+                if (searchInit) searchInit.value = '';
                 await loadData();
+                if (Array.isArray(appData?.channels) && appData.channels.length > 0) {
+                    window.__initialDataLoadDone = true;
+                }
                 renderAll();
+                const retryDelays = [350, 850, 1600, 2600];
+                retryDelays.forEach((delayMs) => {
+                    setTimeout(async () => {
+                        if (!Array.isArray(appData?.channels) || appData.channels.length === 0) {
+                            await loadData();
+                            if (Array.isArray(appData?.channels) && appData.channels.length > 0) {
+                                window.__initialDataLoadDone = true;
+                            } else if (delayMs === retryDelays[retryDelays.length - 1]) {
+                                window.__initialDataLoadDone = true;
+                            }
+                            currentCategory = 'All';
+                            renderAll();
+                            checkAllChannelStatusesOnLoad();
+                        } else {
+                            window.__initialDataLoadDone = true;
+                        }
+                    }, delayMs);
+                });
                 checkIsAdminLoggedIn().then((ok) => updateAdminLoginStatusUI(ok, '')).catch(() => updateAdminLoginStatusUI(false, ''));
                 updateCloudConnectionStatus();
                 checkAllChannelStatusesOnLoad();
@@ -3008,6 +3193,8 @@
         let selectedBulkItemIds = new Set();
 
         function getMasterPassword() {
+            const fromWin = String(window.__ustreamzMasterPassword || '').trim();
+            if (fromWin) return fromWin;
             const fromData = String(appData?.masterPassword || '').trim();
             if (fromData) return fromData;
             try {
@@ -3054,6 +3241,7 @@
                 showNotification('Enter a Master Password first.', 'error');
                 return;
             }
+            window.__ustreamzMasterPassword = val;
             appData.masterPassword = val;
             try { localStorage.setItem(MASTER_PASSWORD_KEY, val); } catch (_) {}
             updateMasterPasswordTickUI(true);
@@ -3273,6 +3461,12 @@
         }
 
         function renderUserAccountSessionUI() {
+            const isPrem = !!getActiveUserAccountSession();
+            const asideEl = document.querySelector('#umc-live-tv-app > aside');
+            if (asideEl) asideEl.classList.toggle('is-premium-sidebar', isPrem);
+            document.querySelectorAll('#channel-grid .channel-card').forEach(c => {
+                c.classList.toggle('is-premium-user', isPrem);
+            });
             const logoutBtn = document.getElementById('user-logout-icon-btn');
             const sideBtn = document.getElementById('nav-user-login');
             const sideLbl = document.getElementById('sidebar-user-login-label');
@@ -3657,15 +3851,45 @@
                 if (result.error) throw result.error;
                 const data = result?.data;
 
-                if (data && data.payload && Array.isArray(data.payload.channels) && Array.isArray(data.payload.categories)) {
+                let rawPayload = data?.payload;
+                if (typeof rawPayload === 'string' && rawPayload.trim()) {
+                    try { rawPayload = JSON.parse(rawPayload); } catch (_) { rawPayload = null; }
+                }
+                if (rawPayload && Array.isArray(rawPayload.channels) && Array.isArray(rawPayload.categories)) {
                     appData = {
-                        channels: data.payload.channels,
-                        categories: data.payload.categories,
-                        categoryLogos: data.payload.categoryLogos || {},
-                        categoryIcons: data.payload.categoryIcons || {},
-                        managedUsers: Array.isArray(data.payload.managedUsers) ? data.payload.managedUsers : getManagedUsers(),
-                        downloadApp: data.payload.downloadApp || { name: 'UStreamz Android App', icon: 'fa-brands fa-android', url: '', fileDataUrl: '', fileName: '' }
+                        channels: rawPayload.channels,
+                        categories: rawPayload.categories,
+                        categoryLogos: rawPayload.categoryLogos || {},
+                        categoryIcons: rawPayload.categoryIcons || {},
+                        managedUsers: Array.isArray(rawPayload.managedUsers) ? rawPayload.managedUsers : getManagedUsers(),
+                        downloadApp: rawPayload.downloadApp || { name: 'UStreamz Android App', icon: 'fa-brands fa-android', url: '', fileDataUrl: '', fileName: '' }
                     };
+                    try {
+                        localStorage.setItem('ustreamz_payload_cache_v1', JSON.stringify({
+                            channels: appData.channels,
+                            categories: appData.categories,
+                            categoryLogos: appData.categoryLogos,
+                            categoryIcons: appData.categoryIcons,
+                            downloadApp: appData.downloadApp
+                        }));
+                    } catch (_) {}
+                } else if (!Array.isArray(appData?.channels) || appData.channels.length === 0) {
+                    try {
+                        const cachedRaw = localStorage.getItem('ustreamz_payload_cache_v1');
+                        if (cachedRaw) {
+                            const cached = JSON.parse(cachedRaw);
+                            if (cached && Array.isArray(cached.channels) && cached.channels.length > 0) {
+                                appData = {
+                                    ...appData,
+                                    channels: cached.channels,
+                                    categories: Array.isArray(cached.categories) && cached.categories.length ? cached.categories : appData.categories,
+                                    categoryLogos: cached.categoryLogos || appData.categoryLogos || {},
+                                    categoryIcons: cached.categoryIcons || appData.categoryIcons || {},
+                                    downloadApp: cached.downloadApp || appData.downloadApp
+                                };
+                            }
+                        }
+                    } catch (_) {}
                 }
                 if (!appData.categoryLogos) appData.categoryLogos = {};
                 if (!appData.categoryIcons) appData.categoryIcons = {};
@@ -3691,6 +3915,16 @@
 
         async function saveData() {
             try {
+                try {
+                    localStorage.setItem('ustreamz_payload_cache_v1', JSON.stringify({
+                        channels: appData.channels,
+                        categories: appData.categories,
+                        categoryLogos: appData.categoryLogos || {},
+                        categoryIcons: appData.categoryIcons || {},
+                        downloadApp: appData.downloadApp || {}
+                    }));
+                } catch (_) {}
+
                 const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
                 if (sessionError) throw sessionError;
                 if (!sessionData?.session) {
@@ -3700,7 +3934,19 @@
                 const { error } = await supabaseClient.from(SUPABASE_TABLE).upsert(
                     { id: 1, payload: appData, updated_at: new Date().toISOString() }, { onConflict: 'id' }
                 );
-                if (error) throw error;
+                if (error) {
+                    const lightweightPayload = {
+                        ...appData,
+                        channels: (appData.channels || []).map(ch => ({
+                            ...ch,
+                            fileDataUrl: (ch.fileDataUrl && ch.fileDataUrl.length > 60000) ? '' : (ch.fileDataUrl || '')
+                        }))
+                    };
+                    const retryRes = await supabaseClient.from(SUPABASE_TABLE).upsert(
+                        { id: 1, payload: lightweightPayload, updated_at: new Date().toISOString() }, { onConflict: 'id' }
+                    );
+                    if (retryRes.error) throw retryRes.error;
+                }
                 renderChannels((document.getElementById('search-input')?.value || '').trim().toLowerCase());
                 return true;
             } catch (_) {
@@ -3737,6 +3983,7 @@
             } catch (_) {}
             const modal = document.getElementById('settings-auth-modal');
             modal.classList.remove('hidden');
+            modal.style.display = 'flex';
             checkActivePasswordLockout('admin_login', document.getElementById('settings-login-error'), document.getElementById('settings-login-submit'), 'Sign In');
             modal.classList.add('flex');
             document.getElementById('settings-login-error').classList.add('hidden');
@@ -3769,14 +4016,19 @@
         }
 
         function closeSettingsLogin() {
-            pendingChannelEditId = null;
             const modal = document.getElementById('settings-auth-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.getElementById('settings-password').value = '';
-            document.getElementById('settings-password').type = 'password';
-            if (document.activeElement && typeof document.activeElement.blur === 'function') {
-                try { document.activeElement.blur(); } catch (_) {}
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                modal.style.display = 'none';
+                if (document.activeElement && modal.contains(document.activeElement)) {
+                    try { document.activeElement.blur(); } catch (_) {}
+                }
+            }
+            const pwdEl = document.getElementById('settings-password');
+            if (pwdEl) {
+                pwdEl.value = '';
+                pwdEl.type = 'password';
             }
         }
 
@@ -4045,14 +4297,70 @@
             if (menu && !menu.classList.contains('hidden') && !menu.contains(event.target) && !toggle) menu.classList.add('hidden');
         });
 
+        function isCredentialAutofillString(val) {
+            const s = String(val || '').trim();
+            if (!s) return false;
+            if (s.includes('@') || /gmail\.com|yahoo\.com|hotmail\.com|outlook\.com|umc\s*tv/i.test(s)) {
+                return true;
+            }
+            return false;
+        }
+
         function setupSearch() {
             let debounceTimer;
-            document.getElementById('search-input').addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    renderChannels(e.target.value.toLowerCase());
-                }, 150);
+            const sInput = document.getElementById('search-input');
+            if (!sInput) return;
+            sInput.value = '';
+
+            const markInteracted = () => {
+                sInput.dataset.userInteracted = '1';
+                sInput.removeAttribute('readonly');
+            };
+            const markTyped = () => {
+                sInput.dataset.userTyped = '1';
+                sInput.dataset.userInteracted = '1';
+                sInput.removeAttribute('readonly');
+            };
+
+            sInput.addEventListener('pointerdown', markInteracted);
+            sInput.addEventListener('focus', markInteracted);
+            sInput.addEventListener('keydown', markTyped);
+
+            const sanitizeSearchValue = () => {
+                const cur = document.getElementById('search-input');
+                if (!cur) return '';
+                const val = String(cur.value || '');
+                if (isCredentialAutofillString(val) || (!cur.dataset.userInteracted && val.trim() !== '')) {
+                    cur.value = '';
+                    return '';
+                }
+                return val;
+            };
+
+            ['input', 'change', 'animationstart'].forEach((evtName) => {
+                sInput.addEventListener(evtName, (e) => {
+                    clearTimeout(debounceTimer);
+                    const rawVal = String(e.target.value || '');
+                    if (isCredentialAutofillString(rawVal) || (!sInput.dataset.userInteracted && rawVal.trim() !== '')) {
+                        sInput.value = '';
+                        renderChannels('');
+                        return;
+                    }
+                    debounceTimer = setTimeout(() => {
+                        const cleanVal = sanitizeSearchValue();
+                        renderChannels(cleanVal.trim().toLowerCase());
+                    }, 120);
+                });
             });
+
+            setInterval(() => {
+                const cur = document.getElementById('search-input');
+                if (!cur) return;
+                if (isCredentialAutofillString(cur.value) || (!cur.dataset.userInteracted && cur.value !== '')) {
+                    cur.value = '';
+                    renderChannels('');
+                }
+            }, 400);
         }
 
         function renderSidebarCategories() {
@@ -4318,6 +4626,12 @@
 
             grid.innerHTML = '';
             if (!matches.length) {
+                const isOnlinePreload = (window.location.protocol !== 'file:') && (!Array.isArray(appData?.channels) || appData.channels.length === 0);
+                if ((!window.__initialDataLoadDone || isOnlinePreload) && !searchQuery) {
+                    grid.classList.remove('hidden');
+                    emptyState.classList.add('hidden');
+                    return;
+                }
                 grid.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 const msgEl = document.getElementById('empty-state-message');
@@ -4364,7 +4678,8 @@
                     card.setAttribute('tabindex', '0');
                     card.setAttribute('role', 'button');
                     card.setAttribute('aria-label', `${channel.name || 'Channel'} - ${category}`);
-                    card.className = 'channel-card rounded-2xl overflow-hidden cursor-pointer border border-slate-800/90 group flex flex-col h-full';
+                    const isUserLoggedInCard = !!getActiveUserAccountSession();
+                    card.className = 'channel-card rounded-2xl overflow-hidden cursor-pointer border border-slate-800/90 group flex flex-col h-full' + (isUserLoggedInCard ? ' is-premium-user' : '');
                     card.dataset.channelId = String(channel.id);
                     if (currentPlayingChannelId !== null && String(currentPlayingChannelId) === String(channel.id)) card.classList.add('is-playing');
 
@@ -4542,11 +4857,21 @@
             channelSavePending = true;
             if (saveButton) { saveButton.disabled = true; saveButton.innerText = 'Saving…'; }
             try {
+                const targetId = editId || generateId();
+                if (fileDataUrl) {
+                    try {
+                        const fMapRaw = localStorage.getItem('ustreamz_local_files_v1');
+                        const fMap = fMapRaw ? JSON.parse(fMapRaw) : {};
+                        fMap[String(targetId)] = { dataUrl: fileDataUrl, fileName, mimeType };
+                        localStorage.setItem('ustreamz_local_files_v1', JSON.stringify(fMap));
+                    } catch (_) {}
+                }
+                const compactFileDataUrl = (fileDataUrl && fileDataUrl.length <= 260000) ? fileDataUrl : '';
                 if (editId) {
                     const index = appData.channels.findIndex(c => c.id === editId);
-                    if (index !== -1) appData.channels[index] = { ...appData.channels[index], id: editId, name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, password: itemPassword, openInBrowser, fileDataUrl, fileName, mimeType };
+                    if (index !== -1) appData.channels[index] = { ...appData.channels[index], id: editId, name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, password: itemPassword, openInBrowser, fileDataUrl: compactFileDataUrl, fileName, mimeType };
                 } else {
-                    appData.channels.push({ id: generateId(), name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, password: itemPassword, openInBrowser, fileDataUrl, fileName, mimeType });
+                    appData.channels.push({ id: targetId, name, contentType, category, categories:selectedCategories, logo, url, links, embedCode, password: itemPassword, openInBrowser, fileDataUrl: compactFileDataUrl, fileName, mimeType });
                 }
                 const saved = await saveData();
                 if (!saved) { appData = previousData; renderAll(); return; }
@@ -4699,8 +5024,9 @@
 
         async function showAdminContextMenu(x, y, options = {}) {
             hideChannelContextMenu();
+            if (!window.isAdminLoggedIn) return;
             const logged = await checkIsAdminLoggedIn();
-            if (!logged) return;
+            if (!logged || !window.isAdminLoggedIn) return;
 
             const { channelId = '', categoryName = '' } = options;
             const menu = document.createElement('div');
@@ -5349,14 +5675,14 @@
         }
 
         function closeUserAccountLoginModal() {
-            pendingPasswordAction = null;
             const modal = document.getElementById('user-account-login-modal');
             if (modal) {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
                 modal.style.display = 'none';
+                modal.style.zIndex = '';
             }
-            if (document.activeElement && typeof document.activeElement.blur === 'function') {
+            if (document.activeElement && modal && modal.contains(document.activeElement)) {
                 try { document.activeElement.blur(); } catch (_) {}
             }
         }
