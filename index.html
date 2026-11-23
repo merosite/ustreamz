@@ -667,10 +667,28 @@
                 visibility: visible !important;
                 opacity: 1 !important;
             }
-            #umc-live-tv-app.mobile-rotated-landscape #view-player,
-            #umc-live-tv-app.mobile-rotated-landscape #player-container {
-                transform: rotate(90deg);
-                transform-origin: center center;
+            #umc-live-tv-app.mobile-rotated-landscape.rotate-dir-cw #view-player {
+                --mobile-rotate-deg: 90deg;
+            }
+            #umc-live-tv-app.mobile-rotated-landscape.rotate-dir-ccw #view-player {
+                --mobile-rotate-deg: -90deg;
+            }
+            #umc-live-tv-app.mobile-rotated-landscape #view-player {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                width: 100dvh !important;
+                height: 100vw !important;
+                transform: translate(-50%, -50%) rotate(var(--mobile-rotate-deg, -90deg)) !important;
+                transform-origin: center center !important;
+                z-index: 2147483647 !important;
+            }
+            #umc-live-tv-app.mobile-rotated-landscape #player-container,
+            #umc-live-tv-app.mobile-rotated-landscape #video-wrapper,
+            #umc-live-tv-app.mobile-rotated-landscape #video-element,
+            #umc-live-tv-app.mobile-rotated-landscape #embed-element {
+                width: 100% !important;
+                height: 100% !important;
             }
             /* Clean Mobile Responsive Buttons & Spacing */
             #umc-live-tv-app #player-overlay > div:first-child > div.flex {
@@ -691,6 +709,965 @@
                 min-height: 34px !important;
             }
         }
+
+        /* Mobile-only Back Key shown on screen touch during Fullscreen */
+        #mobile-fs-back-btn {
+            display: none !important;
+        }
+        @media (max-width: 1024px) and (hover: none), (max-width: 767px) {
+            #umc-live-tv-app.is-app-fullscreen.mobile-fs-controls-visible #mobile-fs-back-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                position: fixed !important;
+                top: max(12px, env(safe-area-inset-top, 12px)) !important;
+                left: max(12px, env(safe-area-inset-left, 12px)) !important;
+                z-index: 2147483647 !important;
+                width: 42px !important;
+                height: 42px !important;
+                border-radius: 9999px !important;
+                background: rgba(15, 23, 42, 0.9) !important;
+                border: 1px solid rgba(255, 255, 255, 0.22) !important;
+                color: #ffffff !important;
+                box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75) !important;
+            }
+        }
+
+        /* Mobile-only Top Category Icon Strip (img2 style) & Drawer Sidebar (img1 style) */
+        #mobile-top-category-strip {
+            display: none;
+        }
+        #mobile-sidebar-backdrop {
+            display: none;
+        }
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: min(80vw, 304px) !important;
+                max-width: 304px !important;
+                height: 100dvh !important;
+                z-index: 2147483642 !important;
+                transform: translateX(-100%) !important;
+                transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                box-shadow: 18px 0 50px rgba(0, 0, 0, 0.85) !important;
+                display: flex !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translateX(0) !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside span.hidden.md\:block,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside div.hidden.md\:block {
+                display: block !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside #nav-All,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside #category-list > button,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside #nav-user-login,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside #nav-settings,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside > button:first-of-type {
+                justify-content: flex-start !important;
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: rgba(2, 6, 23, 0.72) !important;
+                backdrop-filter: blur(2px) !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) #sidebar-reveal-btn {
+                display: none !important;
+            }
+
+            /* Top horizontal icon tile strip above channel grid (like img2) */
+            #mobile-top-category-strip {
+                display: flex !important;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px 6px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                border-bottom: 1px solid rgba(30, 41, 59, 0.85);
+                background: rgba(2, 6, 23, 0.92);
+                flex-shrink: 0;
+                z-index: 9;
+            }
+            #mobile-top-category-strip::-webkit-scrollbar {
+                display: none;
+            }
+            .mobile-cat-tile {
+                display: inline-flex !important;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                min-width: 58px;
+                max-width: 72px;
+                height: 58px;
+                padding: 5px 6px;
+                border-radius: 13px;
+                border: 1px solid #334155;
+                background: linear-gradient(180deg, #0f172a 0%, #090d16 100%);
+                color: #cbd5e1;
+                flex-shrink: 0;
+                transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+            }
+            .mobile-cat-tile.active {
+                border-color: #f97316;
+                background: linear-gradient(180deg, rgba(249, 115, 22, 0.22) 0%, rgba(15, 23, 42, 0.96) 100%);
+                color: #ffffff;
+                box-shadow: 0 4px 14px rgba(249, 115, 22, 0.25);
+            }
+            .mobile-cat-tile-icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(30, 41, 59, 0.85);
+                color: #38bdf8;
+                font-size: 13px;
+            }
+            .mobile-cat-tile.active .mobile-cat-tile-icon {
+                background: rgba(249, 115, 22, 0.28);
+                color: #fdba74;
+            }
+            .mobile-cat-tile-label {
+                font-size: 10px;
+                font-weight: 600;
+                line-height: 1.1;
+                max-width: 64px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+    
+        /* Mobile Sidebar Menu Styling (Mobile Drawer Only, Desktop Untouched) */
+        .mob-sb-pill {
+            margin-left: auto;
+            width: 34px;
+            height: 16px;
+            border-radius: 9999px;
+            background: #334155;
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            transition: background-color 0.2s ease;
+            flex-shrink: 0;
+        }
+        .mob-sb-pill-knob {
+            width: 18px;
+            height: 18px;
+            border-radius: 9999px;
+            background: #94a3b8;
+            position: absolute;
+            left: -1px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .mob-sb-pill.is-on {
+            background: rgba(249, 115, 22, 0.42);
+        }
+        .mob-sb-pill.is-on .mob-sb-pill-knob {
+            transform: translateX(17px);
+            background: #f97316;
+        }
+        @media (min-width: 768px) {
+            #mobile-sidebar-menu-section {
+                display: none !important;
+            }
+        }
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-All,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-nav > div.text-\[11px\],
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #category-list {
+                display: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-nav {
+                padding: 8px 10px !important;
+                gap: 2px !important;
+                overflow-y: auto !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside .mob-sb-item {
+                padding: 8px 10px !important;
+                border-radius: 10px !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V2 MOBILE SIDEBAR: NO BLURRY SHADOW, SMOOTH FINGER DRAG & 1-2PX CATEGORY GAP
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                filter: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                touch-action: pan-y !important;
+                will-change: transform !important;
+                transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1) !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside {
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging #mobile-sidebar-backdrop {
+                background: transparent !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                box-shadow: none !important;
+            }
+
+            /* 1-2px gap between mobile categories bar and channel contents below */
+            #mobile-top-category-strip {
+                margin-bottom: 2px !important;
+                padding-bottom: 5px !important;
+            }
+            #grid-scroll-container {
+                padding-top: 2px !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V3 MOBILE SIDEBAR: 1:1 LIVE FINGER SLIDE IN/OUT & SMOOTH SCROLL
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                filter: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                will-change: transform !important;
+                backface-visibility: hidden !important;
+                -webkit-backface-visibility: hidden !important;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-live-tracking > aside {
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-nav {
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                overscroll-behavior-y: contain !important;
+                touch-action: pan-y !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V4: NON-CENTERED SIDEBAR HIDE/SHOW BUTTONS & REAL-TIME FINGER TRACKING
+           ========================================================= */
+        #sidebar-reveal-btn {
+            top: 12px !important;
+            transform: none !important;
+        }
+        #sidebar-hide-hover {
+            top: 14px !important;
+            transform: none !important;
+        }
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                filter: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                will-change: transform !important;
+                backface-visibility: hidden !important;
+                -webkit-backface-visibility: hidden !important;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-live-tracking > aside {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V6: SAMSUNG INTERNET SIDEBAR LAYOUT, SINGLE-LINE LOGIN & EXACT FINGER DRAG
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > #user-welcome-subtitle {
+                display: flex !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type span.hidden.md\:block,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > #user-welcome-subtitle #user-welcome-text.hidden.md\:block {
+                display: block !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > div.p-2.md\:p-3.border-t {
+                flex-direction: row !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 6px !important;
+                padding: 10px 10px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-user-login,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-settings {
+                flex: 1 1 0% !important;
+                width: auto !important;
+                min-width: 0 !important;
+                justify-content: center !important;
+                padding: 10px 6px !important;
+                gap: 5px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-user-login i,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-settings i {
+                width: 18px !important;
+                height: 18px !important;
+                flex-shrink: 0 !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-user-login-label,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-admin-label {
+                display: inline !important;
+                margin-left: 0 !important;
+                font-size: 13px !important;
+                font-weight: 600 !important;
+                white-space: nowrap !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > div.p-2.md\:p-3.border-t::after {
+                content: "|";
+                color: #475569;
+                font-weight: 700;
+                font-size: 14px;
+                order: 1;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-user-login { order: 0; }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-settings { order: 2; }
+        }
+
+    
+        /* =========================================================
+           V7: TRUE FINGER-FOLLOWING DRAG (NO JUMP TO FULL SHOW/HIDE ON TOUCHMOVE)
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside {
+                transform: var(--mob-sb-drag-tx, translate3d(-100%, 0, 0)) !important;
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: transparent !important;
+                pointer-events: auto !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V8 MOBILE VIEW ONLY: SOLID OPAQUE CURVED PANEL, INSTANT DRAG,
+           BLOCK UNDERLYING CHANNEL CLICKS, LARGER TEXT & USTREAMZ TITLE
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                width: min(74vw, 272px) !important;
+                max-width: 272px !important;
+                background-color: #060d19 !important;
+                background-image: none !important;
+                opacity: 1 !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-top-right-radius: 22px !important;
+                border-bottom-right-radius: 22px !important;
+                overflow: hidden !important;
+                pointer-events: auto !important;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.16s ease-out;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside {
+                transform: var(--mob-sb-drag-tx, translate3d(-100%, 0, 0)) !important;
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: rgba(2, 6, 23, 0.55) !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                pointer-events: auto !important;
+            }
+
+            /* Slightly larger text inside mobile sidebar, welcome user & login */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #user-welcome-text {
+                font-size: 15px !important;
+                font-weight: 700 !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside .mob-sb-item span {
+                font-size: 15.5px !important;
+                font-weight: 500 !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-user-login-label,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-admin-label {
+                font-size: 14.5px !important;
+                font-weight: 700 !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V9: DESKTOP CENTERED SHOW/HIDE BTN & SINGLE CONSISTENT MOBILE TOUCH DRAG
+           ========================================================= */
+        @media (min-width: 768px) {
+            #sidebar-reveal-btn {
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+            }
+            #sidebar-hide-hover {
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                width: min(74vw, 272px) !important;
+                max-width: 272px !important;
+                background-color: #060d19 !important;
+                background-image: none !important;
+                opacity: 1 !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                border-top-right-radius: 22px !important;
+                border-bottom-right-radius: 22px !important;
+                overflow: hidden !important;
+                will-change: transform;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v9-dragging > aside {
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v9-dragging #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: rgba(2, 6, 23, 0.55) !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                pointer-events: auto !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V10: ZERO-LAG INITIAL SHOW/HIDE ON MOBILE FINGER TOUCH
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+                filter: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                will-change: transform;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v10-no-lag > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v9-dragging > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).mob-sb-dragging > aside {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V11 MOBILE SIDEBAR (+50PX WIDTH, LARGER LOGO & WELCOME, 5PX GAPS, CLEAR LOGIN TEXT)
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                width: min(84vw, 322px) !important;
+                max-width: 322px !important;
+            }
+
+            /* Larger Ustreamz Logo + 5px gap on mobile side panel */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type {
+                gap: 5px !important;
+                margin-top: 5px !important;
+                margin-bottom: 5px !important;
+                padding-left: 14px !important;
+                padding-right: 14px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type > div {
+                padding: 7px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type i,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type svg {
+                width: 26px !important;
+                height: 26px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type > span {
+                display: inline-block !important;
+                margin-left: 5px !important;
+                font-size: 23px !important;
+                font-weight: 800 !important;
+                line-height: 1.15 !important;
+            }
+
+            /* Larger Welcome User + 5px top & bottom gap */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > #user-welcome-subtitle {
+                margin-top: 5px !important;
+                margin-bottom: 5px !important;
+                padding-top: 7px !important;
+                padding-bottom: 7px !important;
+                gap: 7px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #user-welcome-text {
+                display: inline-block !important;
+                font-size: 16.5px !important;
+                font-weight: 700 !important;
+                line-height: 1.25 !important;
+            }
+
+            /* 5px gap above other sidebar content */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-nav {
+                margin-top: 5px !important;
+                padding-top: 5px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #mobile-sidebar-menu-section {
+                margin-top: 5px !important;
+            }
+
+            /* Ensure User Login and Admin Login text render clearly without clipping */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > div.p-2.md\:p-3.border-t {
+                gap: 6px !important;
+                padding: 10px 8px !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-user-login,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #nav-settings {
+                padding: 10px 6px !important;
+                gap: 6px !important;
+                overflow: visible !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-user-login-label,
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside #sidebar-admin-label {
+                display: inline-block !important;
+                margin-left: 0 !important;
+                font-size: 13.5px !important;
+                font-weight: 700 !important;
+                line-height: 1.2 !important;
+                overflow: visible !important;
+                text-overflow: clip !important;
+                white-space: nowrap !important;
+                color: inherit !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V12 MOBILE VIEW: 100% LIVE FINGER SWIPE (ZERO DELAY) & HIDE SIDEBAR SHOW/HIDE BTN ON MOBILE
+           ========================================================= */
+        @media (max-width: 767px) {
+            /* Hide sidebar show/hide toggle buttons in mobile view only */
+            #umc-live-tv-app #view-grid > header button[onclick*="toggleSidebarPanel"],
+            #umc-live-tv-app #sidebar-reveal-btn,
+            #umc-live-tv-app #sidebar-hide-hover {
+                display: none !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
+            }
+
+            /* Instant, live transform on mobile sidebar during swipe */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.3, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > aside {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V13 MOBILE VIEW: BLOCK CHANNEL CLICKS WHILE SIDEBAR PULLED/OPEN & CONSISTENT CHANNEL TOUCH
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app #channel-grid,
+            #umc-live-tv-app .channel-card {
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                pointer-events: auto !important;
+            }
+
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #view-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #view-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #channel-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #channel-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open .channel-card,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe .channel-card {
+                pointer-events: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V14 MOBILE VIEW: INSTANT EDGE TOUCH RESPONSE & SILKY ZERO-HANG DRAG
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                contain: layout style;
+                will-change: transform;
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > aside {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V15 MOBILE VIEW: LOCK CHANNELS COMPLETELY STILL WHILE SIDE PANEL SLIDES
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #view-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged #view-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #view-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #grid-scroll-container,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged #grid-scroll-container,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #grid-scroll-container,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #channel-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged #channel-grid,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #channel-grid {
+                touch-action: none !important;
+                overflow: hidden !important;
+                pointer-events: none !important;
+            }
+
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe .channel-card,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged .channel-card,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open .channel-card {
+                transform: none !important;
+                transition: none !important;
+                pointer-events: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V16 MOBILE VIEW: HIDE PLAY ICON ON MOBILE CHANNELS & REALISTIC NATIVE DRAWER SWIPE
+           ========================================================= */
+        @media (max-width: 767px) {
+            /* Hide play icon overlay on channel cards on mobile view */
+            #umc-live-tv-app .channel-card .play-overlay {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+
+            /* Clean realistic drawer transform & backdrop */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                transform: translate3d(-100%, 0, 0);
+                transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+                will-change: transform;
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > aside {
+                transform: translate3d(0, 0, 0);
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > aside {
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) #mobile-sidebar-backdrop {
+                transition: opacity 0.22s ease;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping #mobile-sidebar-backdrop {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V17 MOBILE VIEW: ULTRA-FAST SNAPPY DRAWER RESPONSE & SNAP
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > aside {
+                transition: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) #mobile-sidebar-backdrop {
+                transition: opacity 0.14s ease-out !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping #mobile-sidebar-backdrop {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V18 MOBILE VIEW: ZERO CHANNEL CLICK-THROUGH ON BACKDROP CLOSE & ULTRA-SMOOTH JANK-FREE SHOW/HIDE
+           ========================================================= */
+        @media (max-width: 767px) {
+            /* Eliminate backdrop-filter GPU stutter during open/close animation */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen) #mobile-sidebar-backdrop {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
+
+            /* Crisp, fast, non-stuttering GPU transform & backdrop fade */
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                will-change: transform !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) #mobile-sidebar-backdrop {
+                display: none;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.11s linear !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: rgba(2, 6, 23, 0.56) !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+
+            /* Prevent any click/tap from reaching channel cards when drawer is open */
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > main {
+                pointer-events: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen).v18-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > aside,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > aside {
+                transition: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V21 MOBILE VIEW ONLY: 3-DOT SIDEBAR SHOW/HIDE BTN BEFORE TITLE & SLIGHTLY LARGER TITLE
+           ========================================================= */
+        #mob-3dot-sidebar-btn {
+            display: none;
+        }
+        @media (max-width: 767px) {
+            #mob-3dot-sidebar-btn {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 36px !important;
+                height: 36px !important;
+                border-radius: 12px !important;
+                border: 1px solid rgba(148, 163, 184, 0.28) !important;
+                background: linear-gradient(180deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.96) 100%) !important;
+                color: #f8fafc !important;
+                flex-shrink: 0 !important;
+                transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease !important;
+            }
+            #mob-3dot-sidebar-btn:active {
+                transform: scale(0.94) !important;
+                border-color: #f97316 !important;
+            }
+            #umc-live-tv-app #category-title {
+                font-size: clamp(16px, 4.8vw, 21px) !important;
+                font-weight: 800 !important;
+                letter-spacing: -0.02em !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside > button:first-of-type > span {
+                font-size: 25px !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V22 MOBILE VIEW ONLY: BLOCK ALL BACKGROUND TOUCHES (CHANNELS, CATEGORIES, DOWNLOAD BTN, HEADER) WHEN SIDEPANEL OPEN
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > main *,
+            #umc-live-tv-app:not(.is-app-fullscreen).v18-swiping > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).v18-swiping > main *,
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping > main *,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping > main *,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe > main *,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged > main * {
+                pointer-events: none !important;
+                touch-action: none !important;
+            }
+
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v18-swiping #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged #mobile-sidebar-backdrop {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                pointer-events: auto !important;
+                touch-action: none !important;
+            }
+
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                z-index: 2147483642 !important;
+                pointer-events: auto !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V23 MOBILE VIEW ONLY: NO HOVER ON SIDE PANEL ITEMS, TOUCH/ACTIVE FEEDBACK ONLY ON TAPPED ITEM
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app > aside,
+            #umc-live-tv-app > aside *:hover,
+            #umc-live-tv-app > aside button:hover,
+            #umc-live-tv-app > aside a:hover,
+            #umc-live-tv-app > aside .mob-sb-item:hover,
+            #umc-live-tv-app > aside .nav-btn:hover {
+                background-color: transparent !important;
+                background-image: none !important;
+                color: inherit !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+            }
+            #umc-live-tv-app > aside button:active,
+            #umc-live-tv-app > aside .mob-sb-item:active,
+            #umc-live-tv-app > aside .nav-btn:active {
+                background-color: rgba(30, 41, 59, 0.75) !important;
+                color: #ffffff !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V24 MOBILE VIEW ONLY: ZERO RESPONSE ON OUTSIDE SWIPE UP/DOWN WHEN SLIDE PANEL OPEN
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open > main,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-sidebar-backdrop,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #grid-scroll-container,
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #mobile-top-category-strip {
+                overscroll-behavior: none !important;
+                touch-action: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V25 MOBILE VIEW ONLY: STOP CHANNEL CARDS FROM SHIFTING/MOVING ON SIDEPANEL TAP OR POPUP CANCEL
+           ========================================================= */
+        @media (max-width: 767px) {
+            #umc-live-tv-app.mobile-drawer-open #channel-grid,
+            #umc-live-tv-app.mobile-drawer-open .channel-card,
+            #umc-live-tv-app.v25-modal-settling #channel-grid,
+            #umc-live-tv-app.v25-modal-settling .channel-card {
+                transform: none !important;
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+
+    
+        /* =========================================================
+           V26 MOBILE VIEW ONLY: FULL TOUCH & GHOST-CLICK SHIELD OUTSIDE SIDEPANEL WHEN SHOWN
+           ========================================================= */
+        #v26-outside-shield {
+            display: none;
+        }
+        @media (max-width: 767px) {
+            #umc-live-tv-app:not(.is-app-fullscreen).mobile-drawer-open #v26-outside-shield,
+            #umc-live-tv-app:not(.is-app-fullscreen).v18-swiping #v26-outside-shield,
+            #umc-live-tv-app:not(.is-app-fullscreen).v17-fast-swiping #v26-outside-shield,
+            #umc-live-tv-app:not(.is-app-fullscreen).v16-swiping #v26-outside-shield,
+            #umc-live-tv-app:not(.is-app-fullscreen).v12-live-swipe #v26-outside-shield,
+            #umc-live-tv-app:not(.is-app-fullscreen).v14-edge-engaged #v26-outside-shield {
+                display: block !important;
+                position: fixed !important;
+                inset: 0 !important;
+                z-index: 2147483641 !important;
+                background: transparent !important;
+                pointer-events: auto !important;
+                touch-action: none !important;
+            }
+            #umc-live-tv-app:not(.is-app-fullscreen) > aside {
+                z-index: 2147483642 !important;
+                pointer-events: auto !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -704,6 +1681,8 @@
 </div>
 
 <div id="umc-live-tv-app" class="flex w-full antialiased selection:bg-indigo-500 selection:text-white">
+    <div id="mobile-sidebar-backdrop" onclick="closeMobileSidebarDrawer()"></div>
+    <button type="button" id="mobile-fs-back-btn" onclick="handleMobileFullscreenBack(event)" title="Back" aria-label="Back from Fullscreen"><i data-lucide="arrow-left" class="!w-5 !h-5"></i></button>
 
     <!-- Sidebar -->
     <button id="sidebar-reveal-btn" type="button" tabindex="0" onclick="toggleSidebarPanel()" title="Show categories panel" aria-label="Show categories panel" class="h-12 w-7 items-center justify-center rounded-r-lg bg-slate-800 text-white shadow-lg"><i data-lucide="panel-left-open" class="!w-4 !h-4"></i></button>
@@ -728,9 +1707,52 @@
         <nav class="flex-1 py-3 px-2 md:px-3 flex flex-col gap-1.5 overflow-y-auto" id="sidebar-nav">
 
             <button type="button" tabindex="0" onclick="setCategory('All')" id="nav-All" class="nav-btn w-full flex items-center justify-center md:justify-start px-2.5 md:px-3 py-2.5 md:py-3 rounded-xl bg-indigo-500/10 text-indigo-400 group transition-colors">
-                <i data-lucide="layout-grid" class="!w-5 !h-5"></i>
+                <i data-lucide="layout-grid" class="!w-5 !h-5 shrink-0"></i>
                 <span class="ml-3 font-medium hidden md:block">All Channels</span>
             </button>
+
+            <!-- Mobile-only Sidebar Menu Items -->
+            <div id="mobile-sidebar-menu-section" class="flex md:hidden flex-col gap-1 w-full">
+                <button type="button" data-mob-sb="networkStream" onclick="closeMobileSidebarDrawer(); openMobileNetworkStreamModal()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="globe" class="!w-5 !h-5 text-sky-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Network Stream</span>
+                </button>
+                <button type="button" data-mob-sb="cricScore" onclick="closeMobileSidebarDrawer(); openMobileCricScoreModal()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="trophy" class="!w-5 !h-5 text-amber-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Cric Score</span>
+                </button>
+                <button type="button" data-mob-sb="floatingPlayer" onclick="toggleMobileFloatingPlayer()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="picture-in-picture-2" class="!w-5 !h-5 text-indigo-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Floating Player</span>
+                    <span id="mob-sb-floating-pill" class="mob-sb-pill is-on" aria-hidden="true"><span class="mob-sb-pill-knob"></span></span>
+                </button>
+                <button type="button" data-mob-sb="crashHandling" onclick="toggleMobileCrashHandling()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="shield-alert" class="!w-5 !h-5 text-rose-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Disable Crash Handling</span>
+                    <span id="mob-sb-crash-pill" class="mob-sb-pill" aria-hidden="true"><span class="mob-sb-pill-knob"></span></span>
+                </button>
+                <button type="button" data-mob-sb="copyright" onclick="closeMobileSidebarDrawer(); openMobileCopyrightModal()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="copyright" class="!w-5 !h-5 text-slate-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Copyright</span>
+                </button>
+                <div class="my-1.5 border-t border-slate-700/80 pt-2 px-3 text-xs font-semibold text-slate-400">Communicate</div>
+                <button type="button" data-mob-sb="contact" onclick="closeMobileSidebarDrawer(); openMobileContactModal()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="help-circle" class="!w-5 !h-5 text-cyan-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Contact</span>
+                </button>
+                <button type="button" data-mob-sb="share" onclick="closeMobileSidebarDrawer(); shareMobileAppLink()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="share-2" class="!w-5 !h-5 text-emerald-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Share</span>
+                </button>
+                <button type="button" data-mob-sb="updateApp" onclick="closeMobileSidebarDrawer(); openMobileUpdateModal()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-slate-200 hover:bg-slate-800/80 transition-colors">
+                    <i data-lucide="refresh-cw" class="!w-5 !h-5 text-amber-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Update App</span>
+                </button>
+                <button type="button" data-mob-sb="exitApp" onclick="closeMobileSidebarDrawer(); exitMobileAppView()" class="mob-sb-item w-full flex items-center justify-start px-3 py-2.5 rounded-xl text-rose-300 hover:bg-rose-950/70 transition-colors">
+                    <i data-lucide="log-out" class="!w-5 !h-5 text-rose-400 shrink-0"></i>
+                    <span class="ml-3 text-sm font-medium truncate">Exit</span>
+                </button>
+            </div>
             
             <div class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider mt-3 mb-1 hidden md:block px-3">Categories</div>
             
@@ -797,6 +1819,7 @@
                 </div>
             </header>
             
+            <div id="mobile-top-category-strip" aria-label="Categories"></div>
             <div id="grid-bulk-mark-bar" class="hidden items-center justify-between gap-2 px-4 md:px-6 lg:px-10 py-2 bg-amber-950/80 border-b border-amber-500/40 text-xs shrink-0 z-10">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <span class="inline-flex items-center gap-1 font-bold text-amber-300">
@@ -972,6 +1995,10 @@
                             </div>
                         </div>
                         <div class="pt-1 border-t border-slate-800 flex flex-col gap-1.5">
+                            <button type="button" onclick="closeAdminProfileCard(); openMobileSidebarAdminModal();" class="w-full rounded-lg border border-sky-500/40 bg-sky-600/20 hover:bg-sky-600 text-sky-200 hover:text-white px-2.5 py-1.5 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+                                <i data-lucide="smartphone" class="!w-3.5 !h-3.5"></i>
+                                <span>Manage Mobile Sidebar</span>
+                            </button>
                             <button type="button" onclick="closeAdminProfileCard(); openUserAccountLoginModal();" class="w-full rounded-lg border border-emerald-500/40 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors">User Login</button>
                             <div class="flex items-center justify-between gap-2">
                                 <button type="button" onclick="closeAdminProfileCard(); requestSettings();" class="flex-1 rounded-lg border border-indigo-500/40 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-200 hover:text-white px-2.5 py-1.5 text-xs font-semibold transition-colors">Admin Login</button>
@@ -1008,6 +2035,10 @@
                     <button type="button" data-settings-tab="download-app" onclick="setSettingsTab('download-app')" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">
                         <i class="fa-brands fa-android text-xs shrink-0"></i>
                         <span>Download App Manager</span>
+                    </button>
+                    <button type="button" data-settings-tab="mobile-sidebar" onclick="openMobileSidebarAdminModal()" class="settings-menu-tab inline-flex items-center justify-center gap-1.5 rounded-lg px-2 xl:px-3 py-1.5 text-[11px] xl:text-xs font-semibold whitespace-nowrap text-sky-300 hover:bg-slate-800 hover:text-white transition-colors">
+                        <i data-lucide="smartphone" class="!w-3.5 !h-3.5 shrink-0"></i>
+                        <span>Mobile Sidebar</span>
                     </button>
                 </div>
             </nav>
@@ -1839,6 +2870,137 @@
                 <div class="flex gap-2.5 pt-1">
                     <button type="button" onclick="closeDeleteConfirmModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
                     <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar: Network Stream Modal (Link Only) -->
+    <div id="mob-network-stream-modal" onclick="if(event.target===this)closeMobileNetworkStreamModal()" class="fixed inset-0 z-[2147483645] hidden items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-md rounded-3xl border border-sky-500/40 bg-slate-900 p-5 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/35 flex items-center justify-center text-sky-400">
+                        <i data-lucide="globe" class="!w-5 !h-5"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Network Stream</h3>
+                </div>
+                <button type="button" onclick="closeMobileNetworkStreamModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+            </div>
+            <form onsubmit="playMobileNetworkStream(event)" class="space-y-3">
+                <input type="url" id="mob-network-stream-url" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white" placeholder="https://example.com/live/stream.m3u8">
+                <div class="flex gap-2.5 pt-1">
+                    <button type="button" onclick="closeMobileNetworkStreamModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 py-2.5 text-xs font-semibold text-slate-200">Cancel</button>
+                    <button type="submit" class="flex-1 rounded-xl bg-sky-600 hover:bg-sky-500 py-2.5 text-xs font-bold text-white">Play</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar: Cric Score Modal -->
+    <div id="mob-cric-score-modal" onclick="if(event.target===this)closeMobileCricScoreModal()" class="fixed inset-0 z-[2147483645] hidden items-center justify-center bg-slate-950/90 p-2 sm:p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-2xl h-[88dvh] flex flex-col rounded-3xl border border-amber-500/40 bg-slate-950 shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800 bg-slate-900 shrink-0">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="trophy" class="!w-5 !h-5 text-amber-400"></i>
+                    <h3 class="text-sm sm:text-base font-bold text-white">Cric Score — CREX</h3>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <a id="mob-crex-ext-link" href="https://crex.com/fixtures/match-list" target="_blank" rel="noopener noreferrer" class="rounded-lg border border-slate-700 bg-slate-800 hover:bg-amber-600 px-2.5 py-1.5 text-[11px] font-semibold text-slate-200 hover:text-white inline-flex items-center gap-1">
+                        <i data-lucide="external-link" class="!w-3 h-3"></i>
+                        <span>Open Web</span>
+                    </a>
+                    <button type="button" onclick="closeMobileCricScoreModal()" class="rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-1.5"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+                </div>
+            </div>
+            <div class="flex items-center gap-1.5 px-3 py-2 bg-slate-900/90 border-b border-slate-800 overflow-x-auto shrink-0">
+                <button type="button" data-mob-crex="live" onclick="switchMobileCrexTab('live')" class="mob-crex-tab px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500 text-slate-950 shrink-0">Live</button>
+                <button type="button" data-mob-crex="foryou" onclick="switchMobileCrexTab('foryou')" class="mob-crex-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white shrink-0">For You</button>
+                <button type="button" data-mob-crex="all" onclick="switchMobileCrexTab('all')" class="mob-crex-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white shrink-0">All Match</button>
+                <button type="button" data-mob-crex="upcoming" onclick="switchMobileCrexTab('upcoming')" class="mob-crex-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white shrink-0">Upcoming</button>
+                <button type="button" data-mob-crex="recent" onclick="switchMobileCrexTab('recent')" class="mob-crex-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white shrink-0">Recent</button>
+            </div>
+            <div class="flex-1 min-h-0 bg-slate-950">
+                <iframe id="mob-cric-score-iframe" src="about:blank" class="w-full h-full border-0 bg-slate-950" referrerpolicy="no-referrer" loading="lazy"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar: Copyright Modal -->
+    <div id="mob-copyright-modal" onclick="if(event.target===this)closeMobileCopyrightModal()" class="fixed inset-0 z-[2147483645] hidden items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-md rounded-3xl border border-slate-700 bg-slate-900 p-5 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="copyright" class="!w-5 !h-5 text-indigo-400"></i>
+                    <h3 class="text-base font-bold text-white">Copyright</h3>
+                </div>
+                <button type="button" onclick="closeMobileCopyrightModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">
+                UStreamz does not host or store any media files on its own servers. All streams and links belong to their respective owners.
+            </p>
+            <div class="flex justify-end pt-1">
+                <button type="button" onclick="closeMobileCopyrightModal()" class="rounded-xl bg-indigo-600 hover:bg-indigo-500 px-4 py-2 text-xs font-semibold text-white">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar: Contact & Update Modal -->
+    <div id="mob-contact-modal" onclick="if(event.target===this)closeMobileContactModal()" class="fixed inset-0 z-[2147483645] hidden items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-md rounded-3xl border border-cyan-500/40 bg-slate-900 p-5 shadow-2xl space-y-3">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="help-circle" class="!w-5 !h-5 text-cyan-400"></i>
+                    <h3 id="mob-info-modal-title" class="text-base font-bold text-white">Contact</h3>
+                </div>
+                <button type="button" onclick="closeMobileContactModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+            </div>
+            <div id="mob-info-modal-body" class="text-xs text-slate-200 whitespace-pre-line leading-relaxed bg-slate-950 border border-slate-800 rounded-2xl p-3.5"></div>
+            <div class="flex items-center justify-end gap-2 pt-1">
+                <a id="mob-info-modal-link" href="#" target="_blank" rel="noopener noreferrer" class="hidden rounded-xl bg-cyan-600 hover:bg-cyan-500 px-4 py-2 text-xs font-bold text-white">Open Link</a>
+                <button type="button" onclick="closeMobileContactModal()" class="rounded-xl bg-slate-800 hover:bg-slate-700 px-4 py-2 text-xs font-semibold text-slate-200">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Setting: Manage Mobile Sidebar Modal -->
+    <div id="admin-mobile-sidebar-modal" onclick="if(event.target===this)closeMobileSidebarAdminModal()" class="fixed inset-0 z-[2147483646] hidden items-center justify-center bg-slate-950/85 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-lg max-h-[92dvh] flex flex-col rounded-3xl border border-sky-500/40 bg-slate-900 p-5 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-500/35 flex items-center justify-center text-sky-400">
+                        <i data-lucide="smartphone" class="!w-5 !h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Mobile Sidebar Settings</h3>
+                        <p class="text-[11px] text-slate-400">Configure Mobile Sidebar menu items, Contact &amp; Update App link</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeMobileSidebarAdminModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2"><i data-lucide="x" class="!w-4 !h-4"></i></button>
+            </div>
+            <form onsubmit="saveMobileSidebarAdminSettings(event)" class="mt-4 flex-1 min-h-0 overflow-y-auto pr-1 space-y-4 text-xs">
+                <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-3.5 space-y-2.5">
+                    <div class="font-bold text-cyan-300">Contact &amp; Update App Links</div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Contact Details</label>
+                        <textarea id="ams-contact-text" rows="2" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white" placeholder="Telegram: @ustreamz | Email: support@ustreamz.app"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Contact Link (Optional)</label>
+                        <input type="url" id="ams-contact-url" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white" placeholder="https://t.me/yourchannel">
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 mb-1">Update App URL</label>
+                        <input type="url" id="ams-update-url" class="w-full rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white" placeholder="https://example.com/app.apk">
+                    </div>
+                </div>
+                <div class="rounded-2xl border border-slate-800 bg-slate-950/80 p-3.5 space-y-2">
+                    <div class="font-bold text-emerald-300">Show / Hide Mobile Sidebar Menu Items</div>
+                    <div id="ams-items-checklist" class="grid grid-cols-2 gap-2 pt-1"></div>
+                </div>
+                <div class="flex gap-2.5 pt-2">
+                    <button type="button" onclick="closeMobileSidebarAdminModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 py-2.5 font-semibold text-slate-200">Cancel</button>
+                    <button type="submit" class="flex-1 rounded-xl bg-sky-600 hover:bg-sky-500 py-2.5 font-bold text-white shadow-lg">Save</button>
                 </div>
             </form>
         </div>
@@ -3361,23 +4523,40 @@
             }
         }
 
-        async function forceMobileLandscapeMode(showToast = false) {
+        let mobileLandscapeDirection = 'ccw'; // 'ccw' (-90deg) or 'cw' (90deg)
+
+        function applyLandscapeDirectionClass(appEl, dir) {
+            if (!appEl) return;
+            appEl.classList.remove('rotate-dir-cw', 'rotate-dir-ccw');
+            const cleanDir = (dir === 'cw') ? 'cw' : 'ccw';
+            mobileLandscapeDirection = cleanDir;
+            appEl.classList.add(cleanDir === 'cw' ? 'rotate-dir-cw' : 'rotate-dir-ccw');
+            appEl.style.setProperty('--mobile-rotate-deg', cleanDir === 'cw' ? '90deg' : '-90deg');
+        }
+
+        async function forceMobileLandscapeMode(showToast = false, tiltGamma = null) {
             if (!isMobileDeviceContext()) return;
             const appEl = document.getElementById('umc-live-tv-app');
             if (!isSimulatedFullscreen && typeof enterAppFullScreen === 'function') {
                 enterAppFullScreen();
             }
             isMobileRotatedLandscape = true;
-            if (appEl) appEl.classList.add('mobile-rotated-landscape');
+            const dir = (typeof tiltGamma === 'number' && tiltGamma < 0) ? 'cw' : mobileLandscapeDirection;
+            applyLandscapeDirectionClass(appEl, dir);
+            if (appEl) {
+                appEl.classList.add('mobile-rotated-landscape');
+            }
             try {
                 if (screen.orientation && typeof screen.orientation.lock === 'function') {
                     await screen.orientation.lock('landscape').catch(() => {});
                 }
             } catch (_) {}
             if (showToast && typeof showNotification === 'function') {
-                showNotification('Landscape locked');
+                showNotification(dir === 'cw' ? 'Landscape (90°)' : 'Landscape (-90°)');
             }
         }
+
+        let mobileRotateClickStep = 0; // 0: Default, 1: Left Landscape (-90deg), 2: Right Landscape (90deg)
 
         async function toggleMobileScreenRotate(e) {
             if (e) {
@@ -3388,24 +4567,40 @@
             if (typeof resetPlayerOverlayTimeout === 'function') resetPlayerOverlayTimeout();
 
             const appEl = document.getElementById('umc-live-tv-app');
-            if (!isMobileRotatedLandscape) {
+            mobileRotateClickStep = (mobileRotateClickStep + 1) % 3;
+
+            if (mobileRotateClickStep === 1) {
+                // Left Landscape (-90deg)
+                mobileLandscapeDirection = 'ccw';
                 await forceMobileLandscapeMode(true);
+                if (typeof showNotification === 'function') showNotification('Left Landscape');
+            } else if (mobileRotateClickStep === 2) {
+                // Right Landscape (90deg)
+                mobileLandscapeDirection = 'cw';
+                await forceMobileLandscapeMode(true);
+                if (typeof showNotification === 'function') showNotification('Right Landscape');
             } else {
+                // Default orientation
                 isMobileRotatedLandscape = false;
-                if (appEl) appEl.classList.remove('mobile-rotated-landscape');
+                mobileLandscapeDirection = 'ccw';
+                if (appEl) {
+                    appEl.classList.remove('mobile-rotated-landscape', 'rotate-dir-cw', 'rotate-dir-ccw');
+                    appEl.style.removeProperty('--mobile-rotate-deg');
+                }
                 try {
                     if (screen.orientation && typeof screen.orientation.unlock === 'function') {
                         screen.orientation.unlock();
                     }
                 } catch (_) {}
-                if (typeof showNotification === 'function') showNotification('Screen orientation reset');
+                if (typeof showNotification === 'function') showNotification('Default Orientation');
             }
         }
 
         function setupMobileTiltForceLandscape() {
             const handleTiltOrOrientationChange = () => {
                 if (!isMobileDeviceContext()) {
-                    syncMobileRotateButtonVisibility();
+                    setupMobileFullscreenTouchBack();
+                                syncMobileRotateButtonVisibility();
                     return;
                 }
                 syncMobileRotateButtonVisibility();
@@ -3426,9 +4621,62 @@
                 const playerActive = !!document.getElementById('view-player')?.classList.contains('active');
                 if (!playerActive && !isSimulatedFullscreen) return;
                 const gamma = Math.abs(Number(ev?.gamma || 0));
-                if (gamma >= 55) {
-                    forceMobileLandscapeMode(false);
+                if (Math.abs(gamma) >= 55) {
+                    forceMobileLandscapeMode(false, Number(ev?.gamma || 0));
                 }
+            }, { passive: true });
+        }
+
+        
+        let mobileFsControlsTimer = null;
+        function showMobileFullscreenBackOnTouch() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+            const isFs = !!(isSimulatedFullscreen || appEl.classList.contains('is-app-fullscreen') || document.fullscreenElement || document.webkitFullscreenElement);
+            if (!isMobileDeviceContext() || !isFs) {
+                appEl.classList.remove('mobile-fs-controls-visible');
+                return;
+            }
+            appEl.classList.add('mobile-fs-controls-visible');
+            if (window.lucide) lucide.createIcons({ root: appEl });
+            if (mobileFsControlsTimer) clearTimeout(mobileFsControlsTimer);
+            mobileFsControlsTimer = setTimeout(() => {
+                appEl.classList.remove('mobile-fs-controls-visible');
+            }, 3500);
+        }
+
+        function handleMobileFullscreenBack(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+            if (!isMobileDeviceContext()) return;
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (appEl) {
+                appEl.classList.remove('mobile-fs-controls-visible');
+                appEl.classList.remove('mobile-rotated-landscape');
+            }
+            isMobileRotatedLandscape = false;
+            try {
+                if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                    screen.orientation.unlock();
+                }
+            } catch (_) {}
+            if (typeof exitAppFullScreen === 'function') {
+                exitAppFullScreen();
+            }
+            if (typeof minimizePlayer === 'function') {
+                minimizePlayer();
+            }
+        }
+
+        function setupMobileFullscreenTouchBack() {
+            const onTouch = () => {
+                showMobileFullscreenBackOnTouch();
+            };
+            document.addEventListener('touchstart', onTouch, { passive: true });
+            document.addEventListener('pointerdown', (ev) => {
+                if (ev && ev.pointerType === 'touch') showMobileFullscreenBackOnTouch();
             }, { passive: true });
         }
 
@@ -5002,7 +6250,7 @@
 
         function renderAll() {
             try { applyPremiumColorsToApp(getPremiumColorsConfig(), false); renderSidebarColorPalettes(); } catch (_) {}
-            try { renderSidebarCategories(); } catch (_) {}
+            try { renderSidebarCategories(); renderMobileTopCategoryStrip(); } catch (_) {}
             try { syncHeaderDownloadAppButton(); } catch (_) {}
             try { renderCategorySelects(); } catch (_) {}
             try { renderManageCategories(); } catch (_) {}
@@ -5425,9 +6673,59 @@
             });
         }
 
+
+        function isMobileViewport() {
+            return (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+        }
+
+        function openMobileSidebarDrawer() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (appEl) appEl.classList.add('mobile-drawer-open');
+            if (window.lucide) lucide.createIcons({ root: appEl });
+        }
+
+        function closeMobileSidebarDrawer() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (appEl) appEl.classList.remove('mobile-drawer-open');
+        }
+
+        function renderMobileTopCategoryStrip() {
+            const strip = document.getElementById('mobile-top-category-strip');
+            if (!strip) return;
+            const tiles = [{ name: 'All', icon: 'layout-grid', logo: '' }];
+            (appData?.categories || []).forEach(cat => {
+                if (typeof isCategoryHidden === 'function' && isCategoryHidden(cat)) return;
+                const catChCount = (appData?.channels || []).filter(c => (Array.isArray(c.categories) && c.categories.length ? c.categories : [c.category || 'Uncategorized']).includes(cat)).length;
+                if (cat === 'Uncategorized' && !(appData?.channels || []).some(c => c.category === cat)) return;
+                if (catChCount === 0 && typeof isCategoryExplicitlyShown === 'function' && !isCategoryExplicitlyShown(cat)) return;
+                tiles.push({
+                    name: cat,
+                    icon: appData?.categoryIcons?.[cat] || 'folder',
+                    logo: appData?.categoryLogos?.[cat] || ''
+                });
+            });
+            strip.innerHTML = tiles.map(t => {
+                const isAct = (currentCategory === t.name);
+                const visual = t.logo
+                    ? `<img src="${escapeLogoAttr(t.logo)}" alt="" class="w-5 h-5 object-contain" onerror="this.style.display='none'">`
+                    : renderIconVisual(t.icon, t.name === 'All' ? 'layout-grid' : 'folder', 'w-3.5 h-3.5 text-xs');
+                return `<button type="button" onclick="setCategory('${escapeLogoAttr(t.name)}'); closeMobileSidebarDrawer();" class="mobile-cat-tile ${isAct ? 'active' : ''}" title="${escapeLogoAttr(t.name)}">
+                    <span class="mobile-cat-tile-icon">${visual}</span>
+                    <span class="mobile-cat-tile-label">${escapeLogoAttr(t.name)}</span>
+                </button>`;
+            }).join('');
+            if (window.lucide) lucide.createIcons({ root: strip });
+        }
+
         function toggleSidebarPanel() {
             const app = document.getElementById('umc-live-tv-app');
-            if (app) app.classList.toggle('sidebar-hidden');
+            if (!app) return;
+            if (isMobileViewport()) {
+                app.classList.toggle('mobile-drawer-open');
+                if (window.lucide) lucide.createIcons({ root: app });
+                return;
+            }
+            app.classList.toggle('sidebar-hidden');
         }
 
         function togglePlayingCategoryList(event) {
@@ -5530,6 +6828,8 @@
             document.getElementById('search-input').value = '';
             showView('grid');
             renderChannels();
+            renderMobileTopCategoryStrip();
+            closeMobileSidebarDrawer();
             focusFirstChannelCard();
         }
 
@@ -8532,6 +9832,2658 @@
         }, 12000);
 
         if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
+    
+        const MOB_SIDEBAR_CFG_KEY = 'purano_mob_sidebar_cfg_v1';
+        const MOB_SIDEBAR_ITEMS = [
+            { key: 'networkStream', label: 'Network Stream' },
+            { key: 'cricScore', label: 'Cric Score' },
+            { key: 'floatingPlayer', label: 'Floating Player' },
+            { key: 'crashHandling', label: 'Disable Crash Handling' },
+            { key: 'copyright', label: 'Copyright' },
+            { key: 'contact', label: 'Contact' },
+            { key: 'share', label: 'Share' },
+            { key: 'updateApp', label: 'Update App' },
+            { key: 'exitApp', label: 'Exit' }
+        ];
+        const MOB_CREX_URLS = {
+            live: 'https://crex.com/fixtures/match-list',
+            foryou: 'https://crex.com/',
+            all: 'https://crex.com/fixtures/match-list',
+            upcoming: 'https://crex.com/fixtures/match-list?tab=upcoming',
+            recent: 'https://crex.com/fixtures/match-list?tab=results'
+        };
+
+        let mobFloatingEnabled = true;
+        let mobCrashDisabled = false;
+
+        function getMobileSidebarConfig() {
+            let saved = {};
+            try {
+                const raw = localStorage.getItem(MOB_SIDEBAR_CFG_KEY);
+                if (raw) saved = JSON.parse(raw) || {};
+            } catch (_) {}
+            return {
+                contactText: saved.contactText || 'Support: UStreamz Help Desk',
+                contactUrl: saved.contactUrl || '',
+                updateUrl: saved.updateUrl || '',
+                items: {
+                    networkStream: true,
+                    cricScore: true,
+                    floatingPlayer: true,
+                    crashHandling: true,
+                    copyright: true,
+                    contact: true,
+                    share: true,
+                    updateApp: true,
+                    exitApp: true,
+                    ...(saved.items || {})
+                }
+            };
+        }
+
+        function applyMobileSidebarConfigToUI() {
+            const cfg = getMobileSidebarConfig();
+            document.querySelectorAll('#mobile-sidebar-menu-section [data-mob-sb]').forEach(btn => {
+                const k = btn.dataset.mobSb;
+                btn.classList.toggle('hidden', cfg.items[k] === false);
+            });
+            const fPill = document.getElementById('mob-sb-floating-pill');
+            if (fPill) fPill.classList.toggle('is-on', !!mobFloatingEnabled);
+            const cPill = document.getElementById('mob-sb-crash-pill');
+            if (cPill) cPill.classList.toggle('is-on', !!mobCrashDisabled);
+        }
+
+        function openMobileNetworkStreamModal() {
+            const m = document.getElementById('mob-network-stream-modal');
+            if (!m) return;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+        }
+        function closeMobileNetworkStreamModal() {
+            const m = document.getElementById('mob-network-stream-modal');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        }
+        function playMobileNetworkStream(e) {
+            e.preventDefault();
+            const url = String(document.getElementById('mob-network-stream-url')?.value || '').trim();
+            if (!url) return;
+            closeMobileNetworkStreamModal();
+            openPlayer({ id: 'mob-net-' + Date.now(), name: 'Network Stream', category: 'Network Stream', url });
+        }
+
+        function openMobileCricScoreModal() {
+            const m = document.getElementById('mob-cric-score-modal');
+            if (!m) return;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+            switchMobileCrexTab('live');
+        }
+        function closeMobileCricScoreModal() {
+            const m = document.getElementById('mob-cric-score-modal');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+            const ifr = document.getElementById('mob-cric-score-iframe');
+            if (ifr) ifr.src = 'about:blank';
+        }
+        function switchMobileCrexTab(tabKey) {
+            const key = MOB_CREX_URLS[tabKey] ? tabKey : 'live';
+            const url = MOB_CREX_URLS[key];
+            document.querySelectorAll('.mob-crex-tab').forEach(b => {
+                const active = b.dataset.mobCrex === key;
+                b.className = active
+                    ? 'mob-crex-tab px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500 text-slate-950 shrink-0'
+                    : 'mob-crex-tab px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white shrink-0';
+            });
+            const ext = document.getElementById('mob-crex-ext-link');
+            if (ext) ext.href = url;
+            const ifr = document.getElementById('mob-cric-score-iframe');
+            if (ifr && ifr.src !== url) ifr.src = url;
+        }
+
+        function toggleMobileFloatingPlayer() {
+            mobFloatingEnabled = !mobFloatingEnabled;
+            applyMobileSidebarConfigToUI();
+            showNotification(mobFloatingEnabled ? 'Floating Player enabled.' : 'Floating Player disabled.');
+        }
+        function toggleMobileCrashHandling() {
+            mobCrashDisabled = !mobCrashDisabled;
+            applyMobileSidebarConfigToUI();
+            showNotification(mobCrashDisabled ? 'Crash Handling disabled.' : 'Crash Handling enabled.');
+        }
+
+        function openMobileCopyrightModal() {
+            const m = document.getElementById('mob-copyright-modal');
+            if (!m) return;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+        }
+        function closeMobileCopyrightModal() {
+            const m = document.getElementById('mob-copyright-modal');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        }
+
+        function openMobileContactModal() {
+            const cfg = getMobileSidebarConfig();
+            const m = document.getElementById('mob-contact-modal');
+            const titleEl = document.getElementById('mob-info-modal-title');
+            const bodyEl = document.getElementById('mob-info-modal-body');
+            const linkEl = document.getElementById('mob-info-modal-link');
+            if (!m || !bodyEl) return;
+            if (titleEl) titleEl.textContent = 'Contact';
+            bodyEl.textContent = cfg.contactText || 'Support: UStreamz Help Desk';
+            if (linkEl) {
+                if (cfg.contactUrl) { linkEl.href = cfg.contactUrl; linkEl.classList.remove('hidden'); }
+                else { linkEl.classList.add('hidden'); }
+            }
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+        }
+        function openMobileUpdateModal() {
+            const cfg = getMobileSidebarConfig();
+            const m = document.getElementById('mob-contact-modal');
+            const titleEl = document.getElementById('mob-info-modal-title');
+            const bodyEl = document.getElementById('mob-info-modal-body');
+            const linkEl = document.getElementById('mob-info-modal-link');
+            if (!m || !bodyEl) return;
+            if (titleEl) titleEl.textContent = 'Update App';
+            bodyEl.textContent = cfg.updateUrl ? `Latest update link:
+${cfg.updateUrl}` : 'No update URL configured yet.';
+            if (linkEl) {
+                if (cfg.updateUrl) { linkEl.href = cfg.updateUrl; linkEl.classList.remove('hidden'); }
+                else { linkEl.classList.add('hidden'); }
+            }
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+        }
+        function closeMobileContactModal() {
+            const m = document.getElementById('mob-contact-modal');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        }
+
+        async function shareMobileAppLink() {
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                try { await navigator.share({ title: 'UStreamz', url: shareUrl }); return; } catch (_) {}
+            }
+            window.__allowProgrammaticCopy = true;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(shareUrl);
+                    showNotification('App link copied!');
+                    return;
+                }
+            } catch (_) {} finally { window.__allowProgrammaticCopy = false; }
+            showNotification(shareUrl);
+        }
+
+        function exitMobileAppView() {
+            try { if (typeof closePlayer === 'function') closePlayer(); } catch (_) {}
+            try { if (typeof exitAppFullScreen === 'function') exitAppFullScreen(); } catch (_) {}
+            try { window.close(); } catch (_) {}
+            showNotification('Exited.');
+        }
+
+        async function openMobileSidebarAdminModal() {
+            if (!window.isAdminLoggedIn) {
+                await requestSettings();
+                if (!window.isAdminLoggedIn) return;
+            }
+            const cfg = getMobileSidebarConfig();
+            const m = document.getElementById('admin-mobile-sidebar-modal');
+            if (!m) return;
+            const cText = document.getElementById('ams-contact-text');
+            const cUrl = document.getElementById('ams-contact-url');
+            const uUrl = document.getElementById('ams-update-url');
+            const box = document.getElementById('ams-items-checklist');
+            if (cText) cText.value = cfg.contactText || '';
+            if (cUrl) cUrl.value = cfg.contactUrl || '';
+            if (uUrl) uUrl.value = cfg.updateUrl || '';
+            if (box) {
+                box.innerHTML = MOB_SIDEBAR_ITEMS.map(it => {
+                    const checked = cfg.items[it.key] !== false;
+                    return `<label class="flex items-center gap-2 rounded-xl border border-slate-800 bg-slate-900 px-2.5 py-2 text-slate-200 cursor-pointer">
+                        <input type="checkbox" data-ams-item="${it.key}" ${checked ? 'checked' : ''} class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950">
+                        <span class="truncate">${it.label}</span>
+                    </label>`;
+                }).join('');
+            }
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: m });
+        }
+
+        function closeMobileSidebarAdminModal() {
+            const m = document.getElementById('admin-mobile-sidebar-modal');
+            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        }
+
+        function saveMobileSidebarAdminSettings(e) {
+            e.preventDefault();
+            const items = {};
+            document.querySelectorAll('#ams-items-checklist input[data-ams-item]').forEach(chk => {
+                items[chk.dataset.amsItem] = !!chk.checked;
+            });
+            const nextCfg = {
+                contactText: String(document.getElementById('ams-contact-text')?.value || '').trim(),
+                contactUrl: String(document.getElementById('ams-contact-url')?.value || '').trim(),
+                updateUrl: String(document.getElementById('ams-update-url')?.value || '').trim(),
+                items
+            };
+            try { localStorage.setItem(MOB_SIDEBAR_CFG_KEY, JSON.stringify(nextCfg)); } catch (_) {}
+            applyMobileSidebarConfigToUI();
+            closeMobileSidebarAdminModal();
+            showNotification('Mobile sidebar settings saved!');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyMobileSidebarConfigToUI();
+        });
+
+    
+        (function setupSmoothMobileSidebarFingerDrag() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getDrawerWidth = () => {
+                const aside = getAside();
+                return (aside && aside.getBoundingClientRect().width) || Math.min(window.innerWidth * 0.8, 304);
+            };
+            const isMobile = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+
+            let tracking = false;
+            let mode = null; // 'open' or 'close'
+            let startX = 0;
+            let startY = 0;
+            let currentOffsetPx = 0;
+            let lockedAxis = null; // 'h' or 'v'
+
+            function setTranslate(px) {
+                const aside = getAside();
+                if (!aside) return;
+                const w = getDrawerWidth();
+                const clamped = Math.max(-w, Math.min(0, px));
+                currentOffsetPx = clamped;
+                aside.style.transform = `translate3d(${clamped}px, 0, 0)`;
+            }
+
+            function clearInlineTransform() {
+                const aside = getAside();
+                if (aside) aside.style.transform = '';
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMobile()) return;
+                if (appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const aside = getAside();
+                const onAside = !!(aside && aside.contains(e.target));
+
+                if (!isOpen && t.clientX <= 28) {
+                    tracking = true;
+                    mode = 'open';
+                    lockedAxis = null;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    currentOffsetPx = -getDrawerWidth();
+                } else if (isOpen && (onAside || t.clientX <= getDrawerWidth() + 24)) {
+                    tracking = true;
+                    mode = 'close';
+                    lockedAxis = null;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    currentOffsetPx = 0;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!tracking || !isMobile()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+
+                if (!lockedAxis) {
+                    if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+                    lockedAxis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (lockedAxis === 'h') {
+                        appEl.classList.add('mob-sb-dragging');
+                        if (mode === 'open') {
+                            appEl.classList.add('mobile-drawer-open');
+                        }
+                    } else {
+                        tracking = false;
+                        lockedAxis = null;
+                        clearInlineTransform();
+                        return;
+                    }
+                }
+
+                if (lockedAxis === 'h') {
+                    const w = getDrawerWidth();
+                    if (mode === 'open') {
+                        setTranslate(-w + Math.max(0, Math.min(w, dx)));
+                    } else if (mode === 'close') {
+                        setTranslate(Math.min(0, Math.max(-w, dx)));
+                    }
+                }
+            }, { passive: true });
+
+            function finishDrag() {
+                if (!tracking) return;
+                tracking = false;
+                const w = getDrawerWidth();
+                const wasDraggingH = lockedAxis === 'h';
+                lockedAxis = null;
+                appEl.classList.remove('mob-sb-dragging');
+
+                if (!wasDraggingH) {
+                    clearInlineTransform();
+                    return;
+                }
+
+                const progress = (currentOffsetPx + w) / Math.max(1, w); // 0 = closed, 1 = open
+                const shouldOpen = mode === 'open' ? (progress > 0.28) : (progress > 0.65);
+
+                clearInlineTransform();
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', finishDrag, { passive: true });
+            document.addEventListener('touchcancel', finishDrag, { passive: true });
+        })();
+
+    
+        (function setupLiveFingerSlideSidebar() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMobile = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getWidth = () => {
+                const aside = getAside();
+                return Math.max(180, (aside && aside.getBoundingClientRect().width) || Math.min(window.innerWidth * 0.8, 304));
+            };
+
+            let active = false;
+            let axis = null; // 'h' | 'v'
+            let startX = 0;
+            let startY = 0;
+            let lastX = 0;
+            let lastT = 0;
+            let velocityX = 0;
+            let baseOffsetPx = 0;
+            let currentOffsetPx = 0;
+
+            function applyOffset(px) {
+                const aside = getAside();
+                if (!aside) return;
+                const w = getWidth();
+                const clamped = Math.max(-w, Math.min(0, px));
+                currentOffsetPx = clamped;
+                aside.style.transform = `translate3d(${clamped}px, 0, 0)`;
+            }
+
+            function resetInlineTransform() {
+                const aside = getAside();
+                if (aside) {
+                    aside.style.transform = '';
+                }
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMobile() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const touch = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const aside = getAside();
+                const w = getWidth();
+
+                // Allow sliding IN from left edge (0..44px) when closed, or sliding OUT anywhere when open
+                if (!isOpen && touch.clientX <= 44) {
+                    active = true;
+                    axis = null;
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                    lastX = touch.clientX;
+                    lastT = performance.now();
+                    velocityX = 0;
+                    baseOffsetPx = -w;
+                    currentOffsetPx = -w;
+                } else if (isOpen) {
+                    const targetInAside = !!(aside && aside.contains(e.target));
+                    if (targetInAside || touch.clientX <= w + 48) {
+                        active = true;
+                        axis = null;
+                        startX = touch.clientX;
+                        startY = touch.clientY;
+                        lastX = touch.clientX;
+                        lastT = performance.now();
+                        velocityX = 0;
+                        baseOffsetPx = 0;
+                        currentOffsetPx = 0;
+                    }
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!active || !isMobile()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const touch = e.touches[0];
+                const now = performance.now();
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+
+                const dt = Math.max(1, now - lastT);
+                velocityX = (touch.clientX - lastX) / dt;
+                lastX = touch.clientX;
+                lastT = now;
+
+                if (!axis) {
+                    if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+                    axis = (Math.abs(dx) >= Math.abs(dy) * 1.05) ? 'h' : 'v';
+                    if (axis === 'h') {
+                        appEl.classList.add('mob-sb-dragging', 'mob-sb-live-tracking');
+                        if (baseOffsetPx < 0) {
+                            appEl.classList.add('mobile-drawer-open');
+                        }
+                    } else {
+                        active = false;
+                        axis = null;
+                        appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+                        resetInlineTransform();
+                        return;
+                    }
+                }
+
+                if (axis === 'h') {
+                    applyOffset(baseOffsetPx + dx);
+                }
+            }, { passive: true });
+
+            function endSlide() {
+                if (!active) return;
+                active = false;
+                const wasH = (axis === 'h');
+                axis = null;
+                appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+
+                if (!wasH) {
+                    resetInlineTransform();
+                    return;
+                }
+
+                const w = getWidth();
+                const openRatio = (currentOffsetPx + w) / Math.max(1, w); // 0 = closed, 1 = fully open
+
+                let shouldOpen;
+                if (Math.abs(velocityX) > 0.45) {
+                    shouldOpen = velocityX > 0;
+                } else {
+                    shouldOpen = openRatio >= 0.42;
+                }
+
+                resetInlineTransform();
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', endSlide, { passive: true });
+            document.addEventListener('touchcancel', endSlide, { passive: true });
+        })();
+
+    
+        (function setupRealTimeFingerTrackingSidebar() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMobile = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getWidth = () => {
+                const aside = getAside();
+                return Math.max(180, (aside && aside.getBoundingClientRect().width) || Math.min(window.innerWidth * 0.8, 304));
+            };
+
+            let tracking = false;
+            let axis = null; // 'h' | 'v'
+            let startX = 0;
+            let startY = 0;
+            let prevX = 0;
+            let prevTime = 0;
+            let velX = 0;
+            let originOffset = 0;
+            let currentOffset = 0;
+            let rafId = null;
+            let pendingOffset = null;
+
+            function flushFrame() {
+                rafId = null;
+                if (pendingOffset === null) return;
+                const aside = getAside();
+                if (aside) {
+                    aside.style.transform = `translate3d(${pendingOffset}px, 0, 0)`;
+                }
+                pendingOffset = null;
+            }
+
+            function scheduleOffset(px) {
+                const w = getWidth();
+                const clamped = Math.max(-w, Math.min(0, px));
+                currentOffset = clamped;
+                pendingOffset = clamped;
+                if (!rafId) {
+                    rafId = requestAnimationFrame(flushFrame);
+                }
+            }
+
+            function clearInlineTransform() {
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+                pendingOffset = null;
+                const aside = getAside();
+                if (aside) aside.style.transform = '';
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMobile() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const aside = getAside();
+                const w = getWidth();
+
+                if (!isOpen && t.clientX <= 48) {
+                    tracking = true;
+                    axis = null;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    prevX = t.clientX;
+                    prevTime = performance.now();
+                    velX = 0;
+                    originOffset = -w;
+                    currentOffset = -w;
+                } else if (isOpen) {
+                    const insideAside = !!(aside && aside.contains(e.target));
+                    if (insideAside || t.clientX <= w + 64) {
+                        tracking = true;
+                        axis = null;
+                        startX = t.clientX;
+                        startY = t.clientY;
+                        prevX = t.clientX;
+                        prevTime = performance.now();
+                        velX = 0;
+                        originOffset = 0;
+                        currentOffset = 0;
+                    }
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!tracking || !isMobile()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const now = performance.now();
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+
+                const dt = Math.max(1, now - prevTime);
+                const instVel = (t.clientX - prevX) / dt;
+                velX = velX * 0.4 + instVel * 0.6;
+                prevX = t.clientX;
+                prevTime = now;
+
+                if (!axis) {
+                    if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+                    axis = (Math.abs(dx) >= Math.abs(dy)) ? 'h' : 'v';
+                    if (axis === 'h') {
+                        appEl.classList.add('mob-sb-dragging', 'mob-sb-live-tracking');
+                        if (originOffset < 0) {
+                            appEl.classList.add('mobile-drawer-open');
+                        }
+                    } else {
+                        tracking = false;
+                        axis = null;
+                        appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+                        clearInlineTransform();
+                        return;
+                    }
+                }
+
+                if (axis === 'h') {
+                    scheduleOffset(originOffset + dx);
+                }
+            }, { passive: true });
+
+            function settleDrag() {
+                if (!tracking) return;
+                tracking = false;
+                const wasH = (axis === 'h');
+                axis = null;
+                appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+
+                if (!wasH) {
+                    clearInlineTransform();
+                    return;
+                }
+
+                const w = getWidth();
+                const ratio = (currentOffset + w) / Math.max(1, w);
+                let openFinal;
+                if (Math.abs(velX) > 0.35) {
+                    openFinal = velX > 0;
+                } else {
+                    openFinal = ratio >= 0.38;
+                }
+
+                clearInlineTransform();
+                if (openFinal) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', settleDrag, { passive: true });
+            document.addEventListener('touchcancel', settleDrag, { passive: true });
+        })();
+
+    
+        (function exactFingerDragMobileSidebar() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+            const isMobile = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getDrawerW = () => {
+                const a = getAside();
+                return Math.max(180, (a && a.getBoundingClientRect().width) || Math.min(window.innerWidth * 0.8, 304));
+            };
+
+            let dragging = false;
+            let axis = null;
+            let startX = 0;
+            let startY = 0;
+            let basePx = 0;
+            let currentPx = 0;
+
+            function setPos(px) {
+                const a = getAside();
+                if (!a) return;
+                const w = getDrawerW();
+                currentPx = Math.max(-w, Math.min(0, px));
+                a.style.transform = `translate3d(${currentPx}px, 0, 0)`;
+            }
+
+            function clearPos() {
+                const a = getAside();
+                if (a) a.style.transform = '';
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMobile() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const a = getAside();
+                const w = getDrawerW();
+
+                if (!isOpen && t.clientX <= 40) {
+                    dragging = true;
+                    axis = null;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    basePx = -w;
+                    currentPx = -w;
+                } else if (isOpen && ((a && a.contains(e.target)) || t.clientX <= w + 40)) {
+                    dragging = true;
+                    axis = null;
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    basePx = 0;
+                    currentPx = 0;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!dragging || !isMobile()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+
+                if (!axis) {
+                    if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+                    axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (axis === 'h') {
+                        appEl.classList.add('mob-sb-dragging', 'mob-sb-live-tracking');
+                        if (basePx < 0) appEl.classList.add('mobile-drawer-open');
+                    } else {
+                        dragging = false;
+                        axis = null;
+                        appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+                        clearPos();
+                        return;
+                    }
+                }
+
+                if (axis === 'h') {
+                    setPos(basePx + dx);
+                }
+            }, { passive: true });
+
+            function finishTouch() {
+                if (!dragging) return;
+                dragging = false;
+                const wasH = (axis === 'h');
+                axis = null;
+                appEl.classList.remove('mob-sb-dragging', 'mob-sb-live-tracking');
+                if (!wasH) {
+                    clearPos();
+                    return;
+                }
+                const w = getDrawerW();
+                const openRatio = (currentPx + w) / Math.max(1, w);
+                clearPos();
+                if (openRatio >= 0.5) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', finishTouch, { passive: true });
+            document.addEventListener('touchcancel', finishTouch, { passive: true });
+        })();
+
+    
+        (function fixFingerExactSidebarDrag() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getW = () => {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                return Math.max(160, (r && r.width) || Math.min(window.innerWidth * 0.8, 304));
+            };
+
+            let isTouching = false;
+            let dirLock = null; // 'h' | 'v'
+            let x0 = 0;
+            let y0 = 0;
+            let startTx = 0;
+            let nowTx = 0;
+
+            function setDragTx(tx) {
+                const w = getW();
+                const clamped = Math.max(-w, Math.min(0, tx));
+                nowTx = clamped;
+                appEl.style.setProperty('--mob-sb-drag-tx', `translate3d(${clamped}px, 0, 0)`);
+            }
+
+            function clearDragTx() {
+                appEl.style.removeProperty('--mob-sb-drag-tx');
+                const a = getAside();
+                if (a) a.style.transform = '';
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const a = getAside();
+                const w = getW();
+                const openNow = appEl.classList.contains('mobile-drawer-open');
+
+                if (!openNow && t.clientX <= 56) {
+                    isTouching = true;
+                    dirLock = null;
+                    x0 = t.clientX;
+                    y0 = t.clientY;
+                    startTx = -w;
+                    nowTx = -w;
+                } else if (openNow && ((a && a.contains(e.target)) || t.clientX <= w + 56)) {
+                    isTouching = true;
+                    dirLock = null;
+                    x0 = t.clientX;
+                    y0 = t.clientY;
+                    startTx = 0;
+                    nowTx = 0;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isTouching || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - x0;
+                const dy = t.clientY - y0;
+
+                if (!dirLock) {
+                    if (Math.abs(dx) < 4 && Math.abs(dy) < 4) return;
+                    dirLock = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (dirLock === 'h') {
+                        setDragTx(startTx);
+                        appEl.classList.add('mob-sb-dragging');
+                    } else {
+                        isTouching = false;
+                        dirLock = null;
+                        appEl.classList.remove('mob-sb-dragging');
+                        clearDragTx();
+                        return;
+                    }
+                }
+
+                if (dirLock === 'h') {
+                    setDragTx(startTx + dx);
+                }
+            }, { passive: true });
+
+            function onRelease() {
+                if (!isTouching) return;
+                isTouching = false;
+                const wasH = (dirLock === 'h');
+                dirLock = null;
+                appEl.classList.remove('mob-sb-dragging');
+
+                if (!wasH) {
+                    clearDragTx();
+                    return;
+                }
+
+                const w = getW();
+                const visibleFraction = (nowTx + w) / Math.max(1, w);
+                clearDragTx();
+
+                if (visibleFraction >= 0.5) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', onRelease, { passive: true });
+            document.addEventListener('touchcancel', onRelease, { passive: true });
+        })();
+
+    
+        (function mobileV8InstantSidebarAndTitle() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getW = () => {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                return Math.max(150, (r && r.width) || Math.min(window.innerWidth * 0.74, 272));
+            };
+
+            function syncMobileAllChannelsToUstreamz() {
+                const titleEl = document.getElementById('category-title');
+                if (!titleEl) return;
+                if (!titleEl.dataset.origTitle) {
+                    titleEl.dataset.origTitle = titleEl.textContent || 'All Channels';
+                }
+                if (isMob()) {
+                    if ((titleEl.textContent || '').trim() === 'All Channels') {
+                        titleEl.textContent = 'Ustreamz';
+                    }
+                } else {
+                    if ((titleEl.textContent || '').trim() === 'Ustreamz') {
+                        titleEl.textContent = titleEl.dataset.origTitle || 'All Channels';
+                    }
+                }
+            }
+
+            syncMobileAllChannelsToUstreamz();
+            window.addEventListener('resize', syncMobileAllChannelsToUstreamz, { passive: true });
+            const titleNode = document.getElementById('category-title');
+            if (titleNode && window.MutationObserver) {
+                const obs = new MutationObserver(syncMobileAllChannelsToUstreamz);
+                obs.observe(titleNode, { childList: true, characterData: true, subtree: true });
+            }
+
+            // Close side panel immediately when tapping/clicking outside aside
+            document.addEventListener('pointerdown', (e) => {
+                if (!isMob()) return;
+                if (!appEl.classList.contains('mobile-drawer-open')) return;
+                const a = getAside();
+                if (a && !a.contains(e.target)) {
+                    if (typeof closeMobileSidebarDrawer === 'function') {
+                        closeMobileSidebarDrawer();
+                    } else {
+                        appEl.classList.remove('mobile-drawer-open');
+                    }
+                }
+            }, { capture: true });
+
+            // Instant zero-lag finger drag in/out on mobile
+            let active = false;
+            let axis = null;
+            let sx = 0;
+            let sy = 0;
+            let baseTx = 0;
+            let curTx = 0;
+
+            function setInstantTx(tx) {
+                const w = getW();
+                const clamped = Math.max(-w, Math.min(0, tx));
+                curTx = clamped;
+                const val = `translate3d(${clamped}px, 0, 0)`;
+                appEl.style.setProperty('--mob-sb-drag-tx', val);
+                const a = getAside();
+                if (a) a.style.transform = val;
+            }
+
+            function resetInstantTx() {
+                appEl.style.removeProperty('--mob-sb-drag-tx');
+                const a = getAside();
+                if (a) a.style.transform = '';
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const a = getAside();
+                const w = getW();
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+
+                if (!isOpen && t.clientX <= 54) {
+                    active = true;
+                    axis = null;
+                    sx = t.clientX;
+                    sy = t.clientY;
+                    baseTx = -w;
+                    curTx = -w;
+                } else if (isOpen) {
+                    active = true;
+                    axis = null;
+                    sx = t.clientX;
+                    sy = t.clientY;
+                    baseTx = 0;
+                    curTx = 0;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!active || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - sx;
+                const dy = t.clientY - sy;
+
+                if (!axis) {
+                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
+                    axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (axis === 'h') {
+                        appEl.classList.add('mob-sb-dragging');
+                        setInstantTx(baseTx);
+                    } else {
+                        active = false;
+                        axis = null;
+                        appEl.classList.remove('mob-sb-dragging');
+                        resetInstantTx();
+                        return;
+                    }
+                }
+
+                if (axis === 'h') {
+                    setInstantTx(baseTx + dx);
+                }
+            }, { passive: true });
+
+            function finalizeFinger() {
+                if (!active) return;
+                active = false;
+                const wasH = (axis === 'h');
+                axis = null;
+                appEl.classList.remove('mob-sb-dragging');
+                if (!wasH) {
+                    resetInstantTx();
+                    return;
+                }
+                const w = getW();
+                const ratio = (curTx + w) / Math.max(1, w);
+                resetInstantTx();
+                if (ratio >= 0.45) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+            }
+
+            document.addEventListener('touchend', finalizeFinger, { passive: true });
+            document.addEventListener('touchcancel', finalizeFinger, { passive: true });
+        })();
+
+    
+        (function consistentMobileTouchSidebarV9() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMobileView = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getDrawerAside = () => appEl.querySelector(':scope > aside');
+            const getDrawerWidth = () => {
+                const aside = getDrawerAside();
+                const rect = aside ? aside.getBoundingClientRect() : null;
+                return Math.max(160, (rect && rect.width) || Math.min(window.innerWidth * 0.74, 272));
+            };
+
+            let touchActive = false;
+            let lockedAxis = null; // 'h' | 'v'
+            let originX = 0;
+            let originY = 0;
+            let initialTx = 0;
+            let latestTx = 0;
+
+            function applyRawTranslate(tx) {
+                const w = getDrawerWidth();
+                const clamped = Math.max(-w, Math.min(0, tx));
+                latestTx = clamped;
+                const aside = getDrawerAside();
+                if (aside) {
+                    aside.style.transform = `translate3d(${clamped}px, 0, 0)`;
+                }
+            }
+
+            function clearRawTranslate() {
+                const aside = getDrawerAside();
+                if (aside) {
+                    aside.style.transform = '';
+                }
+            }
+
+            window.addEventListener('touchstart', (e) => {
+                if (!isMobileView() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const aside = getDrawerAside();
+                const w = getDrawerWidth();
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+
+                if (!isOpen && t.clientX <= 48) {
+                    touchActive = true;
+                    lockedAxis = null;
+                    originX = t.clientX;
+                    originY = t.clientY;
+                    initialTx = -w;
+                    latestTx = -w;
+                } else if (isOpen) {
+                    touchActive = true;
+                    lockedAxis = null;
+                    originX = t.clientX;
+                    originY = t.clientY;
+                    initialTx = 0;
+                    latestTx = 0;
+                }
+            }, { capture: true, passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!touchActive || !isMobileView()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - originX;
+                const dy = t.clientY - originY;
+
+                if (!lockedAxis) {
+                    if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+                    lockedAxis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (lockedAxis === 'h') {
+                        appEl.classList.add('v9-dragging');
+                        applyRawTranslate(initialTx);
+                    } else {
+                        touchActive = false;
+                        lockedAxis = null;
+                        appEl.classList.remove('v9-dragging');
+                        clearRawTranslate();
+                        return;
+                    }
+                }
+
+                if (lockedAxis === 'h') {
+                    applyRawTranslate(initialTx + dx);
+                }
+            }, { capture: true, passive: true });
+
+            function endMobileTouch() {
+                if (!touchActive) return;
+                touchActive = false;
+                const wasHorizontal = (lockedAxis === 'h');
+                lockedAxis = null;
+                appEl.classList.remove('v9-dragging');
+
+                if (!wasHorizontal) {
+                    clearRawTranslate();
+                    return;
+                }
+
+                const w = getDrawerWidth();
+                const openRatio = (latestTx + w) / Math.max(1, w);
+                const shouldOpen = openRatio >= 0.45;
+
+                // Apply final state class first, then clear inline transform on next frame so transition animates smoothly
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                    if (window.lucide) lucide.createIcons({ root: appEl });
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+                requestAnimationFrame(() => {
+                    clearRawTranslate();
+                });
+            }
+
+            window.addEventListener('touchend', endMobileTouch, { capture: true, passive: true });
+            window.addEventListener('touchcancel', endMobileTouch, { capture: true, passive: true });
+        })();
+
+    
+        (function zeroLagMobileFingerSidebarV10() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getW = () => {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                return Math.max(160, (r && r.width) || Math.min(window.innerWidth * 0.74, 272));
+            };
+
+            let active = false;
+            let axis = null;
+            let sx = 0;
+            let sy = 0;
+            let startTx = 0;
+            let curTx = 0;
+            let rafPending = null;
+
+            function flushTransform() {
+                rafPending = null;
+                const a = getAside();
+                if (!a) return;
+                a.style.transform = `translate3d(${curTx}px, 0, 0)`;
+            }
+
+            function queueTx(rawPx) {
+                const w = getW();
+                curTx = Math.max(-w, Math.min(0, rawPx));
+                if (!rafPending) {
+                    rafPending = requestAnimationFrame(flushTransform);
+                }
+            }
+
+            function cancelQueuedTx() {
+                if (rafPending) {
+                    cancelAnimationFrame(rafPending);
+                    rafPending = null;
+                }
+            }
+
+            window.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const a = getAside();
+                const w = getW();
+                const openNow = appEl.classList.contains('mobile-drawer-open');
+
+                if (!openNow && t.clientX <= 52) {
+                    active = true;
+                    axis = null;
+                    sx = t.clientX;
+                    sy = t.clientY;
+                    startTx = -w;
+                    curTx = -w;
+                    appEl.classList.add('v10-no-lag');
+                } else if (openNow) {
+                    active = true;
+                    axis = null;
+                    sx = t.clientX;
+                    sy = t.clientY;
+                    startTx = 0;
+                    curTx = 0;
+                    appEl.classList.add('v10-no-lag');
+                }
+            }, { capture: true, passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (!active || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - sx;
+                const dy = t.clientY - sy;
+
+                if (!axis) {
+                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
+                    axis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (axis === 'h') {
+                        appEl.classList.add('v9-dragging', 'v10-no-lag');
+                        queueTx(startTx);
+                    } else {
+                        active = false;
+                        axis = null;
+                        cancelQueuedTx();
+                        appEl.classList.remove('v9-dragging', 'v10-no-lag');
+                        const a = getAside();
+                        if (a) a.style.transform = '';
+                        return;
+                    }
+                }
+
+                if (axis === 'h') {
+                    queueTx(startTx + dx);
+                }
+            }, { capture: true, passive: true });
+
+            function finishFingerDrag() {
+                if (!active) return;
+                active = false;
+                const wasH = (axis === 'h');
+                axis = null;
+                cancelQueuedTx();
+
+                const a = getAside();
+                if (!wasH) {
+                    appEl.classList.remove('v9-dragging', 'v10-no-lag');
+                    if (a) a.style.transform = '';
+                    return;
+                }
+
+                const w = getW();
+                const ratio = (curTx + w) / Math.max(1, w);
+                const shouldOpen = ratio >= 0.42;
+
+                if (a) a.style.transform = `translate3d(${curTx}px, 0, 0)`;
+                appEl.classList.remove('v9-dragging');
+
+                requestAnimationFrame(() => {
+                    appEl.classList.remove('v10-no-lag');
+                    if (shouldOpen) {
+                        appEl.classList.add('mobile-drawer-open');
+                    } else {
+                        appEl.classList.remove('mobile-drawer-open');
+                    }
+                    if (a) a.style.transform = '';
+                });
+            }
+
+            window.addEventListener('touchend', finishFingerDrag, { capture: true, passive: true });
+            window.addEventListener('touchcancel', finishFingerDrag, { capture: true, passive: true });
+        })();
+
+    
+        (function ensureMobileV11LabelsVisible() {
+            function refreshLabels() {
+                const uLbl = document.getElementById('sidebar-user-login-label');
+                const aLbl = document.getElementById('sidebar-admin-label');
+                const wTxt = document.getElementById('user-welcome-text');
+                if (uLbl) {
+                    uLbl.classList.remove('hidden');
+                    if (!uLbl.textContent || !uLbl.textContent.trim()) {
+                        uLbl.textContent = 'User Login';
+                    }
+                }
+                if (aLbl) {
+                    aLbl.classList.remove('hidden');
+                    if (!aLbl.textContent || !aLbl.textContent.trim()) {
+                        aLbl.textContent = window.isAdminLoggedIn ? 'Admin' : 'Admin Login';
+                    }
+                }
+                if (wTxt) {
+                    wTxt.classList.remove('hidden');
+                }
+            }
+            refreshLabels();
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', refreshLabels);
+            }
+            setTimeout(refreshLabels, 200);
+            setTimeout(refreshLabels, 800);
+        })();
+
+    
+        (function liveInstantMobileSwipeV12() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getW = () => {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                return Math.max(160, (r && r.width) || Math.min(window.innerWidth * 0.84, 322));
+            };
+
+            let swiping = false;
+            let dirLocked = null; // 'h' | 'v'
+            let x0 = 0;
+            let y0 = 0;
+            let txStart = 0;
+            let txNow = 0;
+
+            function setLiveTx(px) {
+                const w = getW();
+                const c = Math.max(-w, Math.min(0, px));
+                txNow = c;
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'none', 'important');
+                    a.style.setProperty('transform', `translate3d(${c}px, 0, 0)`, 'important');
+                }
+            }
+
+            function clearLiveTx() {
+                const a = getAside();
+                if (a) {
+                    a.style.removeProperty('transition');
+                    a.style.removeProperty('transform');
+                }
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const w = getW();
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+
+                if (!isOpen && t.clientX <= 64) {
+                    swiping = true;
+                    dirLocked = null;
+                    x0 = t.clientX;
+                    y0 = t.clientY;
+                    txStart = -w;
+                    txNow = -w;
+                    appEl.classList.add('v12-live-swipe');
+                    setLiveTx(-w);
+                } else if (isOpen) {
+                    swiping = true;
+                    dirLocked = null;
+                    x0 = t.clientX;
+                    y0 = t.clientY;
+                    txStart = 0;
+                    txNow = 0;
+                    appEl.classList.add('v12-live-swipe');
+                    setLiveTx(0);
+                }
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!swiping || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - x0;
+                const dy = t.clientY - y0;
+
+                if (!dirLocked) {
+                    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return;
+                    dirLocked = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+                    if (dirLocked !== 'h') {
+                        swiping = false;
+                        dirLocked = null;
+                        appEl.classList.remove('v12-live-swipe');
+                        clearLiveTx();
+                        return;
+                    }
+                }
+
+                if (dirLocked === 'h') {
+                    setLiveTx(txStart + dx);
+                }
+            }, { capture: true, passive: true });
+
+            function finishSwipe() {
+                if (!swiping) return;
+                swiping = false;
+                const wasH = (dirLocked === 'h');
+                dirLocked = null;
+
+                if (!wasH) {
+                    appEl.classList.remove('v12-live-swipe');
+                    clearLiveTx();
+                    return;
+                }
+
+                const w = getW();
+                const progress = (txNow + w) / Math.max(1, w);
+                const openFinal = progress >= 0.35;
+
+                if (openFinal) {
+                    appEl.classList.add('mobile-drawer-open');
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+                clearLiveTx();
+                appEl.classList.remove('v12-live-swipe');
+            }
+
+            document.addEventListener('touchend', finishSwipe, { capture: true, passive: true });
+            document.addEventListener('touchcancel', finishSwipe, { capture: true, passive: true });
+        })();
+
+    
+        (function guardMobileChannelClicksDuringSidebarV13() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const isSidebarActiveOrPulled = () => {
+                return appEl.classList.contains('mobile-drawer-open') || appEl.classList.contains('v12-live-swipe');
+            };
+
+            function blockChannelEventIfSidebarPulled(e) {
+                if (!isMob()) return;
+                if (!isSidebarActiveOrPulled()) return;
+                const aside = appEl.querySelector(':scope > aside');
+                if (aside && aside.contains(e.target)) return;
+                const channelHit = e.target && e.target.closest ? e.target.closest('#channel-grid, .channel-card, #grid-scroll-container') : null;
+                if (channelHit) {
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    return false;
+                }
+            }
+
+            document.addEventListener('click', blockChannelEventIfSidebarPulled, { capture: true });
+            document.addEventListener('pointerup', blockChannelEventIfSidebarPulled, { capture: true });
+            document.addEventListener('touchend', blockChannelEventIfSidebarPulled, { capture: true, passive: false });
+        })();
+
+    
+        (function instantNativeEdgeTouchSidebarV14() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            let cachedW = Math.min((window.innerWidth || 390) * 0.84, 322);
+            function refreshCachedW() {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                cachedW = Math.max(180, (r && r.width) || Math.min((window.innerWidth || 390) * 0.84, 322));
+            }
+            window.addEventListener('resize', refreshCachedW, { passive: true });
+
+            const EDGE_ZONE_PX = 76;
+            const PEEK_PX = 20;
+
+            let tracking = false;
+            let axis = null; // null | 'h' | 'v'
+            let startX = 0;
+            let startY = 0;
+            let baseTx = 0;
+            let currentTx = 0;
+            let movedDistance = 0;
+
+            function applyRawTx(px) {
+                const clamped = Math.max(-cachedW, Math.min(0, px));
+                currentTx = clamped;
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'none', 'important');
+                    a.style.setProperty('transform', `translate3d(${clamped}px, 0, 0)`, 'important');
+                }
+            }
+
+            function releaseRawTx() {
+                const a = getAside();
+                if (a) {
+                    a.style.removeProperty('transition');
+                    a.style.removeProperty('transform');
+                }
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                refreshCachedW();
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+
+                if (!isOpen && t.clientX <= EDGE_ZONE_PX) {
+                    tracking = true;
+                    axis = 'h';
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    movedDistance = 0;
+                    const peekTx = -cachedW + PEEK_PX;
+                    baseTx = peekTx;
+                    appEl.classList.add('v14-edge-engaged', 'v12-live-swipe');
+                    applyRawTx(peekTx);
+                } else if (isOpen) {
+                    tracking = true;
+                    axis = 'h';
+                    startX = t.clientX;
+                    startY = t.clientY;
+                    movedDistance = 0;
+                    baseTx = 0;
+                    appEl.classList.add('v14-edge-engaged', 'v12-live-swipe');
+                    applyRawTx(0);
+                }
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!tracking || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                movedDistance = Math.max(movedDistance, Math.abs(dx), Math.abs(dy));
+
+                // If user clearly scrolls vertically right after touching edge and barely moved horizontally, cancel edge peek
+                if (Math.abs(dy) > 18 && Math.abs(dx) < 8 && !appEl.classList.contains('mobile-drawer-open')) {
+                    tracking = false;
+                    axis = null;
+                    releaseRawTx();
+                    appEl.classList.remove('v14-edge-engaged', 'v12-live-swipe');
+                    return;
+                }
+
+                if (axis === 'h') {
+                    applyRawTx(baseTx + dx);
+                }
+            }, { capture: true, passive: true });
+
+            function endEdgeTouch() {
+                if (!tracking) return;
+                tracking = false;
+                axis = null;
+
+                const w = cachedW;
+                const ratio = (currentTx + w) / Math.max(1, w);
+                const shouldOpen = movedDistance > 10 ? (ratio >= 0.28) : false;
+
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+
+                releaseRawTx();
+                appEl.classList.remove('v14-edge-engaged', 'v12-live-swipe');
+            }
+
+            document.addEventListener('touchend', endEdgeTouch, { capture: true, passive: true });
+            document.addEventListener('touchcancel', endEdgeTouch, { capture: true, passive: true });
+        })();
+
+    
+        (function lockChannelsStillOnSidebarSlideV15() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isMob()) return;
+                if (appEl.classList.contains('v12-live-swipe') || appEl.classList.contains('v14-edge-engaged')) {
+                    if (typeof e.preventDefault === 'function') {
+                        e.preventDefault();
+                    }
+                }
+            }, { capture: true, passive: false });
+        })();
+
+    
+        (function realisticNativeMobileDrawerV16() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getBackdrop = () => document.getElementById('mobile-sidebar-backdrop');
+
+            let drawerW = Math.min((window.innerWidth || 390) * 0.84, 322);
+            function measureDrawerW() {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                drawerW = Math.max(180, (r && r.width) || Math.min((window.innerWidth || 390) * 0.84, 322));
+            }
+            window.addEventListener('resize', measureDrawerW, { passive: true });
+
+            const EDGE_TRIGGER_PX = 64;
+            let active = false;
+            let lockedAxis = null; // null | 'h' | 'v'
+            let startX = 0;
+            let startY = 0;
+            let lastX = 0;
+            let lastT = 0;
+            let velX = 0;
+            let startTx = 0;
+            let nowTx = 0;
+
+            function setDrawerPosition(tx) {
+                const clamped = Math.max(-drawerW, Math.min(0, tx));
+                nowTx = clamped;
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'none', 'important');
+                    a.style.setProperty('transform', `translate3d(${clamped.toFixed(1)}px, 0, 0)`, 'important');
+                }
+                const bd = getBackdrop();
+                if (bd) {
+                    const progress = Math.max(0, Math.min(1, (clamped + drawerW) / Math.max(1, drawerW)));
+                    bd.style.display = 'block';
+                    bd.style.opacity = (progress * 0.58).toFixed(3);
+                }
+            }
+
+            function clearInlineDrawerPosition() {
+                const a = getAside();
+                if (a) {
+                    a.style.removeProperty('transition');
+                    a.style.removeProperty('transform');
+                }
+                const bd = getBackdrop();
+                if (bd) {
+                    bd.style.removeProperty('display');
+                    bd.style.removeProperty('opacity');
+                }
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const aside = getAside();
+                const touchedInsideAside = !!(aside && aside.contains(e.target));
+
+                if (!isOpen && t.clientX > EDGE_TRIGGER_PX) return;
+                if (isOpen && !touchedInsideAside && t.clientX > drawerW + 24) return;
+
+                measureDrawerW();
+                active = true;
+                lockedAxis = null;
+                startX = t.clientX;
+                startY = t.clientY;
+                lastX = t.clientX;
+                lastT = performance.now();
+                velX = 0;
+                startTx = isOpen ? 0 : -drawerW;
+                nowTx = startTx;
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!active || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+
+                if (!lockedAxis) {
+                    if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+                    lockedAxis = (Math.abs(dx) >= Math.abs(dy) * 1.15) ? 'h' : 'v';
+                    if (lockedAxis === 'h') {
+                        appEl.classList.add('v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                        setDrawerPosition(startTx);
+                    } else {
+                        active = false;
+                        lockedAxis = null;
+                        return;
+                    }
+                }
+
+                if (lockedAxis === 'h') {
+                    const nowPerf = performance.now();
+                    const dt = Math.max(1, nowPerf - lastT);
+                    velX = (t.clientX - lastX) / dt;
+                    lastX = t.clientX;
+                    lastT = nowPerf;
+                    setDrawerPosition(startTx + dx);
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                }
+            }, { capture: true, passive: false });
+
+            function finishDrawerGesture() {
+                if (!active) return;
+                const wasH = (lockedAxis === 'h');
+                active = false;
+                lockedAxis = null;
+
+                if (!wasH) {
+                    clearInlineDrawerPosition();
+                    appEl.classList.remove('v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                    return;
+                }
+
+                const progress = (nowTx + drawerW) / Math.max(1, drawerW);
+                let shouldOpen = progress >= 0.42;
+                if (velX > 0.35) shouldOpen = true;
+                else if (velX < -0.35) shouldOpen = false;
+
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+
+                clearInlineDrawerPosition();
+                appEl.classList.remove('v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+            }
+
+            document.addEventListener('touchend', finishDrawerGesture, { capture: true, passive: true });
+            document.addEventListener('touchcancel', finishDrawerGesture, { capture: true, passive: true });
+        })();
+
+    
+        (function ultraFastMobileDrawerV17() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            const getBackdrop = () => document.getElementById('mobile-sidebar-backdrop');
+
+            let drawerW = Math.min((window.innerWidth || 390) * 0.84, 322);
+            function measureDrawerW() {
+                const a = getAside();
+                const r = a ? a.getBoundingClientRect() : null;
+                drawerW = Math.max(180, (r && r.width) || Math.min((window.innerWidth || 390) * 0.84, 322));
+            }
+            window.addEventListener('resize', measureDrawerW, { passive: true });
+
+            const EDGE_TRIGGER_PX = 68;
+            const TOUCH_PEEK_PX = 14;
+
+            let active = false;
+            let lockedAxis = null; // null | 'h' | 'v'
+            let startX = 0;
+            let startY = 0;
+            let lastX = 0;
+            let lastT = 0;
+            let velX = 0;
+            let startTx = 0;
+            let nowTx = 0;
+            let rafId = null;
+            let pendingTx = null;
+
+            function flushDrawerFrame() {
+                rafId = null;
+                if (pendingTx === null) return;
+                const clamped = Math.max(-drawerW, Math.min(0, pendingTx));
+                pendingTx = null;
+                nowTx = clamped;
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'none', 'important');
+                    a.style.setProperty('transform', `translate3d(${clamped.toFixed(1)}px, 0, 0)`, 'important');
+                }
+                const bd = getBackdrop();
+                if (bd) {
+                    const progress = Math.max(0, Math.min(1, (clamped + drawerW) / Math.max(1, drawerW)));
+                    bd.style.display = 'block';
+                    bd.style.opacity = (progress * 0.58).toFixed(3);
+                }
+            }
+
+            function scheduleDrawerTx(tx) {
+                pendingTx = tx;
+                if (!rafId) {
+                    rafId = requestAnimationFrame(flushDrawerFrame);
+                }
+            }
+
+            function clearInlineDrawerPosition() {
+                if (rafId) {
+                    cancelAnimationFrame(rafId);
+                    rafId = null;
+                }
+                pendingTx = null;
+                const a = getAside();
+                if (a) {
+                    a.style.removeProperty('transition');
+                    a.style.removeProperty('transform');
+                }
+                const bd = getBackdrop();
+                if (bd) {
+                    bd.style.removeProperty('display');
+                    bd.style.removeProperty('opacity');
+                }
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob() || appEl.classList.contains('is-app-fullscreen')) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const aside = getAside();
+                const touchedInsideAside = !!(aside && aside.contains(e.target));
+
+                if (!isOpen && t.clientX > EDGE_TRIGGER_PX) return;
+                if (isOpen && !touchedInsideAside && t.clientX > drawerW + 24) return;
+
+                measureDrawerW();
+                active = true;
+                lockedAxis = null;
+                startX = t.clientX;
+                startY = t.clientY;
+                lastX = t.clientX;
+                lastT = performance.now();
+                velX = 0;
+
+                if (!isOpen) {
+                    startTx = -drawerW + TOUCH_PEEK_PX;
+                    nowTx = startTx;
+                    appEl.classList.add('v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                    pendingTx = startTx;
+                    flushDrawerFrame();
+                } else {
+                    startTx = 0;
+                    nowTx = 0;
+                }
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!active || !isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+
+                if (!lockedAxis) {
+                    if (Math.abs(dx) < 3 && Math.abs(dy) < 3) return;
+                    lockedAxis = (Math.abs(dx) >= Math.abs(dy) * 1.05) ? 'h' : 'v';
+                    if (lockedAxis === 'h') {
+                        appEl.classList.add('v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                    } else {
+                        active = false;
+                        lockedAxis = null;
+                        clearInlineDrawerPosition();
+                        appEl.classList.remove('v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                        return;
+                    }
+                }
+
+                if (lockedAxis === 'h') {
+                    const nowPerf = performance.now();
+                    const dt = Math.max(1, nowPerf - lastT);
+                    velX = (t.clientX - lastX) / dt;
+                    lastX = t.clientX;
+                    lastT = nowPerf;
+                    scheduleDrawerTx(startTx + dx);
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                }
+            }, { capture: true, passive: false });
+
+            function finishFastDrawerGesture() {
+                if (!active) return;
+                const wasH = (lockedAxis === 'h') || appEl.classList.contains('v17-fast-swiping');
+                active = false;
+                lockedAxis = null;
+
+                if (!wasH) {
+                    clearInlineDrawerPosition();
+                    appEl.classList.remove('v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                    return;
+                }
+
+                if (pendingTx !== null) {
+                    flushDrawerFrame();
+                }
+
+                const progress = (nowTx + drawerW) / Math.max(1, drawerW);
+                let shouldOpen = progress >= 0.32;
+                if (velX > 0.22) shouldOpen = true;
+                else if (velX < -0.22) shouldOpen = false;
+
+                if (shouldOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                }
+
+                clearInlineDrawerPosition();
+                appEl.classList.remove('v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+            }
+
+            document.addEventListener('touchend', finishFastDrawerGesture, { capture: true, passive: true });
+            document.addEventListener('touchcancel', finishFastDrawerGesture, { capture: true, passive: true });
+        })();
+
+    
+        (function smoothFastDrawerAndNoChannelClickThroughV18() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+            let blockClicksUntil = 0;
+
+            function forceCloseDrawerCleanly() {
+                blockClicksUntil = performance.now() + 320;
+                appEl.classList.remove(
+                    'mobile-drawer-open',
+                    'v18-swiping',
+                    'v17-fast-swiping',
+                    'v16-swiping',
+                    'v12-live-swipe',
+                    'v14-edge-engaged',
+                    'mob-sb-dragging',
+                    'v9-dragging',
+                    'v10-no-lag'
+                );
+                const a = getAside();
+                if (a) {
+                    a.style.removeProperty('transform');
+                }
+                const bd = document.getElementById('mobile-sidebar-backdrop');
+                if (bd) {
+                    bd.style.removeProperty('opacity');
+                    bd.style.removeProperty('display');
+                }
+                if (typeof closeMobileSidebarDrawer === 'function') {
+                    try { closeMobileSidebarDrawer(); } catch (_) {}
+                }
+            }
+
+            function interceptOutsideTap(e) {
+                if (!isMob()) return;
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                const recentlyClosed = performance.now() < blockClicksUntil;
+                if (!isOpen && !recentlyClosed) return;
+
+                const aside = getAside();
+                const insideAside = !!(aside && aside.contains(e.target));
+                if (insideAside) return;
+
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
+                if (isOpen) {
+                    forceCloseDrawerCleanly();
+                }
+                return false;
+            }
+
+            ['pointerdown', 'touchstart', 'mousedown', 'click'].forEach((evtName) => {
+                document.addEventListener(evtName, interceptOutsideTap, { capture: true, passive: false });
+            });
+        })();
+
+    
+        (function strictlyPreventChannelPlayOnOutsideHideV19() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            window.__v19SidepanelLockedUntil = 0;
+
+            function isDrawerCurrentlyOpenOrSliding() {
+                return appEl.classList.contains('mobile-drawer-open') ||
+                    appEl.classList.contains('v18-swiping') ||
+                    appEl.classList.contains('v17-fast-swiping') ||
+                    appEl.classList.contains('v16-swiping') ||
+                    appEl.classList.contains('v12-live-swipe') ||
+                    appEl.classList.contains('v14-edge-engaged');
+            }
+
+            function hideSidepanelImmediately() {
+                window.__v19SidepanelLockedUntil = performance.now() + 900;
+                appEl.classList.remove(
+                    'mobile-drawer-open',
+                    'v18-swiping',
+                    'v17-fast-swiping',
+                    'v16-swiping',
+                    'v12-live-swipe',
+                    'v14-edge-engaged',
+                    'mob-sb-dragging',
+                    'v9-dragging',
+                    'v10-no-lag'
+                );
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                    a.style.setProperty('transform', 'translate3d(-100%, 0, 0)', 'important');
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            a.style.removeProperty('transition');
+                            a.style.removeProperty('transform');
+                        }
+                    }, 120);
+                }
+                const bd = document.getElementById('mobile-sidebar-backdrop');
+                if (bd) {
+                    bd.style.opacity = '0';
+                    bd.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            bd.style.removeProperty('opacity');
+                            bd.style.removeProperty('display');
+                            bd.style.removeProperty('pointer-events');
+                        }
+                    }, 120);
+                }
+                if (typeof closeMobileSidebarDrawer === 'function') {
+                    try { closeMobileSidebarDrawer(); } catch (_) {}
+                }
+            }
+
+            function handleOutsideInteraction(e) {
+                if (!isMob()) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+
+                const openNow = isDrawerCurrentlyOpenOrSliding();
+                const inGuardWindow = performance.now() < (window.__v19SidepanelLockedUntil || 0);
+
+                if (openNow || inGuardWindow) {
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    if (openNow) {
+                        hideSidepanelImmediately();
+                    }
+                    return false;
+                }
+            }
+
+            ['pointerdown', 'touchstart', 'mousedown', 'touchend', 'click'].forEach((evtName) => {
+                document.addEventListener(evtName, handleOutsideInteraction, { capture: true, passive: false });
+            });
+
+            // Wrap playChannel if already defined, or guard on window load as well
+            function wrapPlayChannelIfReady() {
+                if (typeof window.playChannel === 'function' && !window.playChannel.__v19Wrapped) {
+                    const origPlayChannel = window.playChannel;
+                    const guardedPlayChannel = function(...args) {
+                        if (isMob() && (isDrawerCurrentlyOpenOrSliding() || performance.now() < (window.__v19SidepanelLockedUntil || 0))) {
+                            return;
+                        }
+                        return origPlayChannel.apply(this, args);
+                    };
+                    guardedPlayChannel.__v19Wrapped = true;
+                    window.playChannel = guardedPlayChannel;
+                }
+            }
+            wrapPlayChannelIfReady();
+            window.addEventListener('DOMContentLoaded', wrapPlayChannelIfReady);
+            window.addEventListener('load', wrapPlayChannelIfReady);
+        })();
+
+    
+        (function mobileVerticalSwipeNoDrawerToggleAndOutsideClickHideV20() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            let trackStartX = 0;
+            let trackStartY = 0;
+            let trackGestureAxis = null; // null | 'v' | 'h'
+            let trackStartedWhileOpen = false;
+
+            document.addEventListener('touchstart', (e) => {
+                if (!isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                trackStartX = e.touches[0].clientX;
+                trackStartY = e.touches[0].clientY;
+                trackGestureAxis = null;
+                trackStartedWhileOpen = appEl.classList.contains('mobile-drawer-open');
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isMob()) return;
+                if (!e.touches || e.touches.length !== 1) return;
+                const dx = e.touches[0].clientX - trackStartX;
+                const dy = e.touches[0].clientY - trackStartY;
+
+                if (!trackGestureAxis && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+                    trackGestureAxis = (Math.abs(dy) > Math.abs(dx)) ? 'v' : 'h';
+                }
+
+                // If swiping up/down ('v'), never hide or show the sidepanel
+                if (trackGestureAxis === 'v') {
+                    appEl.classList.remove('v18-swiping', 'v17-fast-swiping', 'v16-swiping', 'v12-live-swipe', 'v14-edge-engaged');
+                    const a = getAside();
+                    if (a && trackStartedWhileOpen) {
+                        a.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+                    }
+                }
+            }, { capture: true, passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                if (!isMob()) return;
+                // If gesture was vertical up/down swipe, do not alter drawer open/close state
+                if (trackGestureAxis === 'v' && trackStartedWhileOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                    const a = getAside();
+                    if (a) {
+                        a.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+                    }
+                }
+                trackGestureAxis = null;
+                trackStartedWhileOpen = false;
+            }, { capture: true, passive: true });
+        })();
+
+    
+        (function mobileThreeDotSidebarBtnAndLargerTitleV21() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+
+            function toggleMobileDrawerFrom3Dot(e) {
+                if (e) {
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                }
+                if (!isMob()) return;
+                const willOpen = !appEl.classList.contains('mobile-drawer-open');
+                if (willOpen) {
+                    appEl.classList.add('mobile-drawer-open');
+                    const a = appEl.querySelector(':scope > aside');
+                    if (a) {
+                        a.style.setProperty('transition', 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                        a.style.setProperty('transform', 'translate3d(0, 0, 0)', 'important');
+                    }
+                    const bd = document.getElementById('mobile-sidebar-backdrop');
+                    if (bd) {
+                        bd.style.display = 'block';
+                        bd.style.opacity = '1';
+                        bd.style.pointerEvents = 'auto';
+                    }
+                } else {
+                    appEl.classList.remove('mobile-drawer-open');
+                    const a = appEl.querySelector(':scope > aside');
+                    if (a) {
+                        a.style.setProperty('transition', 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                        a.style.setProperty('transform', 'translate3d(-100%, 0, 0)', 'important');
+                    }
+                    const bd = document.getElementById('mobile-sidebar-backdrop');
+                    if (bd) {
+                        bd.style.opacity = '0';
+                        bd.style.pointerEvents = 'none';
+                    }
+                    if (typeof closeMobileSidebarDrawer === 'function') {
+                        try { closeMobileSidebarDrawer(); } catch (_) {}
+                    }
+                }
+            }
+
+            function ensureThreeDotButtonInHeader() {
+                const headerLeft = document.querySelector('#view-grid > header > div:first-child');
+                const titleEl = document.getElementById('category-title');
+                if (!headerLeft || !titleEl) return;
+
+                let dotBtn = document.getElementById('mob-3dot-sidebar-btn');
+                if (!dotBtn) {
+                    dotBtn = document.createElement('button');
+                    dotBtn.type = 'button';
+                    dotBtn.id = 'mob-3dot-sidebar-btn';
+                    dotBtn.setAttribute('aria-label', 'Show or hide side panel');
+                    dotBtn.setAttribute('title', 'Side panel');
+                    dotBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2.1"></circle><circle cx="12" cy="12" r="2.1"></circle><circle cx="12" cy="19" r="2.1"></circle></svg>`;
+                    dotBtn.addEventListener('click', toggleMobileDrawerFrom3Dot, { passive: false });
+                }
+
+                if (titleEl.parentNode === headerLeft && dotBtn.previousElementSibling !== titleEl) {
+                    // Place right in front of the title/UStreamz text
+                    headerLeft.insertBefore(dotBtn, titleEl);
+                }
+            }
+
+            ensureThreeDotButtonInHeader();
+            document.addEventListener('DOMContentLoaded', ensureThreeDotButtonInHeader);
+            window.addEventListener('load', ensureThreeDotButtonInHeader);
+        })();
+
+    
+        (function blockAllBackgroundTouchesWhenDrawerOpenV22() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            function isDrawerOpenMobile() {
+                return isMob() && (
+                    appEl.classList.contains('mobile-drawer-open') ||
+                    appEl.classList.contains('v18-swiping') ||
+                    appEl.classList.contains('v17-fast-swiping') ||
+                    appEl.classList.contains('v16-swiping') ||
+                    appEl.classList.contains('v12-live-swipe') ||
+                    appEl.classList.contains('v14-edge-engaged')
+                );
+            }
+
+            function closeDrawerAndLockBg() {
+                window.__v19SidepanelLockedUntil = performance.now() + 900;
+                appEl.classList.remove(
+                    'mobile-drawer-open',
+                    'v18-swiping',
+                    'v17-fast-swiping',
+                    'v16-swiping',
+                    'v12-live-swipe',
+                    'v14-edge-engaged',
+                    'mob-sb-dragging',
+                    'v9-dragging',
+                    'v10-no-lag'
+                );
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                    a.style.setProperty('transform', 'translate3d(-100%, 0, 0)', 'important');
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            a.style.removeProperty('transition');
+                            a.style.removeProperty('transform');
+                        }
+                    }, 120);
+                }
+                const bd = document.getElementById('mobile-sidebar-backdrop');
+                if (bd) {
+                    bd.style.opacity = '0';
+                    bd.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            bd.style.removeProperty('opacity');
+                            bd.style.removeProperty('display');
+                            bd.style.removeProperty('pointer-events');
+                        }
+                    }, 120);
+                }
+                if (typeof closeMobileSidebarDrawer === 'function') {
+                    try { closeMobileSidebarDrawer(); } catch (_) {}
+                }
+            }
+
+            let bgTouchStartX = 0;
+            let bgTouchStartY = 0;
+
+            function guardBackgroundEvent(e) {
+                if (!isMob()) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+
+                const openNow = isDrawerOpenMobile();
+                const inGuard = performance.now() < (window.__v19SidepanelLockedUntil || 0);
+                if (!openNow && !inGuard) return;
+
+                if (e.type === 'touchstart' || e.type === 'pointerdown') {
+                    const pt = (e.touches && e.touches[0]) || e;
+                    bgTouchStartX = pt ? pt.clientX : 0;
+                    bgTouchStartY = pt ? pt.clientY : 0;
+                }
+
+                if (e.type === 'touchend') {
+                    const pt = (e.changedTouches && e.changedTouches[0]) || e;
+                    const dx = pt ? Math.abs(pt.clientX - bgTouchStartX) : 0;
+                    const dy = pt ? Math.abs(pt.clientY - bgTouchStartY) : 0;
+                    // If user is scrolling vertically on background while drawer open, keep drawer open and do nothing to background
+                    if (dy > dx && dy > 6) {
+                        if (typeof e.preventDefault === 'function') e.preventDefault();
+                        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
+                if (openNow && (e.type === 'click' || e.type === 'touchend')) {
+                    closeDrawerAndLockBg();
+                }
+                return false;
+            }
+
+            ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'mousedown', 'mouseup', 'click'].forEach((evtName) => {
+                document.addEventListener(evtName, guardBackgroundEvent, { capture: true, passive: false });
+            });
+        })();
+
+    
+        (function outsideSwipeUpDownZeroResponseWhenOpenV24() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            let outsideSwipeActive = false;
+            let outsideStartX = 0;
+            let outsideStartY = 0;
+
+            function isPanelOpen() {
+                return isMob() && appEl.classList.contains('mobile-drawer-open');
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                outsideSwipeActive = false;
+                if (!isPanelOpen()) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                if (e.touches && e.touches.length === 1) {
+                    outsideSwipeActive = true;
+                    outsideStartX = e.touches[0].clientX;
+                    outsideStartY = e.touches[0].clientY;
+                }
+            }, { capture: true, passive: false });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isPanelOpen() || !outsideSwipeActive) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                if (e.touches && e.touches.length === 1) {
+                    const dx = Math.abs(e.touches[0].clientX - outsideStartX);
+                    const dy = Math.abs(e.touches[0].clientY - outsideStartY);
+                    if (dy >= dx) {
+                        if (typeof e.preventDefault === 'function') e.preventDefault();
+                        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            }, { capture: true, passive: false });
+
+            document.addEventListener('touchend', (e) => {
+                if (!outsideSwipeActive) return;
+                const wasOutside = outsideSwipeActive;
+                outsideSwipeActive = false;
+                if (!isPanelOpen() || !wasOutside) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                const pt = e.changedTouches && e.changedTouches[0];
+                if (pt) {
+                    const dx = Math.abs(pt.clientX - outsideStartX);
+                    const dy = Math.abs(pt.clientY - outsideStartY);
+                    if (dy > dx && dy > 6) {
+                        if (typeof e.preventDefault === 'function') e.preventDefault();
+                        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                        if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                        return false;
+                    }
+                }
+            }, { capture: true, passive: false });
+        })();
+
+    
+        (function preventChannelShiftOnMobileSidebarTapAndPopupCancelV25() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+
+            function settleChannelGridWithoutShift() {
+                if (!isMob()) return;
+                appEl.classList.add('v25-modal-settling');
+                const scrollEl = document.getElementById('grid-scroll-container');
+                const prevTop = scrollEl ? scrollEl.scrollTop : 0;
+
+                // Blur any focused channel card so focus ring/scrollIntoView cannot move cards
+                try {
+                    if (document.activeElement && document.activeElement.classList && document.activeElement.classList.contains('channel-card')) {
+                        document.activeElement.blur();
+                    }
+                } catch (_) {}
+
+                if (scrollEl) {
+                    scrollEl.scrollTop = prevTop;
+                }
+                requestAnimationFrame(() => {
+                    if (scrollEl) scrollEl.scrollTop = prevTop;
+                    setTimeout(() => {
+                        appEl.classList.remove('v25-modal-settling');
+                    }, 220);
+                });
+            }
+
+            // Whenever a sidepanel item is touched/clicked on mobile, keep grid scroll locked and prevent background channel activation
+            document.addEventListener('click', (e) => {
+                if (!isMob()) return;
+                const aside = appEl.querySelector(':scope > aside');
+                const clickedInAside = !!(aside && aside.contains(e.target));
+                const btn = e.target && e.target.closest ? e.target.closest('button') : null;
+                const btnLabel = String(btn?.textContent || '').trim().toLowerCase();
+                const isCancelOrCloseBtn = !!(btn && (
+                    btnLabel === 'cancel' ||
+                    btnLabel === 'close' ||
+                    btn.getAttribute('aria-label') === 'Close' ||
+                    btn.getAttribute('aria-label') === 'Close popup'
+                ));
+                if (clickedInAside || isCancelOrCloseBtn) {
+                    settleChannelGridWithoutShift();
+                }
+            }, { capture: true, passive: true });
+        })();
+
+    
+        (function outsideSwipeNeverActivatesBackgroundV26() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            function ensureShield() {
+                if (document.getElementById('v26-outside-shield')) return;
+                const shield = document.createElement('div');
+                shield.id = 'v26-outside-shield';
+                shield.setAttribute('aria-hidden', 'true');
+                appEl.insertBefore(shield, appEl.firstChild);
+            }
+
+            ensureShield();
+            document.addEventListener('DOMContentLoaded', ensureShield);
+
+            function isPanelShown() {
+                if (!isMob()) return false;
+                if (appEl.classList.contains('mobile-drawer-open')) return true;
+                const aside = getAside();
+                if (!aside) return false;
+                const rect = aside.getBoundingClientRect();
+                return rect.right > 4;
+            }
+
+            let ghostBlockUntil = 0;
+            let trackingOutside = false;
+            let startX = 0;
+            let startY = 0;
+
+            function blockOutsideEvent(e) {
+                if (!isMob()) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+
+                const now = performance.now();
+                const shown = isPanelShown();
+
+                if (e.type === 'touchstart' || e.type === 'pointerdown') {
+                    if (!shown) return;
+                    const pt = (e.touches && e.touches[0]) || e;
+                    trackingOutside = true;
+                    startX = pt ? pt.clientX : 0;
+                    startY = pt ? pt.clientY : 0;
+                    ghostBlockUntil = now + 750;
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    return false;
+                }
+
+                if (e.type === 'touchmove' || e.type === 'pointermove') {
+                    if (!shown && !trackingOutside && now > ghostBlockUntil) return;
+                    ghostBlockUntil = now + 750;
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    return false;
+                }
+
+                if (e.type === 'touchend' || e.type === 'pointerup' || e.type === 'mouseup' || e.type === 'mousedown' || e.type === 'click') {
+                    const wasOutsideGesture = trackingOutside || shown || now <= ghostBlockUntil;
+                    if (!wasOutsideGesture) return;
+                    ghostBlockUntil = now + 750;
+                    if (e.type === 'touchend' || e.type === 'pointerup') {
+                        trackingOutside = false;
+                    }
+                    if (typeof e.preventDefault === 'function') e.preventDefault();
+                    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    return false;
+                }
+            }
+
+            ['touchstart', 'touchmove', 'touchend', 'pointerdown', 'pointermove', 'pointerup', 'mousedown', 'mouseup', 'click'].forEach((evtName) => {
+                document.addEventListener(evtName, blockOutsideEvent, { capture: true, passive: false });
+            });
+        })();
+
+    
+        (function singleTapOutsideChannelAreaHidesPanelV27() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!appEl) return;
+
+            const isMob = () => (window.innerWidth || document.documentElement.clientWidth || 1024) <= 767;
+            const getAside = () => appEl.querySelector(':scope > aside');
+
+            let tapCandidate = false;
+            let tapStartX = 0;
+            let tapStartY = 0;
+            let tapMovedTooFar = false;
+
+            function hidePanelOnly() {
+                window.__v19SidepanelLockedUntil = performance.now() + 800;
+                appEl.classList.remove(
+                    'mobile-drawer-open',
+                    'v18-swiping',
+                    'v17-fast-swiping',
+                    'v16-swiping',
+                    'v12-live-swipe',
+                    'v14-edge-engaged',
+                    'mob-sb-dragging',
+                    'v9-dragging',
+                    'v10-no-lag'
+                );
+                const a = getAside();
+                if (a) {
+                    a.style.setProperty('transition', 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)', 'important');
+                    a.style.setProperty('transform', 'translate3d(-100%, 0, 0)', 'important');
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            a.style.removeProperty('transition');
+                            a.style.removeProperty('transform');
+                        }
+                    }, 140);
+                }
+                const bd = document.getElementById('mobile-sidebar-backdrop');
+                if (bd) {
+                    bd.style.opacity = '0';
+                    bd.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        if (!appEl.classList.contains('mobile-drawer-open')) {
+                            bd.style.removeProperty('opacity');
+                            bd.style.removeProperty('display');
+                            bd.style.removeProperty('pointerEvents');
+                        }
+                    }, 140);
+                }
+                if (typeof closeMobileSidebarDrawer === 'function') {
+                    try { closeMobileSidebarDrawer(); } catch (_) {}
+                }
+            }
+
+            function isInChannelAreaAtPoint(x, y) {
+                const channelArea = document.getElementById('grid-scroll-container') || document.getElementById('channel-grid');
+                if (!channelArea) return false;
+                const r = channelArea.getBoundingClientRect();
+                return x >= r.left && x <= r.right && y >= r.top && y <= r.bottom;
+            }
+
+            document.addEventListener('touchstart', (e) => {
+                tapCandidate = false;
+                tapMovedTooFar = false;
+                if (!isMob() || !appEl.classList.contains('mobile-drawer-open')) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                if (e.touches && e.touches.length === 1) {
+                    tapCandidate = true;
+                    tapStartX = e.touches[0].clientX;
+                    tapStartY = e.touches[0].clientY;
+                }
+            }, { capture: true, passive: false });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isMob() || !appEl.classList.contains('mobile-drawer-open')) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                if (tapCandidate && e.touches && e.touches.length === 1) {
+                    const dx = Math.abs(e.touches[0].clientX - tapStartX);
+                    const dy = Math.abs(e.touches[0].clientY - tapStartY);
+                    if (dx > 10 || dy > 10) {
+                        tapMovedTooFar = true;
+                    }
+                }
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                return false;
+            }, { capture: true, passive: false });
+
+            document.addEventListener('touchend', (e) => {
+                if (!isMob()) return;
+                const aside = getAside();
+                if (aside && aside.contains(e.target)) return;
+                const isOpen = appEl.classList.contains('mobile-drawer-open');
+                if (!isOpen || !tapCandidate) {
+                    tapCandidate = false;
+                    return;
+                }
+                const pt = e.changedTouches && e.changedTouches[0];
+                const endX = pt ? pt.clientX : tapStartX;
+                const endY = pt ? pt.clientY : tapStartY;
+                const dx = Math.abs(endX - tapStartX);
+                const dy = Math.abs(endY - tapStartY);
+                const wasSingleTap = !tapMovedTooFar && dx <= 10 && dy <= 10;
+                const inChannelArea = isInChannelAreaAtPoint(endX, endY);
+
+                tapCandidate = false;
+                tapMovedTooFar = false;
+
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+                if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+
+                // Only hide when it is a single tap inside the outside channel area; swipe up/down does NOT hide
+                if (wasSingleTap && inChannelArea) {
+                    hidePanelOnly();
+                }
+                return false;
+            }, { capture: true, passive: false });
+        })();
+
     </script>
 </div>
 </body>
