@@ -653,6 +653,21 @@
                 gap: 28px !important;
             }
         }
+
+        /* Mobile-only Screen Rotate button right after Fullscreen button */
+        #player-rotate-screen-btn {
+            display: none !important;
+        }
+        @media (max-width: 767px) {
+            #player-rotate-screen-btn {
+                display: inline-flex !important;
+            }
+            #umc-live-tv-app.mobile-rotated-landscape #view-player,
+            #umc-live-tv-app.mobile-rotated-landscape #player-container {
+                transform: rotate(90deg);
+                transform-origin: center center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -817,6 +832,10 @@
                         <!-- Full Screen Toggle Button -->
                         <button type="button" tabindex="0" id="player-fullscreen-btn" onclick="toggleAppFullScreen(event)" class="flex items-center justify-center text-white hover:text-cyan-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" aria-label="Toggle Full Screen">
                             <i data-lucide="maximize" id="player-fullscreen-icon" class="!w-4 !h-4"></i>
+                        </button>
+                        <!-- Mobile-only Screen Rotate Button (right behind Full Screen button) -->
+                        <button type="button" tabindex="0" id="player-rotate-screen-btn" onclick="toggleMobileScreenRotate(event)" class="items-center justify-center text-white hover:text-emerald-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" title="Rotate Screen" aria-label="Rotate Screen">
+                            <i data-lucide="rotate-cw" id="player-rotate-screen-icon" class="!w-4 !h-4"></i>
                         </button>
                         <!-- Exit Playing Channel Button (Icon Only, turns red only on hover) -->
                         <button type="button" tabindex="0" id="player-exit-channel-btn" onclick="closePlayer()" class="flex items-center justify-center text-white bg-slate-900/90 hover:bg-rose-600 hover:border-rose-500 hover:text-white border border-white/15 w-8 h-8 rounded-full shadow-lg transition-colors" aria-label="Exit Playing Channel">
@@ -3293,6 +3312,47 @@
                 setTimeout(() => {
                     try { splash.remove(); } catch (_) {}
                 }, 700);
+            }
+        }
+
+        
+        let isMobileRotatedLandscape = false;
+        function isMobileDeviceContext() {
+            const narrow = (window.innerWidth || document.documentElement.clientWidth || 0) <= 767;
+            const uaMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
+            return narrow || uaMobile;
+        }
+
+        async function toggleMobileScreenRotate(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+            if (!isMobileDeviceContext()) return;
+            if (typeof resetPlayerOverlayTimeout === 'function') resetPlayerOverlayTimeout();
+
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!isMobileRotatedLandscape) {
+                if (!isSimulatedFullscreen && typeof enterAppFullScreen === 'function') {
+                    enterAppFullScreen();
+                }
+                isMobileRotatedLandscape = true;
+                if (appEl) appEl.classList.add('mobile-rotated-landscape');
+                try {
+                    if (screen.orientation && typeof screen.orientation.lock === 'function') {
+                        await screen.orientation.lock('landscape').catch(() => {});
+                    }
+                } catch (_) {}
+                if (typeof showNotification === 'function') showNotification('Screen rotated to Landscape');
+            } else {
+                isMobileRotatedLandscape = false;
+                if (appEl) appEl.classList.remove('mobile-rotated-landscape');
+                try {
+                    if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                        screen.orientation.unlock();
+                    }
+                } catch (_) {}
+                if (typeof showNotification === 'function') showNotification('Screen orientation reset');
             }
         }
 
