@@ -140,6 +140,64 @@
             box-shadow: none !important;
         }
 
+        /* Clean, Crisp Border on All Text Input Fields (Including Outside #umc-live-tv-app) */
+        #umc-live-tv-app input[type="text"],
+        #umc-live-tv-app input[type="password"],
+        #umc-live-tv-app input[type="email"],
+        #umc-live-tv-app input[type="url"],
+        #umc-live-tv-app input[type="number"],
+        #umc-live-tv-app input[type="search"],
+        #umc-live-tv-app textarea,
+        #umc-live-tv-app select,
+        #user-account-login-modal input[type="text"],
+        #user-account-login-modal input[type="password"],
+        #settings-auth-modal input[type="text"],
+        #settings-auth-modal input[type="password"],
+        #settings-auth-modal input[type="email"] {
+            outline: none !important;
+            box-shadow: none !important;
+            --tw-ring-shadow: 0 0 #0000 !important;
+            --tw-ring-offset-shadow: 0 0 #0000 !important;
+            border-width: 1px !important;
+            border-style: solid !important;
+            border-color: #475569 !important;
+            transition: border-color 0.15s ease !important;
+        }
+        #umc-live-tv-app input[type="text"]:focus,
+        #umc-live-tv-app input[type="password"]:focus,
+        #umc-live-tv-app input[type="email"]:focus,
+        #umc-live-tv-app input[type="url"]:focus,
+        #umc-live-tv-app input[type="number"]:focus,
+        #umc-live-tv-app input[type="search"]:focus,
+        #umc-live-tv-app textarea:focus,
+        #umc-live-tv-app select:focus,
+        #settings-auth-modal input:focus,
+        #settings-auth-modal input:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+            border-width: 1px !important;
+            border-style: solid !important;
+            border-color: #818cf8 !important;
+        }
+        #umc-live-tv-app #user-account-login-modal input:focus,
+        #umc-live-tv-app #user-account-login-modal input:focus-visible,
+        #user-account-login-modal input:focus,
+        #user-account-login-modal input:focus-visible {
+            outline: none !important;
+            box-shadow: none !important;
+            border-width: 1px !important;
+            border-style: solid !important;
+            border-color: #10b981 !important;
+        }
+        /* Keep search input borderless as designed */
+        #umc-live-tv-app #search-input,
+        #umc-live-tv-app #search-input:focus,
+        #umc-live-tv-app #search-input:focus-visible,
+        #umc-live-tv-app #search-input:active {
+            border-width: 0 !important;
+            border-color: transparent !important;
+        }
+
         /* Improved Card Web View */
         .channel-card {
             transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
@@ -326,6 +384,19 @@
         #umc-live-tv-app ::-webkit-scrollbar-track { background: transparent; }
         #umc-live-tv-app ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         #umc-live-tv-app ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+
+        #umc-live-tv-app #view-player.mini-player #player-overlay {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+            z-index: 2147483647 !important;
+        }
+        #umc-live-tv-app #view-player.mini-player #mini-player-actions,
+        #umc-live-tv-app #view-player.mini-player #mini-player-actions button {
+            pointer-events: auto !important;
+            z-index: 2147483647 !important;
+        }
 
         .view-section { display: none; height: 100%; }
         .view-section.active { display: flex; }
@@ -684,7 +755,7 @@
         </section>
 
         <!-- View 2: Video Player -->
-        <section id="view-player" class="view-section flex-col w-full h-full bg-black relative" onmousemove="resetPlayerOverlayTimeout()" ontouchstart="resetPlayerOverlayTimeout()">
+        <section id="view-player" class="view-section flex-col w-full h-full bg-black relative" onmousemove="resetPlayerOverlayTimeout()" onmouseenter="resetPlayerOverlayTimeout()" ontouchstart="resetPlayerOverlayTimeout()"><div id="fs-top-hover-strip" onmousemove="resetPlayerOverlayTimeout()" onmouseenter="resetPlayerOverlayTimeout()" style="display:none;position:fixed;top:0;left:0;right:0;height:76px;z-index:2147483646;background:transparent;pointer-events:auto;"></div>
             <header id="player-overlay" class="h-14 md:h-16 flex items-center px-4 bg-gradient-to-b from-black/95 via-black/60 to-transparent absolute top-0 left-0 w-full z-30 transition-opacity duration-300 opacity-100">
                 <div class="relative">
                     <div class="flex items-center gap-2">
@@ -723,7 +794,7 @@
                 </div>
 
                 <!-- Fallback Iframe for Embeds / Null-Origin Sandbox -->
-                <iframe id="embed-element" class="hidden w-full h-full border-0 bg-black" title="Channel player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; presentation" allowfullscreen referrerpolicy="no-referrer"></iframe>
+                <iframe id="embed-element" class="hidden w-full h-full border-0 bg-black"  allow="autoplay; encrypted-media; picture-in-picture; fullscreen; presentation" allowfullscreen referrerpolicy="no-referrer"></iframe>
                 
                 <!-- Live Stream Status Indicator Dot (Icon Only, No Text) -->
                 <div id="stream-status-badge" role="status" aria-live="polite" class="absolute left-3 z-20 flex items-center justify-center pointer-events-none transition-all duration-300" style="bottom:16px;background:transparent !important;border:none !important;box-shadow:none !important;">
@@ -871,7 +942,7 @@
                                     <input type="hidden" id="edit-id" value="">
                                     <div>
                                         <label class="block text-sm font-medium text-slate-400 mb-1">Add to list (Automatic)</label>
-                                        <select id="add-content-type" disabled class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-4 py-2.5 text-cyan-300 font-semibold cursor-not-allowed opacity-95 focus:outline-none">
+                                        <select id="add-content-type" disabled class="w-full bg-slate-900/90 border border-slate-700/80 rounded-lg px-4 py-2.5 text-cyan-300 font-semibold cursor-not-allowed opacity-95 ">
                                             <option value="channel">Channel List</option>
                                             <option value="movie">Movies Online</option>
                                             <option value="app">App / Files (APK, EXE, DOC, PDF, Word, Excel, Image)</option>
@@ -879,11 +950,11 @@
                                     </div>
                                     <div>
                                         <label id="add-name-label" class="block text-sm font-medium text-slate-400 mb-1">Channel Name</label>
-                                        <input type="text" id="add-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="e.g., Kantipur HD">
+                                        <input type="text" id="add-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white " placeholder="e.g., Kantipur HD">
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-400 mb-1">Category (Move to)</label>
-                                        <select id="add-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500"></select>
+                                        <select id="add-category" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white "></select>
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-400 mb-1">Additional Categories (select multiple)</label>
@@ -891,13 +962,13 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-400 mb-1">Logo URL (Image)</label>
-                                        <input type="url" id="add-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="Logo URL (optional if uploading)">
+                                        <input type="url" id="add-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white " placeholder="Logo URL (optional if uploading)">
                                         <label class="mt-2 flex items-center gap-2 text-xs text-indigo-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload channel logo<input type="file" id="add-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
                                         <img id="add-logo-preview" class="hidden mt-2 h-14 w-14 rounded-lg border border-slate-700 bg-slate-950 object-contain p-1" alt="Logo preview">
                                     </div>
                                     <div>
                                         <label id="add-url-label" class="block text-sm font-medium text-slate-400 mb-1">Stream / Player / Direct App Download URL</label>
-                                        <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/stream.m3u8 or https://example.com/app.apk">
+                                        <input type="url" id="add-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-white " placeholder="https://example.com/stream.m3u8 or https://example.com/app.apk">
                                         <!-- Add More Link trigger right below Main Link -->
                                         <div id="add-more-link-bar" class="mt-2 flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/80 px-3 py-2">
                                             <span class="text-xs font-medium text-slate-300">Add More Link</span>
@@ -934,7 +1005,7 @@
                                     <div id="settings-password-section" class="rounded-xl border border-rose-500/50 bg-rose-950/20 p-3.5 space-y-1.5">
                                         <label class="block text-sm font-semibold text-rose-300">Password (optional — required to play channel or preview/download file)</label>
                                         <div class="relative">
-                                            <input type="password" id="add-password" autocomplete="new-password" class="w-full bg-slate-950 border border-rose-500/40 rounded-lg px-4 py-2.5 pr-11 text-white focus:outline-none focus:border-rose-500" placeholder="Leave empty for no password">
+                                            <input type="password" id="add-password" autocomplete="new-password" class="w-full bg-slate-950 border border-rose-500/40 rounded-lg px-4 py-2.5 pr-11 text-white " placeholder="Leave empty for no password">
                                             <button type="button" id="toggle-add-password-btn" onclick="toggleAddPasswordPreview()" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1.5 text-rose-300 hover:bg-rose-950/60 hover:text-white transition-colors" aria-label="Toggle password preview" title="Show / Hide Password">
                                                 <i data-lucide="eye" class="!w-4 !h-4"></i>
                                             </button>
@@ -964,6 +1035,11 @@
                                     <span class="ml-auto text-sm text-slate-500 font-normal bg-slate-950 px-3 py-1 rounded-full border border-slate-800" id="total-channels-count">0</span>
                                 </h2>
                                 <input type="search" id="settings-channel-search" oninput="renderSettingsList()" placeholder="Search channel by name..." class="shrink-0">
+                                <div id="settings-channel-lock-filter-bar" class="flex items-center gap-1.5 mb-2.5 shrink-0 text-xs">
+                                    <button type="button" id="ch-lock-filter-all" onclick="setChannelLockFilter('all')" class="rounded-lg px-2.5 py-1 font-semibold bg-indigo-600 text-white transition-colors">All (<span id="ch-lock-count-all">0</span>)</button>
+                                    <button type="button" id="ch-lock-filter-locked" onclick="setChannelLockFilter('locked')" class="rounded-lg px-2.5 py-1 font-semibold bg-slate-950 hover:bg-slate-800 border border-rose-500/40 text-rose-300 transition-colors">Locked (<span id="ch-lock-count-locked">0</span>)</button>
+                                    <button type="button" id="ch-lock-filter-unlocked" onclick="setChannelLockFilter('unlocked')" class="rounded-lg px-2.5 py-1 font-semibold bg-slate-950 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 transition-colors">Unlocked (<span id="ch-lock-count-unlocked">0</span>)</button>
+                                </div>
                                 <div class="flex flex-wrap items-center justify-between gap-2 mb-3 rounded-xl border border-slate-800 bg-slate-950/80 px-3 py-2 shrink-0">
                                     <label class="inline-flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
                                         <input type="checkbox" onchange="toggleSelectAllSettingsItems('channel', this.checked)" class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-900">
@@ -1048,8 +1124,8 @@
                                     </h2>
                                     <form onsubmit="handleAddCategory(event)" class="flex flex-col gap-2.5 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
                                         <select id="new-category-parent" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white"><option value="">Top-level category</option></select>
-                                        <input type="text" id="new-category-name" required placeholder="New Category Name" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
-                                        <input type="text" id="new-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                        <input type="text" id="new-category-name" required placeholder="New Category Name" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white ">
+                                        <input type="text" id="new-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white ">
                                         <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
                                             <div class="flex items-center justify-between gap-2">
                                                 <div class="flex items-center gap-2 min-w-0">
@@ -1062,11 +1138,11 @@
                                                 </button>
                                             </div>
                                             <div id="category-icon-picker-drawer" class="hidden space-y-2 pt-1 border-t border-slate-800/80">
-                                                <input type="search" id="category-icon-search" oninput="renderCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv, app, sport...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                                                <input type="search" id="category-icon-search" oninput="renderCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv, app, sport...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white ">
                                                 <div id="category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
                                             </div>
                                         </div>
-                                        <input type="url" id="new-category-logo" placeholder="Category logo URL (optional)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                                        <input type="url" id="new-category-logo" placeholder="Category logo URL (optional)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white ">
                                         <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="new-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
                                         <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2.5 rounded-lg font-medium flex items-center justify-center">Add Category</button>
                                     </form>
@@ -1094,32 +1170,32 @@
                             <form id="settings-download-app-form" onsubmit="handleSettingsDownloadAppSave(event)" class="space-y-3 lg:flex-1 lg:min-h-0 lg:overflow-y-auto lg:pr-2">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Button / Section Title</label>
-                                    <input type="text" id="settings-dl-app-title" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="Download App">
+                                    <input type="text" id="settings-dl-app-title" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="Download App">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">App Name</label>
-                                    <input type="text" id="settings-dl-app-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="UStreamz Android App">
+                                    <input type="text" id="settings-dl-app-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="UStreamz Android App">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Icon Class (e.g., fa-brands fa-android)</label>
-                                    <input type="text" id="settings-dl-app-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="fa-brands fa-android">
+                                    <input type="text" id="settings-dl-app-icon" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="fa-brands fa-android">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">App Logo URL or Upload Logo</label>
-                                    <input type="text" id="settings-dl-app-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="https://example.com/logo.png">
+                                    <input type="text" id="settings-dl-app-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="https://example.com/logo.png">
                                     <label class="mt-2 flex items-center gap-2 text-xs text-emerald-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload app logo<input type="file" id="settings-dl-app-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">About App</label>
-                                    <textarea id="settings-dl-app-about" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="Fast, lightweight Android app for live streams &amp; updates."></textarea>
+                                    <textarea id="settings-dl-app-about" rows="2" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="Fast, lightweight Android app for live streams &amp; updates."></textarea>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Direct Download Link / URL</label>
-                                    <input type="url" id="settings-dl-app-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="https://example.com/app.apk">
+                                    <input type="url" id="settings-dl-app-url" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="https://example.com/app.apk">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Mirror Link / URL (optional)</label>
-                                    <input type="text" id="settings-dl-app-mirror" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-emerald-500" placeholder="https://mirror.example.com/app.apk">
+                                    <input type="text" id="settings-dl-app-mirror" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="https://mirror.example.com/app.apk">
                                 </div>
                                 <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                     <i data-lucide="save" class="!w-4 !h-4"></i>
@@ -1200,7 +1276,7 @@
                                             </div>
                                             <div class="flex gap-1.5">
                                                 <div class="relative flex-1 min-w-0">
-                                                    <input type="password" id="master-password-input" autocomplete="off" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg pl-3 pr-9 py-2 text-xs font-mono text-amber-200 focus:outline-none focus:border-amber-400" placeholder="Set Master Password...">
+                                                    <input type="password" id="master-password-input" autocomplete="off" class="w-full bg-slate-950 border border-amber-500/40 rounded-lg pl-3 pr-9 py-2 text-xs font-mono text-amber-200 " placeholder="Set Master Password...">
                                                     <button type="button" id="toggle-master-password-btn" onclick="toggleMasterPasswordPreview()" title="Show / Hide Master Password" aria-label="Show or hide Master Password" class="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-amber-300 hover:bg-amber-900/50 hover:text-white transition-colors">
                                                         <i data-lucide="eye" class="!w-3.5 !h-3.5"></i>
                                                     </button>
@@ -1212,7 +1288,7 @@
                                         <form id="add-user-form" onsubmit="handleAddManagedUser(event)" class="space-y-3">
                                             <div>
                                                 <label class="block text-xs font-medium text-slate-400 mb-1">User Name / User ID</label>
-                                                <input type="text" id="new-user-name" oninput="handleManagedUserNameInput()" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Enter user name or ID...">
+                                                <input type="text" id="new-user-name" oninput="handleManagedUserNameInput()" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white " placeholder="Enter user name or ID...">
                                             </div>
                                             <div>
                                                 <div class="flex items-center justify-between gap-2 mb-1">
@@ -1223,7 +1299,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex gap-1.5">
-                                                    <input type="text" id="new-user-generated-password" readonly onclick="if(this.readOnly)this.select()" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm font-mono text-emerald-300 focus:outline-none focus:border-sky-500" placeholder="Auto password will generate here">
+                                                    <input type="text" id="new-user-generated-password" readonly onclick="if(this.readOnly)this.select()" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm font-mono text-emerald-300 " placeholder="Auto password will generate here">
                                                     <button type="button" onclick="copyNewUserGeneratedPassword()" title="Copy Password" class="shrink-0 rounded-lg border border-slate-700 bg-slate-800 hover:bg-emerald-700/80 px-2.5 py-2 text-xs font-semibold text-emerald-300 hover:text-white inline-flex items-center gap-1 transition-colors">
                                                         <i data-lucide="copy" class="!w-3.5 !h-3.5"></i>
                                                         <span>Copy</span>
@@ -1237,8 +1313,8 @@
                                             <div>
                                                 <label class="block text-xs font-medium text-slate-400 mb-1">Validity Period</label>
                                                 <div class="flex gap-2">
-                                                    <input type="number" id="new-user-validity-value" min="1" value="30" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
-                                                    <select id="new-user-validity-unit" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+                                                    <input type="number" id="new-user-validity-value" min="1" value="30" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white ">
+                                                    <select id="new-user-validity-unit" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white ">
                                                         <option value="hour">Hour</option>
                                                         <option value="day" selected>Day</option>
                                                         <option value="month">Month</option>
@@ -1246,6 +1322,10 @@
                                                         <option value="unlimited">Unlimited</option>
                                                     </select>
                                                 </div>
+                                            </div>
+                                            <div>
+                                                <label for="new-user-device-limit" class="block text-xs font-medium text-slate-400 mb-1">Device Limit</label>
+                                                <input type="number" id="new-user-device-limit" min="1" max="100" value="1" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white " placeholder="Allowed devices (e.g., 1, 2, 3)">
                                             </div>
                                             <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                                 <i data-lucide="user-plus" class="!w-4 !h-4"></i>
@@ -1282,18 +1362,18 @@
                 <div><h2 class="text-xl font-bold text-white">UStreamz Admin</h2><p class="text-sm text-slate-400">Sign in with your administrator account.</p></div>
             </div>
             <form id="settings-login-form" class="space-y-4">
-                <div><label for="settings-email" class="mb-1 block text-sm font-medium text-slate-300">User ID / Email</label><input id="settings-email" type="email" autocomplete="username" required class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none focus:border-indigo-500" placeholder="Enter your user ID / email"></div>
+                <div><label for="settings-email" class="mb-1 block text-sm font-medium text-slate-300">User ID / Email</label><input id="settings-email" type="email" autocomplete="username" required class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none " placeholder="Enter your user ID / email"></div>
                 <div>
                     <label for="settings-password" class="mb-1 block text-sm font-medium text-slate-300">Password</label>
                     <div class="relative">
-                        <input id="settings-password" type="password" autocomplete="current-password" required class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-white outline-none focus:border-indigo-500" placeholder="Enter your password">
+                        <input id="settings-password" type="password" autocomplete="current-password" required class="w-full rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 pr-12 text-white outline-none " placeholder="Enter your password">
                         <button type="button" id="toggle-password-btn" onclick="togglePasswordVisibility()" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-2 text-slate-400 hover:bg-slate-800 hover:text-white" aria-label="Show password" title="Show password">
                             <i data-lucide="eye" class="!w-5 !h-5"></i>
                         </button>
                     </div>
                 </div>
                 <label class="flex items-center gap-2 text-sm text-slate-400 cursor-pointer select-none">
-                    <input id="remember-user-id" type="checkbox" checked class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500">
+                    <input id="remember-user-id" type="checkbox" checked class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-indigo-600 ">
                     Always remember user ID &amp; password
                 </label>
                 <p id="settings-login-error" class="hidden text-sm text-rose-400"></p>
@@ -1348,6 +1428,81 @@
     </div>
 
     
+
+    <!-- Fast Edit Channel Modal (Right-Click -> Fast Edit) -->
+    <div id="fast-edit-channel-modal" class="fixed inset-0 z-[200010] hidden items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md">
+        <div onclick="event.stopPropagation()" class="w-full max-w-lg max-h-[92dvh] flex flex-col rounded-3xl border border-cyan-500/40 bg-gradient-to-b from-slate-900 to-slate-950 p-5 sm:p-6 shadow-[0_24px_70px_rgba(0,0,0,0.9)]">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/35 flex items-center justify-center text-cyan-400 shrink-0">
+                        <i data-lucide="zap" class="!w-4 !h-4"></i>
+                    </div>
+                    <h3 class="text-base sm:text-lg font-bold text-white truncate">Fast Edit</h3>
+                </div>
+                <button type="button" onclick="closeFastEditModal()" class="rounded-xl bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white p-2 transition-colors" aria-label="Close">
+                    <i data-lucide="x" class="!w-4 !h-4"></i>
+                </button>
+            </div>
+            <form id="fast-edit-channel-form" onsubmit="handleSaveFastEdit(event)" class="mt-4 flex-1 min-h-0 overflow-y-auto pr-1 space-y-3.5">
+                <input type="hidden" id="fast-edit-channel-id" value="">
+                <input type="hidden" id="fast-edit-main-category-val" value="">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Channel Name</label>
+                    <input type="text" id="fast-edit-name" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-sm text-white " placeholder="Channel name">
+                </div>
+                <div class="relative">
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Select Categories</label>
+                    <button type="button" id="fast-edit-cats-dropdown-btn" onclick="toggleFastEditCatsDropdown(event)" class="w-full flex items-center justify-between gap-2 rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-left text-xs text-slate-200 hover:border-cyan-500/60 transition-colors">
+                        <span id="fast-edit-cats-summary" class="truncate">Select categories...</span>
+                        <i data-lucide="chevron-down" class="!w-4 !h-4 text-slate-400 shrink-0"></i>
+                    </button>
+                    <div id="fast-edit-cats-dropdown-panel" class="hidden mt-1.5 max-h-40 overflow-y-auto rounded-xl border border-slate-700 bg-slate-950 p-2 space-y-1"></div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Main Link (Player / Stream URL)</label>
+                    <input type="url" id="fast-edit-main-url" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2 text-xs text-white " placeholder="https://example.com/stream.m3u8">
+                </div>
+                <div id="fast-edit-extra-links-section" class="rounded-xl border border-slate-800 bg-slate-950/80 p-3 space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-300">Additional Stream Links</span>
+                        <div class="inline-flex rounded-lg border border-slate-700 bg-slate-900 p-0.5 text-[11px]">
+                            <button type="button" id="fe-link-mode-auto" onclick="setFastEditLinkLabelMode('auto')" class="rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors">Auto</button>
+                            <button type="button" id="fe-link-mode-manual" onclick="setFastEditLinkLabelMode('manual')" class="rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors">Manual</button>
+                        </div>
+                    </div>
+                    <div id="fast-edit-extra-links-rows" class="space-y-2"></div>
+                    <div class="pt-0.5">
+                        <button type="button" onclick="appendFastEditExtraLinkRow('', '', true)" class="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 hover:bg-indigo-600 border border-slate-700/90 hover:border-indigo-500 px-3 py-1.5 text-xs font-semibold text-indigo-300 hover:text-white transition-colors">
+                            <span>Add</span>
+                            <i data-lucide="plus" class="!w-3.5 !h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-xs font-medium text-slate-400">Logo Image (URL or Upload)</label>
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-12 h-12 rounded-xl border border-slate-700 bg-slate-950 flex items-center justify-center overflow-hidden shrink-0">
+                            <img id="fast-edit-logo-preview" src="" alt="" class="hidden w-full h-full object-contain p-1">
+                            <i id="fast-edit-logo-placeholder" data-lucide="image" class="!w-5 !h-5 text-slate-600"></i>
+                        </div>
+                        <div class="flex-1 min-w-0 space-y-1.5">
+                            <input type="text" id="fast-edit-logo-url" oninput="updateFastEditLogoPreview(this.value)" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-xs text-white " placeholder="https://example.com/logo.png">
+                            <label class="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 px-2.5 py-1 text-[11px] font-semibold text-cyan-300 cursor-pointer transition-colors">
+                                <i data-lucide="upload" class="!w-3.5 !h-3.5"></i>
+                                <span>Upload Image</span>
+                                <input type="file" id="fast-edit-logo-file" accept="image/*" onchange="handleFastEditLogoFileChange(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2.5 pt-2">
+                    <button type="button" onclick="closeFastEditModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
+                    <button type="submit" class="flex-1 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Edit Category Modal (Same experience as Add Category) -->
     <div id="edit-category-modal" class="fixed inset-0 z-[130] hidden items-center justify-center bg-black/85 p-4 backdrop-blur-sm">
         <div class="w-full max-w-lg rounded-2xl border border-slate-700 bg-slate-900 p-5 md:p-6 shadow-2xl max-h-[92dvh] overflow-y-auto space-y-4">
@@ -1359,20 +1514,20 @@
                 <input type="hidden" id="edit-category-old-name" value="">
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Category Name</label>
-                    <input type="text" id="edit-category-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="edit-category-name" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white ">
                 </div>
-                <input type="text" id="edit-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                <input type="text" id="edit-category-icon" value="fa-brands fa-android" placeholder="FontAwesome icon class (e.g., fa-brands fa-android)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white ">
                 <div class="rounded-xl border border-slate-800 bg-slate-950/90 p-2.5 space-y-2">
                     <div class="flex items-center justify-between gap-2">
                         <span class="text-xs font-semibold text-cyan-300">Select Category Icon (<span id="edit-category-icon-count">1060</span>)</span>
                         <span id="edit-category-icon-badge" class="inline-flex items-center gap-1.5 text-xs bg-slate-900 border border-slate-700 text-cyan-200 px-2.5 py-0.5 rounded-full"></span>
                     </div>
-                    <input type="search" id="edit-category-icon-search" oninput="renderEditCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+                    <input type="search" id="edit-category-icon-search" oninput="renderEditCategoryIconLibrary()" placeholder="Search icon (android, ios, pdf, word, excel, image, tv...)" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white ">
                     <div id="edit-category-icon-library" class="grid grid-cols-6 sm:grid-cols-8 gap-1.5 max-h-40 overflow-y-auto pr-1"></div>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-400 mb-1">Category Logo URL (optional)</label>
-                    <input type="url" id="edit-category-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-cyan-500" placeholder="Logo URL">
+                    <input type="url" id="edit-category-logo" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-white " placeholder="Logo URL">
                 </div>
                 <label class="flex items-center gap-2 text-xs text-cyan-300 cursor-pointer"><i data-lucide="upload" class="!w-4 !h-4"></i> Upload category logo<input type="file" id="edit-category-logo-file" accept="image/*" class="block w-full text-xs text-slate-400 file:mr-2 file:rounded-md file:border-0 file:bg-slate-800 file:px-3 file:py-1.5 file:text-slate-200"></label>
                 <div class="flex gap-2.5 pt-2">
@@ -1462,27 +1617,27 @@
                 <div class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Edit Download App (Link &amp; Icon)</div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">App Name</label>
-                    <input type="text" id="dl-app-edit-name" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="UStreamz Android App">
+                    <input type="text" id="dl-app-edit-name" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="UStreamz Android App">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Icon Class (e.g., fa-brands fa-android)</label>
-                    <input type="text" id="dl-app-edit-icon" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="fa-brands fa-android">
+                    <input type="text" id="dl-app-edit-icon" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="fa-brands fa-android">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Logo URL (optional)</label>
-                    <input type="url" id="dl-app-edit-logo" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/logo.png">
+                    <input type="url" id="dl-app-edit-logo" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="https://example.com/logo.png">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">About App</label>
-                    <textarea id="dl-app-edit-about" rows="2" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="About this app..."></textarea>
+                    <textarea id="dl-app-edit-about" rows="2" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="About this app..."></textarea>
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Direct Download URL</label>
-                    <input type="url" id="dl-app-edit-url" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="https://example.com/app.apk">
+                    <input type="url" id="dl-app-edit-url" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="https://example.com/app.apk">
                 </div>
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Mirror Link URL (optional)</label>
-                    <input type="url" id="dl-app-edit-mirror" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="https://mirror.example.com/app.apk">
+                    <input type="url" id="dl-app-edit-mirror" class="w-full rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-xs text-white " placeholder="https://mirror.example.com/app.apk">
                 </div>
                 <div class="flex justify-end gap-2 pt-1">
                     <button type="button" onclick="toggleDownloadAppEditor(false)" class="rounded-lg bg-slate-800 hover:bg-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200">Cancel</button>
@@ -1515,15 +1670,18 @@
                     <p id="user-login-locked-channel-msg" class="text-[11px] text-rose-200 leading-snug">You can only watch this channel after unlocking.</p>
                 </div>
                 <div class="space-y-2.5">
-                    <input type="text" id="user-login-username-input" autocomplete="username" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" placeholder="Username">
                     <div class="relative">
-                        <input type="password" id="user-login-password-input" autocomplete="current-password" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 pr-11 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500" placeholder="Password">
+                        <input type="text" id="user-login-username-input" autocomplete="off" oninput="renderDeviceUserTypeahead()" onfocus="renderDeviceUserTypeahead()" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 " placeholder="Username">
+                        <div id="device-user-typeahead-list" class="hidden absolute left-0 right-0 top-full mt-1 z-50 max-h-40 overflow-y-auto rounded-xl border border-slate-700 bg-slate-900 shadow-2xl divide-y divide-slate-800/80"></div>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="user-login-password-input" autocomplete="current-password" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 pr-11 text-sm text-white placeholder-slate-500 " placeholder="Password">
                         <button type="button" id="toggle-user-login-password-btn" onclick="toggleUserLoginPasswordPreview()" title="Show / Hide Password" aria-label="Show or hide Password" class="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-emerald-300 transition-colors">
                             <i data-lucide="eye" class="!w-4 !h-4"></i>
                         </button>
                     </div>
                     <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer select-none pt-0.5">
-                        <input type="checkbox" id="remember-user-account-creds" checked class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 focus:ring-emerald-500">
+                        <input type="checkbox" id="remember-user-account-creds" checked class="h-4 w-4 rounded border-slate-700 bg-slate-950 text-emerald-500 ">
                         <span>Remember user ID &amp; password</span>
                     </label>
                     <p id="user-login-error" class="hidden text-xs text-rose-400 font-medium"></p>
@@ -1559,8 +1717,8 @@
                     <button type="button" id="pwd-mode-userpwd-btn" onclick="setItemPasswordAuthMode('user_password')" class="rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors">User &amp; Password</button>
                 </div>
                 <div class="space-y-2.5">
-                    <input type="text" id="pwd-modal-username-input" autocomplete="off" class="hidden w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder="Username">
-                    <input type="password" id="pwd-modal-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder="Password">
+                    <input type="text" id="pwd-modal-username-input" autocomplete="off" class="hidden w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2 text-sm text-white placeholder-slate-500 " placeholder="Username">
+                    <input type="password" id="pwd-modal-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 " placeholder="Password">
                     <p id="pwd-modal-error" class="hidden text-xs text-rose-400 mt-1 font-medium">Incorrect password. Please try again.</p>
                 </div>
                 <div class="flex gap-2.5 pt-1">
@@ -1590,7 +1748,7 @@
             </div>
             <form id="delete-confirm-form" onsubmit="submitDeleteConfirmModal(event)" class="space-y-3.5">
                 <p class="text-xs text-slate-300 leading-relaxed">Type <span class="font-mono font-bold text-rose-400 bg-rose-950/60 border border-rose-500/30 px-1.5 py-0.5 rounded">Delete</span> below to permanently delete this item.</p>
-                <input type="text" id="delete-confirm-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500" placeholder='Type "Delete" to confirm'>
+                <input type="text" id="delete-confirm-input" autocomplete="off" required class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-2.5 text-sm text-white placeholder-slate-500 " placeholder='Type "Delete" to confirm'>
                 <p id="delete-confirm-error" class="hidden text-xs text-rose-400 font-medium">Please type "Delete" to confirm.</p>
                 <div class="flex gap-2.5 pt-1">
                     <button type="button" onclick="closeDeleteConfirmModal()" class="flex-1 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2.5 text-xs font-semibold text-slate-200 transition-colors">Cancel</button>
@@ -1680,6 +1838,7 @@
                         e.preventDefault();
                         e.stopPropagation();
                         showAdminContextMenu(e.clientX, e.clientY, {
+                            source: catBtn ? 'sidebar' : (card ? 'card' : 'grid'),
                             channelId: card?.dataset?.channelId || '',
                             categoryName: catBtn?.dataset?.categoryName || (typeof currentCategory === 'string' && currentCategory !== 'All' ? currentCategory : '')
                         });
@@ -2365,8 +2524,8 @@
             const autoName = `Server ${nextNum}`;
             const initialLabel = (streamLinkLabelMode === 'auto') ? autoName : (labelVal || '');
             row.innerHTML = `
-                <input type="text" value="${escapeLogoAttr(initialLabel)}" oninput="syncExtraLinksToTextarea()" placeholder="Label (e.g. ${autoName})" class="extra-link-label w-28 sm:w-32 shrink-0 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
-                <input type="url" value="${escapeLogoAttr(urlVal)}" oninput="syncExtraLinksToTextarea()" placeholder="https://example.com/backup.m3u8" class="extra-link-url flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500">
+                <input type="text" value="${escapeLogoAttr(initialLabel)}" oninput="syncExtraLinksToTextarea()" placeholder="Label (e.g. ${autoName})" class="extra-link-label w-28 sm:w-32 shrink-0 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-white ">
+                <input type="url" value="${escapeLogoAttr(urlVal)}" oninput="syncExtraLinksToTextarea()" placeholder="https://example.com/backup.m3u8" class="extra-link-url flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white ">
                 <button type="button" onclick="this.closest('.extra-link-row').remove(); applyStreamLinkLabelModeToRows(); if(!document.querySelector('#extra-links-rows .extra-link-row')) document.getElementById('multiple-links-section')?.classList.add('hidden');" title="Remove link" class="shrink-0 rounded-lg bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 p-2">
                     <i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i>
                 </button>
@@ -2696,6 +2855,17 @@
             if (btn) {
                 btn.innerHTML = `<i data-lucide="${active ? 'minimize' : 'maximize'}" class="!w-4 !h-4"></i>`;
                 if (window.lucide) lucide.createIcons({ root: btn });
+            }
+            const fsStrip = document.getElementById('fs-top-hover-strip');
+            if (fsStrip) fsStrip.style.display = active ? 'block' : 'none';
+            if (active) {
+                resetPlayerOverlayTimeout();
+            } else {
+                if (playerOverlayTimeout) {
+                    clearTimeout(playerOverlayTimeout);
+                    playerOverlayTimeout = null;
+                }
+                setPlayerOverlayVisible(true);
             }
         }
 
@@ -3615,13 +3785,23 @@
             appData.masterPassword = val;
             try { localStorage.setItem(MASTER_PASSWORD_KEY, val); } catch (_) {}
             updateMasterPasswordTickUI(true);
-            showNotification('✓ Master Password saved!');
             try {
                 if (supabaseClient) {
                     const { data: sData } = await supabaseClient.auth.getSession();
-                    if (sData?.session) await saveData();
+                    if (sData?.session) {
+                        const savedMain = await saveData();
+                        await supabaseClient.from(SUPABASE_TABLE).upsert(
+                            { id: 2, payload: { masterPassword: val }, updated_at: new Date().toISOString() },
+                            { onConflict: 'id' }
+                        );
+                        if (savedMain) {
+                            showNotification('✓ Master Password saved to Supabase!');
+                            return;
+                        }
+                    }
                 }
             } catch (_) {}
+            showNotification('✓ Master Password saved!');
         }
 
         let gridBulkMarkMode = false;
@@ -3768,7 +3948,7 @@
                     ${allCats.map(cat => {
                         const checked = commonCats.has(cat);
                         return `<label class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs cursor-pointer transition-colors ${checked ? 'bg-indigo-500/15 text-indigo-200 border border-indigo-500/30' : 'bg-slate-950/70 text-slate-300 hover:bg-slate-800 border border-transparent'}">
-                            <input type="checkbox" value="${escapeLogoAttr(cat)}" ${checked ? 'checked' : ''} class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950 text-indigo-500 focus:ring-indigo-500">
+                            <input type="checkbox" value="${escapeLogoAttr(cat)}" ${checked ? 'checked' : ''} class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950 text-indigo-500 ">
                             ${getCategoryIconBadgeHtml(cat)}
                             <span class="truncate font-medium">${escapeLogoAttr(cat)}</span>
                         </label>`;
@@ -4255,13 +4435,17 @@
             }
             const valNum = document.getElementById('new-user-validity-value')?.value || 30;
             const valUnit = document.getElementById('new-user-validity-unit')?.value || 'day';
+            const rawDevLimit = parseInt(document.getElementById('new-user-device-limit')?.value || '1', 10);
+            const deviceLimit = Math.max(1, isNaN(rawDevLimit) ? 1 : rawDevLimit);
             const { validityLabel, expiresAt } = computeValidityExpiry(valNum, valUnit);
             const users = [...getManagedUsers()];
             const existingIdx = users.findIndex(u => String(u.username || '').toLowerCase() === username.toLowerCase());
             if (existingIdx !== -1) {
-                users[existingIdx] = { ...users[existingIdx], username, password, validityLabel, expiresAt };
+                const prevU = users[existingIdx];
+                const prevDevs = Array.isArray(prevU.deviceIds) ? prevU.deviceIds : (prevU.deviceId ? [prevU.deviceId] : []);
+                users[existingIdx] = { ...prevU, username, password, validityLabel, expiresAt, deviceLimit, deviceIds: prevDevs };
             } else {
-                users.push({ id: generateId(), username, password, validityLabel, expiresAt });
+                users.push({ id: generateId(), username, password, validityLabel, expiresAt, deviceLimit, deviceIds: [], deviceId: '' });
             }
             persistManagedUsers(users);
             if (nameInput) nameInput.value = '';
@@ -4292,11 +4476,53 @@
             } catch (_) {}
         }
 
+        function getUserDeviceLimit(u) {
+            const n = parseInt(u?.deviceLimit, 10);
+            return Math.max(1, isNaN(n) ? 1 : n);
+        }
+
+        function getUserBoundDevices(u) {
+            if (!u) return [];
+            if (Array.isArray(u.deviceIds)) {
+                return [...new Set(u.deviceIds.map(x => String(x || '').trim()).filter(Boolean))];
+            }
+            const single = String(u.deviceId || '').trim();
+            return single ? [single] : [];
+        }
+
+        function evaluateAndBindUserDevice(userObj, thisDev) {
+            const limit = getUserDeviceLimit(userObj);
+            const devs = getUserBoundDevices(userObj);
+            if (devs.includes(thisDev)) {
+                return {
+                    allowed: true,
+                    changed: false,
+                    limit,
+                    updatedUser: { ...userObj, deviceLimit: limit, deviceIds: devs, deviceId: devs[0] || thisDev }
+                };
+            }
+            if (devs.length < limit) {
+                const nextDevs = [...devs, thisDev];
+                return {
+                    allowed: true,
+                    changed: true,
+                    limit,
+                    updatedUser: { ...userObj, deviceLimit: limit, deviceIds: nextDevs, deviceId: nextDevs[0] || thisDev }
+                };
+            }
+            return {
+                allowed: false,
+                changed: false,
+                limit,
+                updatedUser: { ...userObj, deviceLimit: limit, deviceIds: devs, deviceId: devs[0] || '' }
+            };
+        }
+
         async function resetManagedUserDevice(userId) {
             const users = [...getManagedUsers()];
             const idx = users.findIndex(u => String(u.id) === String(userId));
             if (idx === -1) return;
-            users[idx] = { ...users[idx], deviceId: '' };
+            users[idx] = { ...users[idx], deviceId: '', deviceIds: [] };
             persistManagedUsers(users);
             renderManagedUsersList();
             showNotification(`Device lock reset for "${users[idx].username}".`);
@@ -4323,9 +4549,53 @@
 
         let editingManagedUserId = null;
         let editingManagedUserMode = 'manual';
+        let editingDeviceLimitUserId = null;
+
+        function openEditManagedUserDeviceLimit(userId) {
+            editingDeviceLimitUserId = String(userId);
+            editingManagedUserId = null;
+            renderManagedUsersList();
+            setTimeout(() => {
+                const inp = document.getElementById(`edit-user-dev-limit-input-${editingDeviceLimitUserId}`);
+                if (inp) { inp.focus(); inp.select(); }
+            }, 20);
+        }
+
+        function cancelEditManagedUserDeviceLimit() {
+            editingDeviceLimitUserId = null;
+            renderManagedUsersList();
+        }
+
+        async function saveEditedManagedUserDeviceLimit(userId) {
+            const inp = document.getElementById(`edit-user-dev-limit-input-${userId}`);
+            const parsed = parseInt(inp?.value || '1', 10);
+            const nextLimit = Math.max(1, isNaN(parsed) ? 1 : parsed);
+            const users = [...getManagedUsers()];
+            const idx = users.findIndex(u => String(u.id) === String(userId));
+            if (idx === -1) return;
+            const existingDevs = getUserBoundDevices(users[idx]);
+            const trimmedDevs = existingDevs.slice(0, nextLimit);
+            users[idx] = {
+                ...users[idx],
+                deviceLimit: nextLimit,
+                deviceIds: trimmedDevs,
+                deviceId: trimmedDevs[0] || ''
+            };
+            persistManagedUsers(users);
+            editingDeviceLimitUserId = null;
+            renderManagedUsersList();
+            showNotification(`Device limit updated to ${nextLimit} for "${users[idx].username}".`);
+            try {
+                if (supabaseClient) {
+                    const { data: sData } = await supabaseClient.auth.getSession();
+                    if (sData?.session) await saveData();
+                }
+            } catch (_) {}
+        }
 
         function openEditManagedUserRow(userId) {
             editingManagedUserId = String(userId);
+            editingDeviceLimitUserId = null;
             editingManagedUserMode = 'manual';
             renderManagedUsersList();
             setTimeout(() => {
@@ -4416,13 +4686,16 @@
             listEl.innerHTML = users.map(u => {
                 const uid = String(u.id);
                 const isEditing = (editingManagedUserId === uid);
-                const bound = !!String(u.deviceId || '').trim();
-                const isMine = bound && u.deviceId === myDev;
+                const isEditingLimit = (editingDeviceLimitUserId === uid);
+                const boundDevs = getUserBoundDevices(u);
+                const devLimit = getUserDeviceLimit(u);
+                const bound = boundDevs.length > 0;
+                const isMine = boundDevs.includes(myDev);
                 const devBadge = bound
-                    ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${isMine ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">${isMine ? '1 Device (This)' : '1 Device (Other)'}</span>`
-                    : `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">Single Device Ready</span>`;
+                    ? `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full ${isMine ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'}">${boundDevs.length}/${devLimit} Device${devLimit > 1 ? 's' : ''}${isMine ? ' (This)' : ''}</span>`
+                    : `<span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">0/${devLimit} Device${devLimit > 1 ? 's' : ''}</span>`;
                 return `
-                <div class="bg-slate-950 border ${isEditing ? 'border-sky-500/60' : 'border-slate-800'} rounded-xl px-3 py-2.5 space-y-2">
+                <div class="bg-slate-950 border ${isEditing || isEditingLimit ? 'border-sky-500/60' : 'border-slate-800'} rounded-xl px-3 py-2.5 space-y-2">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div class="min-w-0">
                             <div class="flex flex-wrap items-center gap-1.5">
@@ -4444,6 +4717,10 @@
                                 <i data-lucide="pencil" class="!w-3.5 !h-3.5"></i>
                                 <span>Edit</span>
                             </button>
+                            <button type="button" onclick="openEditManagedUserDeviceLimit('${escapeLogoAttr(uid)}')" title="Set / Edit Device Limit" class="rounded-lg bg-slate-900 hover:bg-cyan-950 border border-slate-700 text-cyan-300 px-2.5 py-1.5 text-xs font-medium inline-flex items-center gap-1">
+                                <i data-lucide="smartphone" class="!w-3.5 !h-3.5"></i>
+                                <span>Limit: ${devLimit}</span>
+                            </button>
                             <button type="button" onclick="regenerateManagedUserRowPassword('${escapeLogoAttr(uid)}')" title="Regenerate Password" class="rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-sky-300 px-2.5 py-1.5 text-xs font-medium inline-flex items-center gap-1">
                                 <i data-lucide="refresh-cw" class="!w-3.5 !h-3.5"></i>
                                 <span>Auto</span>
@@ -4454,6 +4731,17 @@
                             </button>
                         </div>
                     </div>
+                    ${isEditingLimit ? `
+                    <div class="pt-2 border-t border-slate-800/90 space-y-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[11px] font-semibold text-cyan-300">Set Device Limit (Devices Allowed)</span>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <input type="number" id="edit-user-dev-limit-input-${escapeLogoAttr(uid)}" min="1" max="100" value="${devLimit}" onkeydown="if(event.key==='Enter'){event.preventDefault();saveEditedManagedUserDeviceLimit('${escapeLogoAttr(uid)}');}" class="w-28 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono text-white ">
+                            <button type="button" onclick="saveEditedManagedUserDeviceLimit('${escapeLogoAttr(uid)}')" class="shrink-0 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 text-xs font-semibold">Save Limit</button>
+                            <button type="button" onclick="cancelEditManagedUserDeviceLimit()" class="shrink-0 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1.5 text-xs font-medium">Cancel</button>
+                        </div>
+                    </div>` : ''}
                     ${isEditing ? `
                     <div class="pt-2 border-t border-slate-800/90 space-y-2">
                         <div class="flex items-center justify-between gap-2">
@@ -4464,7 +4752,7 @@
                             </div>
                         </div>
                         <div class="flex gap-1.5">
-                            <input type="text" id="edit-user-pwd-input-${escapeLogoAttr(uid)}" value="${escapeLogoAttr(u.password)}" ${editingManagedUserMode === 'auto' ? 'readonly' : ''} onkeydown="if(event.key==='Enter'){event.preventDefault();saveEditedManagedUserPassword('${escapeLogoAttr(uid)}');}" class="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono ${editingManagedUserMode === 'auto' ? 'text-emerald-300' : 'text-white'} focus:outline-none focus:border-sky-500" placeholder="Enter password...">
+                            <input type="text" id="edit-user-pwd-input-${escapeLogoAttr(uid)}" value="${escapeLogoAttr(u.password)}" ${editingManagedUserMode === 'auto' ? 'readonly' : ''} onkeydown="if(event.key==='Enter'){event.preventDefault();saveEditedManagedUserPassword('${escapeLogoAttr(uid)}');}" class="flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs font-mono ${editingManagedUserMode === 'auto' ? 'text-emerald-300' : 'text-white'} " placeholder="Enter password...">
                             <button type="button" id="edit-user-regen-btn-${escapeLogoAttr(uid)}" onclick="regenerateEditManagedUserRowInput('${escapeLogoAttr(uid)}')" title="Generate New" class="${editingManagedUserMode === 'auto' ? '' : 'hidden'} shrink-0 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 text-xs font-semibold text-sky-300 inline-flex items-center gap-1">
                                 <i data-lucide="refresh-cw" class="!w-3 h-3"></i>
                             </button>
@@ -4628,6 +4916,30 @@
                                 }
                             }
                         } catch (_) {}
+                    }
+                }
+                let cloudMasterPwd = String(rawPayload?.masterPassword || '').trim();
+                if (!cloudMasterPwd && supabaseClient) {
+                    try {
+                        const mpRes = await supabaseClient
+                            .from(SUPABASE_TABLE)
+                            .select('payload')
+                            .eq('id', 2)
+                            .maybeSingle();
+                        if (mpRes?.data?.payload?.masterPassword) {
+                            cloudMasterPwd = String(mpRes.data.payload.masterPassword).trim();
+                        }
+                    } catch (_) {}
+                }
+                if (cloudMasterPwd) {
+                    appData.masterPassword = cloudMasterPwd;
+                    window.__ustreamzMasterPassword = cloudMasterPwd;
+                    try { localStorage.setItem(MASTER_PASSWORD_KEY, cloudMasterPwd); } catch (_) {}
+                } else {
+                    const fallbackLocalMp = getMasterPassword();
+                    if (fallbackLocalMp) {
+                        appData.masterPassword = fallbackLocalMp;
+                        window.__ustreamzMasterPassword = fallbackLocalMp;
                     }
                 }
                 if (!appData.categoryLogos) appData.categoryLogos = {};
@@ -4803,11 +5115,18 @@
                 try { localStorage.removeItem(REMEMBERED_CHANNEL_UNLOCKS_KEY); } catch (_) {}
                 resetAuthRateState('admin_login');
                 closeSettingsLogin();
-                await loadData();
                 window.isAdminLoggedIn = true;
-                renderAll();
                 updateAdminLoginStatusUI(true, email);
+                renderAll();
                 showView('settings');
+                setSettingsTab(activeSettingsTab || 'channels');
+                if (!Array.isArray(appData?.channels) || appData.channels.length === 0) {
+                    loadData().then(() => {
+                        window.isAdminLoggedIn = true;
+                        renderAll();
+                        updateAdminLoginStatusUI(true, email);
+                    }).catch(() => {});
+                }
                 const editAfterLogin = pendingChannelEditId;
                 pendingChannelEditId = null;
                 if (editAfterLogin !== null && editAfterLogin !== undefined) {
@@ -5136,7 +5455,7 @@
                 btn.addEventListener('contextmenu', (ev) => {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    showAdminContextMenu(ev.clientX, ev.clientY, { categoryName: cat });
+                    showAdminContextMenu(ev.clientX, ev.clientY, { source: 'sidebar', categoryName: cat });
                 });
                 container.appendChild(btn);
             });
@@ -5703,6 +6022,53 @@
             if (window.lucide) lucide.createIcons({ root: grid });
         }
 
+        
+        window.settingsChannelLockFilter = 'all';
+        function setChannelLockFilter(mode) {
+            window.settingsChannelLockFilter = ['all', 'locked', 'unlocked'].includes(mode) ? mode : 'all';
+            const bAll = document.getElementById('ch-lock-filter-all');
+            const bLok = document.getElementById('ch-lock-filter-locked');
+            const bUnl = document.getElementById('ch-lock-filter-unlocked');
+            if (bAll) {
+                bAll.className = window.settingsChannelLockFilter === 'all'
+                    ? 'rounded-lg px-2.5 py-1 font-semibold bg-indigo-600 text-white transition-colors'
+                    : 'rounded-lg px-2.5 py-1 font-semibold bg-slate-950 hover:bg-slate-800 border border-slate-700 text-slate-300 transition-colors';
+            }
+            if (bLok) {
+                bLok.className = window.settingsChannelLockFilter === 'locked'
+                    ? 'rounded-lg px-2.5 py-1 font-semibold bg-rose-600 text-white transition-colors'
+                    : 'rounded-lg px-2.5 py-1 font-semibold bg-slate-950 hover:bg-slate-800 border border-rose-500/40 text-rose-300 transition-colors';
+            }
+            if (bUnl) {
+                bUnl.className = window.settingsChannelLockFilter === 'unlocked'
+                    ? 'rounded-lg px-2.5 py-1 font-semibold bg-emerald-600 text-white transition-colors'
+                    : 'rounded-lg px-2.5 py-1 font-semibold bg-slate-950 hover:bg-slate-800 border border-emerald-500/40 text-emerald-300 transition-colors';
+            }
+            renderSettingsList();
+        }
+
+        async function toggleSingleChannelLockFromSettings(channelId) {
+            const idx = appData.channels.findIndex(c => String(c.id) === String(channelId));
+            if (idx === -1) return;
+            const ch = appData.channels[idx];
+            const isLocked = !!String(ch.password || '').trim();
+            if (isLocked) {
+                appData.channels[idx] = { ...ch, password: '' };
+                showNotification(`Unlocked "${ch.name}".`);
+            } else {
+                const pwd = getMasterPassword() || window.prompt(`Enter password to lock "${ch.name}":`);
+                const cleanPwd = String(pwd || '').trim();
+                if (!cleanPwd) {
+                    showNotification('Password is required to lock channel.', 'error');
+                    return;
+                }
+                appData.channels[idx] = { ...ch, password: cleanPwd };
+                showNotification(`Locked "${ch.name}".`);
+            }
+            renderAll();
+            await saveData();
+        }
+
         function renderSettingsList() {
             const renderOne = (type, listId, countId, searchId) => {
                 const list = document.getElementById(listId);
@@ -5712,7 +6078,26 @@
                 const items = appData.channels.filter(c => (c.contentType || 'channel') === type);
                 countLabel.innerText = `${items.length} Total`;
                 const searchTerm = (document.getElementById(searchId)?.value || '').trim().toLocaleLowerCase();
-                const filteredItems = items.filter(c => String(c.name || '').toLocaleLowerCase().includes(searchTerm));
+                if (type === 'channel') {
+                    const lockedCnt = items.filter(c => !!String(c.password || '').trim()).length;
+                    const unlockedCnt = items.length - lockedCnt;
+                    const cAll = document.getElementById('ch-lock-count-all');
+                    const cLok = document.getElementById('ch-lock-count-locked');
+                    const cUnl = document.getElementById('ch-lock-count-unlocked');
+                    if (cAll) cAll.textContent = String(items.length);
+                    if (cLok) cLok.textContent = String(lockedCnt);
+                    if (cUnl) cUnl.textContent = String(unlockedCnt);
+                }
+                const filteredItems = items.filter(c => {
+                    const matchesName = String(c.name || '').toLocaleLowerCase().includes(searchTerm);
+                    if (!matchesName) return false;
+                    if (type !== 'channel') return true;
+                    const mode = window.settingsChannelLockFilter || 'all';
+                    const isLok = !!String(c.password || '').trim();
+                    if (mode === 'locked') return isLok;
+                    if (mode === 'unlocked') return !isLok;
+                    return true;
+                });
                 if (!filteredItems.length) {
                     list.innerHTML = `<div class="text-center text-slate-500 py-8">No matching results.</div>`;
                     return;
@@ -5734,6 +6119,7 @@
                         <div class="flex items-center gap-1 shrink-0">
                             <button type="button" onclick="moveChannel('${channel.id}',-1)" class="text-slate-400 hover:text-cyan-300 p-2"><i data-lucide="chevron-up" class="!w-4 !h-4"></i></button>
                             <button type="button" onclick="moveChannel('${channel.id}',1)" class="text-slate-400 hover:text-cyan-300 p-2"><i data-lucide="chevron-down" class="!w-4 !h-4"></i></button>
+                            <button type="button" onclick="toggleSingleChannelLockFromSettings('${escapeLogoAttr(channel.id)}')" title="${isLockedItem ? 'Unlock Channel' : 'Lock Channel'}" class="${isLockedItem ? 'text-rose-300 hover:text-emerald-300 bg-rose-950/40 border border-rose-500/30' : 'text-amber-300 hover:text-amber-200 bg-slate-900 border border-slate-700'} px-2 py-1.5 rounded-lg text-[11px] font-semibold inline-flex items-center gap-1 transition-colors"><i data-lucide="${isLockedItem ? 'unlock' : 'lock'}" class="!w-3.5 !h-3.5"></i><span>${isLockedItem ? 'Unlock' : 'Lock'}</span></button>
                             <button type="button" onclick="editChannel('${channel.id}')" class="text-slate-400 hover:text-indigo-400 p-2"><i data-lucide="pencil" class="!w-4 !h-4"></i></button>
                             <button type="button" onclick="deleteChannel('${channel.id}')" class="text-slate-400 hover:text-rose-500 p-2"><i data-lucide="trash" class="!w-4 !h-4"></i></button>
                         </div>`;
@@ -5906,7 +6292,7 @@
                         const isMain = cat === mainCat;
                         return `<label class="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-xs cursor-pointer transition-colors ${checked ? 'bg-indigo-500/15 text-indigo-200 border border-indigo-500/30' : 'bg-slate-950/70 text-slate-300 hover:bg-slate-800 border border-transparent'}">
                             <span class="flex items-center gap-2 min-w-0">
-                                <input type="checkbox" value="${escapeLogoAttr(cat)}" ${checked ? 'checked' : ''} class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950 text-indigo-500 focus:ring-indigo-500">
+                                <input type="checkbox" value="${escapeLogoAttr(cat)}" ${checked ? 'checked' : ''} class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950 text-indigo-500 ">
                                 ${getCategoryIconBadgeHtml(cat)}
                                 <span class="truncate font-medium">${escapeLogoAttr(cat)}</span>
                             </span>
@@ -5940,6 +6326,257 @@
             }
         }
 
+        let fastEditCheckedCats = new Set();
+        let fastEditLinkLabelMode = 'auto';
+
+        function applyFastEditLinkLabelModeToRows() {
+            const rows = Array.from(document.querySelectorAll('#fast-edit-extra-links-rows .fe-extra-link-row'));
+            rows.forEach((row, idx) => {
+                const lblInp = row.querySelector('.fe-extra-link-label');
+                if (!lblInp) return;
+                const autoName = `Server ${idx + 2}`;
+                if (fastEditLinkLabelMode === 'auto') {
+                    lblInp.value = autoName;
+                    lblInp.readOnly = true;
+                    lblInp.classList.add('text-cyan-300', 'font-semibold', 'cursor-not-allowed', 'opacity-90');
+                    lblInp.classList.remove('text-white');
+                } else {
+                    lblInp.readOnly = false;
+                    lblInp.placeholder = `Label (e.g. ${autoName})`;
+                    lblInp.classList.remove('text-cyan-300', 'font-semibold', 'cursor-not-allowed', 'opacity-90');
+                    lblInp.classList.add('text-white');
+                }
+            });
+        }
+
+        function setFastEditLinkLabelMode(mode) {
+            fastEditLinkLabelMode = (mode === 'manual') ? 'manual' : 'auto';
+            const autoBtn = document.getElementById('fe-link-mode-auto');
+            const manualBtn = document.getElementById('fe-link-mode-manual');
+            if (autoBtn && manualBtn) {
+                if (fastEditLinkLabelMode === 'auto') {
+                    autoBtn.className = 'rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors';
+                    manualBtn.className = 'rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors';
+                } else {
+                    autoBtn.className = 'rounded-md px-2 py-0.5 font-semibold text-slate-300 hover:text-white transition-colors';
+                    manualBtn.className = 'rounded-md px-2 py-0.5 font-semibold bg-indigo-600 text-white transition-colors';
+                }
+            }
+            applyFastEditLinkLabelModeToRows();
+        }
+
+        function appendFastEditExtraLinkRow(labelVal = '', urlVal = '', shouldFocus = true) {
+            const container = document.getElementById('fast-edit-extra-links-rows');
+            const sec = document.getElementById('fast-edit-extra-links-section');
+            if (!container || !sec) return;
+            sec.classList.remove('hidden');
+            const row = document.createElement('div');
+            row.className = 'fe-extra-link-row flex items-center gap-2';
+            const nextNum = container.children.length + 2;
+            const autoName = `Server ${nextNum}`;
+            const initialLabel = (fastEditLinkLabelMode === 'auto') ? autoName : (labelVal || '');
+            row.innerHTML = `
+                <input type="text" value="${escapeLogoAttr(initialLabel)}" placeholder="Label (e.g. ${autoName})" class="fe-extra-link-label w-24 sm:w-28 shrink-0 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white ">
+                <input type="url" value="${escapeLogoAttr(urlVal)}" placeholder="https://example.com/backup.m3u8" class="fe-extra-link-url flex-1 min-w-0 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-white ">
+                <button type="button" onclick="this.closest('.fe-extra-link-row').remove(); applyFastEditLinkLabelModeToRows();" title="Remove link" class="shrink-0 rounded-lg bg-slate-900 hover:bg-rose-950 border border-slate-700 text-rose-400 p-1.5 transition-colors">
+                    <i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i>
+                </button>
+            `;
+            container.appendChild(row);
+            applyFastEditLinkLabelModeToRows();
+            if (window.lucide) lucide.createIcons({ root: row });
+            if (!urlVal && shouldFocus) {
+                const uInp = row.querySelector('.fe-extra-link-url');
+                if (uInp) setTimeout(() => { try { uInp.focus(); } catch (_) {} }, 20);
+            }
+        }
+
+        function updateFastEditLogoPreview(urlVal) {
+            const img = document.getElementById('fast-edit-logo-preview');
+            const ph = document.getElementById('fast-edit-logo-placeholder');
+            const clean = String(urlVal || '').trim();
+            if (!img || !ph) return;
+            if (clean) {
+                img.src = clean;
+                img.classList.remove('hidden');
+                ph.classList.add('hidden');
+                img.onerror = () => {
+                    img.classList.add('hidden');
+                    ph.classList.remove('hidden');
+                };
+            } else {
+                img.src = '';
+                img.classList.add('hidden');
+                ph.classList.remove('hidden');
+            }
+        }
+
+        async function handleFastEditLogoFileChange(event) {
+            const file = event?.target?.files?.[0];
+            if (!file) return;
+            try {
+                const dataUrl = await readImageFileAsDataUrl(file);
+                const urlInp = document.getElementById('fast-edit-logo-url');
+                if (urlInp) urlInp.value = dataUrl;
+                updateFastEditLogoPreview(dataUrl);
+            } catch (err) {
+                showNotification(err.message || 'Could not load image.', 'error');
+                event.target.value = '';
+            }
+        }
+
+        function toggleFastEditCatsDropdown(event) {
+            if (event) event.stopPropagation();
+            const panel = document.getElementById('fast-edit-cats-dropdown-panel');
+            if (panel) panel.classList.toggle('hidden');
+        }
+
+        function renderFastEditCategoryChecklist() {
+            const mainCat = document.getElementById('fast-edit-main-category-val')?.value || 'Uncategorized';
+            const panel = document.getElementById('fast-edit-cats-dropdown-panel');
+            const summary = document.getElementById('fast-edit-cats-summary');
+            if (!panel) return;
+            fastEditCheckedCats.add(mainCat);
+            const allCats = [...new Set([...(appData.categories || []), ...fastEditCheckedCats])];
+            panel.innerHTML = allCats.map(cat => {
+                const isMain = (cat === mainCat);
+                const isChecked = isMain || fastEditCheckedCats.has(cat);
+                return `<label class="flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-xs ${isMain ? 'bg-cyan-500/15 text-cyan-200 border border-cyan-500/30 cursor-not-allowed' : (isChecked ? 'bg-indigo-500/15 text-indigo-200 border border-indigo-500/30 cursor-pointer' : 'text-slate-300 hover:bg-slate-900 border border-transparent cursor-pointer')}">
+                    <span class="flex items-center gap-2 min-w-0">
+                        <input type="checkbox" value="${escapeLogoAttr(cat)}" ${isChecked ? 'checked' : ''} ${isMain ? 'disabled' : ''} onchange="onFastEditCategoryToggle('${escapeLogoAttr(cat)}', this.checked)" class="h-3.5 w-3.5 rounded border-slate-600 bg-slate-950 text-cyan-500 ">
+                        ${getCategoryIconBadgeHtml(cat)}
+                        <span class="truncate font-medium">${escapeLogoAttr(cat)}</span>
+                    </span>
+                    ${isMain ? '<span class="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-500/30 shrink-0">Main</span>' : ''}
+                </label>`;
+            }).join('');
+            if (summary) {
+                const list = [mainCat, ...Array.from(fastEditCheckedCats).filter(c => c !== mainCat)];
+                summary.textContent = list.join(', ');
+            }
+            if (window.lucide) lucide.createIcons({ root: panel });
+        }
+
+        function onFastEditCategoryToggle(catName, checked) {
+            const mainCat = document.getElementById('fast-edit-main-category-val')?.value || 'Uncategorized';
+            if (catName === mainCat) {
+                fastEditCheckedCats.add(mainCat);
+            } else if (checked) {
+                fastEditCheckedCats.add(catName);
+            } else {
+                fastEditCheckedCats.delete(catName);
+            }
+            renderFastEditCategoryChecklist();
+        }
+
+        function openFastEditModal(channelId) {
+            const ch = appData.channels.find(c => String(c.id) === String(channelId));
+            if (!ch) return;
+            const modal = document.getElementById('fast-edit-channel-modal');
+            if (!modal) return;
+            document.getElementById('fast-edit-channel-id').value = String(ch.id);
+            document.getElementById('fast-edit-name').value = ch.name || '';
+            const logoUrl = getChannelLogo(ch);
+            document.getElementById('fast-edit-logo-url').value = logoUrl;
+            const fileInp = document.getElementById('fast-edit-logo-file');
+            if (fileInp) fileInp.value = '';
+            updateFastEditLogoPreview(logoUrl);
+
+            const mainCat = ch.category || 'Uncategorized';
+            document.getElementById('fast-edit-main-category-val').value = mainCat;
+            const existingCats = Array.isArray(ch.categories) && ch.categories.length ? ch.categories : [mainCat];
+            fastEditCheckedCats = new Set([mainCat, ...existingCats.filter(Boolean)]);
+            const ddPanel = document.getElementById('fast-edit-cats-dropdown-panel');
+            if (ddPanel) ddPanel.classList.add('hidden');
+            renderFastEditCategoryChecklist();
+
+            const mainUrl = String(ch.url || '').trim();
+            document.getElementById('fast-edit-main-url').value = mainUrl;
+
+            const extraContainer = document.getElementById('fast-edit-extra-links-rows');
+            const extraSec = document.getElementById('fast-edit-extra-links-section');
+            if (extraContainer) extraContainer.innerHTML = '';
+            if (extraSec) extraSec.classList.remove('hidden');
+
+            const existingLinks = Array.isArray(ch.links) ? ch.links.filter(l => l && l.url && String(l.url).trim() !== mainUrl) : [];
+            const hasCustomLabels = existingLinks.some((l, idx) => {
+                const lbl = String(l.label || '').trim();
+                return lbl && lbl !== `Server ${idx + 2}` && lbl !== `Link ${idx + 2}`;
+            });
+            setFastEditLinkLabelMode(hasCustomLabels ? 'manual' : 'auto');
+            if (existingLinks.length) {
+                existingLinks.forEach((l, idx) => {
+                    appendFastEditExtraLinkRow(l.label || `Server ${idx + 2}`, String(l.url || '').trim(), false);
+                });
+            } else {
+                appendFastEditExtraLinkRow('', '', false);
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (window.lucide) lucide.createIcons({ root: modal });
+            setTimeout(() => { try { document.getElementById('fast-edit-name')?.focus(); } catch (_) {} }, 30);
+        }
+
+        function closeFastEditModal() {
+            const modal = document.getElementById('fast-edit-channel-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        async function handleSaveFastEdit(event) {
+            if (event) event.preventDefault();
+            const idStr = document.getElementById('fast-edit-channel-id')?.value || '';
+            const ch = appData.channels.find(c => String(c.id) === String(idStr));
+            if (!ch) return;
+            const nextName = String(document.getElementById('fast-edit-name')?.value || '').trim();
+            if (!nextName) {
+                showNotification('Channel name is required.', 'error');
+                return;
+            }
+            const mainCat = document.getElementById('fast-edit-main-category-val')?.value || ch.category || 'Uncategorized';
+            const nextCats = [...new Set([mainCat, ...Array.from(fastEditCheckedCats).filter(Boolean)])];
+            const nextMainUrl = String(document.getElementById('fast-edit-main-url')?.value || '').trim();
+            const nextLogo = String(document.getElementById('fast-edit-logo-url')?.value || '').trim();
+
+            const extraRows = Array.from(document.querySelectorAll('#fast-edit-extra-links-rows .fe-extra-link-row'));
+            const extraLinks = extraRows.map((row, idx) => {
+                const autoName = `Server ${idx + 2}`;
+                const lbl = fastEditLinkLabelMode === 'auto'
+                    ? autoName
+                    : (String(row.querySelector('.fe-extra-link-label')?.value || '').trim() || autoName);
+                const u = String(row.querySelector('.fe-extra-link-url')?.value || '').trim();
+                return u ? { label: lbl, url: u } : null;
+            }).filter(Boolean);
+
+            const nextLinks = [...extraLinks];
+            if (nextMainUrl && !nextLinks.some(x => x.url === nextMainUrl)) {
+                nextLinks.unshift({ label: (fastEditLinkLabelMode === 'auto' ? 'Server 1' : 'Main'), url: nextMainUrl });
+            }
+
+            if (!nextMainUrl && !nextLinks.length && !ch.embedCode && !ch.fileDataUrl) {
+                showNotification('Main link or stream URL is required.', 'error');
+                return;
+            }
+
+            ch.name = nextName;
+            ch.category = mainCat;
+            ch.categories = nextCats;
+            ch.url = nextMainUrl || (nextLinks[0]?.url || '');
+            ch.links = nextLinks;
+            ch.logo = nextLogo;
+
+            syncEmptyCategoriesVisibility();
+            closeFastEditModal();
+            renderAll();
+            const ok = await saveData();
+            if (ok) {
+                showNotification(`"${nextName}" updated.`);
+            }
+        }
+
         function hideChannelContextMenu() {
             const sub = document.getElementById('channel-left-subpanel');
             if (sub) sub.remove();
@@ -5963,7 +6600,7 @@
             const logged = await checkIsAdminLoggedIn();
             if (!logged || !window.isAdminLoggedIn) return;
 
-            const { channelId = '', categoryName = '' } = options;
+            const { source = '', channelId = '', categoryName = '' } = options;
             const menu = document.createElement('div');
             menu.className = 'fixed z-[200000] w-56 max-h-[88dvh] overflow-y-auto rounded-2xl border border-slate-700/90 bg-slate-900/95 backdrop-blur-md p-2 shadow-2xl space-y-1';
 
@@ -5985,21 +6622,28 @@
                 } else {
                     rows += `<button type="button" data-act="lock-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-300 hover:bg-amber-950/60"><i data-lucide="lock" class="!w-3.5 !h-3.5"></i><span>Lock</span></button>`;
                 }
-                rows += `<button type="button" data-act="edit-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-100 hover:bg-slate-800"><i data-lucide="edit-3" class="!w-3.5 !h-3.5 text-cyan-400"></i><span>Edit Item</span></button>`;
+                rows += `<button type="button" data-act="fast-edit-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-cyan-300 hover:bg-slate-800"><i data-lucide="zap" class="!w-3.5 !h-3.5 text-cyan-400"></i><span>Fast Edit</span></button>`;
+                rows += `<button type="button" data-act="edit-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-slate-100 hover:bg-slate-800"><i data-lucide="edit-3" class="!w-3.5 !h-3.5 text-indigo-400"></i><span>Edit Item</span></button>`;
                 rows += `<button type="button" data-act="del-ch" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-rose-300 hover:bg-rose-950/70"><i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i><span>Delete Item</span></button>`;
-            } else if (categoryName) {
-                const isCatHidden = Array.isArray(appData.hiddenCategories) && appData.hiddenCategories.includes(categoryName);
-                rows += `<button type="button" data-act="add-channel-here" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-indigo-300 hover:bg-slate-800"><i data-lucide="plus-circle" class="!w-3.5 !h-3.5"></i><span>Add New Channel</span></button>`;
-                rows += `<button type="button" data-act="toggle-hide-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium ${isCatHidden ? 'text-emerald-300' : 'text-amber-300'} hover:bg-slate-800"><i data-lucide="${isCatHidden ? 'eye' : 'eye-off'}" class="!w-3.5 !h-3.5"></i><span>${isCatHidden ? 'Show Category' : 'Hide Category'}</span></button>`;
-                rows += `<button type="button" data-act="create-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-emerald-300 hover:bg-slate-800"><i data-lucide="folder-plus" class="!w-3.5 !h-3.5"></i><span>Create Folder</span></button>`;
-                rows += `<button type="button" data-act="upload-file" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-sky-300 hover:bg-slate-800"><i data-lucide="upload" class="!w-3.5 !h-3.5"></i><span>Upload File</span></button>`;
-                rows += `<button type="button" data-act="edit-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-300 hover:bg-slate-800"><i data-lucide="pencil" class="!w-3.5 !h-3.5"></i><span>Edit Folder</span></button>`;
+            } else if (source === 'sidebar' && categoryName) {
+                const catIdx = appData.categories.indexOf(categoryName);
+                const canMoveUp = catIdx > 0;
+                const canMoveDown = catIdx >= 0 && catIdx < appData.categories.length - 1;
+                rows += `<div class="px-2.5 py-1.5 rounded-xl bg-slate-950/70 border border-slate-800/80">
+                    <div class="text-xs font-bold text-cyan-300 truncate">${escapeLogoAttr(categoryName)}</div>
+                </div>`;
+                rows += `<button type="button" data-act="add-channel-here" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-indigo-300 hover:bg-slate-800"><i data-lucide="plus-circle" class="!w-3.5 !h-3.5"></i><span>Add Channel</span></button>`;
+                rows += `<button type="button" data-act="edit-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-300 hover:bg-slate-800"><i data-lucide="pencil" class="!w-3.5 !h-3.5"></i><span>Edit Categories</span></button>`;
+                rows += `<button type="button" data-act="move-cat-up" ${canMoveUp ? '' : 'disabled'} class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-cyan-300 hover:bg-slate-800 disabled:opacity-35 disabled:pointer-events-none"><i data-lucide="arrow-up" class="!w-3.5 !h-3.5"></i><span>Move Up</span></button>`;
+                rows += `<button type="button" data-act="move-cat-down" ${canMoveDown ? '' : 'disabled'} class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-cyan-300 hover:bg-slate-800 disabled:opacity-35 disabled:pointer-events-none"><i data-lucide="arrow-down" class="!w-3.5 !h-3.5"></i><span>Move Down</span></button>`;
                 if (categoryName !== 'Uncategorized') {
-                    rows += `<button type="button" data-act="del-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-rose-300 hover:bg-rose-950/70"><i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i><span>Delete Folder</span></button>`;
+                    rows += `<button type="button" data-act="del-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-rose-300 hover:bg-rose-950/70"><i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i><span>Delete</span></button>`;
                 }
             } else {
-                rows += `<button type="button" data-act="create-folder" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-emerald-300 hover:bg-slate-800"><i data-lucide="folder-plus" class="!w-3.5 !h-3.5"></i><span>Create Folder</span></button>`;
-                rows += `<button type="button" data-act="upload-file" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-sky-300 hover:bg-slate-800"><i data-lucide="upload" class="!w-3.5 !h-3.5"></i><span>Upload File</span></button>`;
+                const targetCat = categoryName || (currentCategory && currentCategory !== 'All' ? currentCategory : '');
+                rows += `<button type="button" data-act="add-new-channel-grid" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-indigo-300 hover:bg-slate-800"><i data-lucide="plus-circle" class="!w-3.5 !h-3.5"></i><span>Add New Channel</span></button>`;
+                rows += `<button type="button" data-act="edit-categories-grid" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-amber-300 hover:bg-slate-800"><i data-lucide="folder-cog" class="!w-3.5 !h-3.5"></i><span>Edit Categories${targetCat ? ` (${escapeLogoAttr(targetCat)})` : ''}</span></button>`;
+                rows += `<button type="button" data-act="refresh-grid" class="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-medium text-emerald-300 hover:bg-slate-800"><i data-lucide="refresh-cw" class="!w-3.5 !h-3.5"></i><span>Refresh</span></button>`;
             }
 
             menu.innerHTML = rows;
@@ -6055,7 +6699,7 @@
                 const lockBox = document.createElement('div');
                 lockBox.className = 'mt-1.5 rounded-xl border border-amber-500/40 bg-slate-950 p-2 space-y-1.5';
                 lockBox.innerHTML = `
-                    <input type="password" data-lock-pwd-input placeholder="Set password..." class="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                    <input type="password" data-lock-pwd-input placeholder="Set password..." class="w-full rounded-lg border border-slate-700 bg-slate-900 px-2.5 py-1.5 text-xs text-white ">
                     <button type="button" data-confirm-lock class="w-full rounded-lg bg-amber-600 hover:bg-amber-500 text-white px-2.5 py-1.5 text-xs font-semibold">Set Password</button>
                 `;
                 menu.appendChild(lockBox);
@@ -6087,6 +6731,8 @@
                 renderAll();
                 await saveData();
             };
+            const fastEditChBtn = menu.querySelector('[data-act="fast-edit-ch"]');
+            if (fastEditChBtn) fastEditChBtn.onclick = () => { hideChannelContextMenu(); openFastEditModal(channelId); };
             const editChBtn = menu.querySelector('[data-act="edit-ch"]');
             if (editChBtn) editChBtn.onclick = () => { hideChannelContextMenu(); editChannel(channelId); };
             const delChBtn = menu.querySelector('[data-act="del-ch"]');
@@ -6115,9 +6761,8 @@
             };
 
             const editFolderBtn = menu.querySelector('[data-act="edit-folder"]');
-            if (editFolderBtn) editFolderBtn.onclick = async () => {
+            if (editFolderBtn) editFolderBtn.onclick = () => {
                 hideChannelContextMenu();
-                await requestSettings();
                 editCategoryDetails(categoryName);
             };
 
@@ -6127,17 +6772,60 @@
                 await openAddChannelForCategory(categoryName);
             };
 
-            const toggleHideFolderBtn = menu.querySelector('[data-act="toggle-hide-folder"]');
-            if (toggleHideFolderBtn) toggleHideFolderBtn.onclick = async () => {
+            const moveCatUpBtn = menu.querySelector('[data-act="move-cat-up"]');
+            if (moveCatUpBtn) moveCatUpBtn.onclick = () => {
                 hideChannelContextMenu();
-                await toggleCategoryVisibility(categoryName);
+                moveCategory(categoryName, -1);
+                showNotification(`Moved "${categoryName}" up.`);
+            };
+
+            const moveCatDownBtn = menu.querySelector('[data-act="move-cat-down"]');
+            if (moveCatDownBtn) moveCatDownBtn.onclick = () => {
+                hideChannelContextMenu();
+                moveCategory(categoryName, 1);
+                showNotification(`Moved "${categoryName}" down.`);
             };
 
             const delFolderBtn = menu.querySelector('[data-act="del-folder"]');
-            if (delFolderBtn) delFolderBtn.onclick = async () => {
+            if (delFolderBtn) delFolderBtn.onclick = () => {
                 hideChannelContextMenu();
-                deleteCategory(categoryName);
-                await saveData();
+                openDeleteCategoryConfirmModal(categoryName);
+            };
+
+            const addNewChGridBtn = menu.querySelector('[data-act="add-new-channel-grid"]');
+            if (addNewChGridBtn) addNewChGridBtn.onclick = async () => {
+                hideChannelContextMenu();
+                const targetCat = categoryName || (currentCategory && currentCategory !== 'All' ? currentCategory : '');
+                if (targetCat) {
+                    await openAddChannelForCategory(targetCat);
+                } else {
+                    await requestSettings();
+                    setSettingsTab('channels');
+                    cancelEdit();
+                    const nameInput = document.getElementById('add-name');
+                    if (nameInput) setTimeout(() => { try { nameInput.focus(); } catch (_) {} }, 30);
+                }
+            };
+
+            const editCatsGridBtn = menu.querySelector('[data-act="edit-categories-grid"]');
+            if (editCatsGridBtn) editCatsGridBtn.onclick = async () => {
+                hideChannelContextMenu();
+                const targetCat = categoryName || (currentCategory && currentCategory !== 'All' ? currentCategory : '');
+                if (targetCat) {
+                    editCategoryDetails(targetCat);
+                } else {
+                    await requestSettings();
+                    setSettingsTab('categories');
+                }
+            };
+
+            const refreshGridBtn = menu.querySelector('[data-act="refresh-grid"]');
+            if (refreshGridBtn) refreshGridBtn.onclick = async () => {
+                hideChannelContextMenu();
+                await loadData();
+                renderAll();
+                checkAllChannelStatusesOnLoad();
+                showNotification('Refreshed.');
             };
 
             if (window._adminCtxDismissListener) {
@@ -6289,8 +6977,32 @@
             }
         }
 
+        let pendingDeleteCategoryName = null;
+
+        function openDeleteCategoryConfirmModal(catName) {
+            if (!catName || catName === 'Uncategorized') return;
+            pendingDeleteChannelId = null;
+            pendingDeleteCategoryName = catName;
+            const modal = document.getElementById('delete-confirm-modal');
+            const titleEl = document.getElementById('delete-modal-channel-name');
+            const inp = document.getElementById('delete-confirm-input');
+            const errEl = document.getElementById('delete-confirm-error');
+            if (titleEl) titleEl.textContent = `Delete Category "${catName}"?`;
+            if (inp) inp.value = '';
+            if (errEl) errEl.classList.add('hidden');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                modal.style.display = 'flex';
+                modal.style.zIndex = '2147483647';
+                if (window.lucide) lucide.createIcons({ root: modal });
+                setTimeout(() => { try { inp && inp.focus(); } catch (_) {} }, 30);
+            }
+        }
+
         function closeDeleteConfirmModal() {
             pendingDeleteChannelId = null;
+            pendingDeleteCategoryName = null;
             const modal = document.getElementById('delete-confirm-modal');
             if (modal) {
                 modal.classList.add('hidden');
@@ -6309,6 +7021,12 @@
                     errEl.textContent = 'Please type "Delete" to confirm.';
                     errEl.classList.remove('hidden');
                 }
+                return;
+            }
+            if (pendingDeleteCategoryName) {
+                const catToDelete = pendingDeleteCategoryName;
+                closeDeleteConfirmModal();
+                deleteCategory(catToDelete);
                 return;
             }
             const idToDelete = pendingDeleteChannelId;
@@ -6370,7 +7088,7 @@
             const freshFrame = document.createElement('iframe');
             freshFrame.id = 'embed-element';
             freshFrame.className = 'hidden w-full h-full border-0 bg-black';
-            freshFrame.title = 'Channel player';
+            
             freshFrame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen; presentation');
             freshFrame.setAttribute('allowfullscreen', '');
             freshFrame.setAttribute('referrerpolicy', 'no-referrer');
@@ -6378,7 +7096,17 @@
             return freshFrame;
         }
 
+        let streamWatchdogTimer = null;
+
+        function clearStreamWatchdog() {
+            if (streamWatchdogTimer) {
+                clearInterval(streamWatchdogTimer);
+                streamWatchdogTimer = null;
+            }
+        }
+
         function stopPlayer() {
+            clearStreamWatchdog();
             activePlaySession++;
             if (hlsInstance) {
                 try {
@@ -6576,6 +7304,92 @@
 
         const REMEMBERED_USER_ACCT_NAME_KEY = 'ustreamz_remembered_user_acct_name_v1';
         const REMEMBERED_USER_ACCT_PWD_KEY = 'ustreamz_remembered_user_acct_pwd_v1';
+        const DEVICE_REMEMBERED_USERS_KEY = 'ustreamz_device_remembered_users_v1';
+
+        function getDeviceRememberedUsers() {
+            try {
+                const raw = localStorage.getItem(DEVICE_REMEMBERED_USERS_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed.filter(u => u && (u.username || u.password)) : [];
+            } catch (_) {
+                return [];
+            }
+        }
+
+        function saveDeviceRememberedUser(username, password) {
+            const cleanUser = String(username || '').trim();
+            const cleanPwd = String(password || '').trim();
+            if (!cleanPwd && !cleanUser) return;
+            try {
+                const list = getDeviceRememberedUsers();
+                const keyUser = cleanUser.toLowerCase();
+                const filtered = list.filter(item => {
+                    const sameUser = keyUser && String(item.username || '').trim().toLowerCase() === keyUser;
+                    const samePwdNoUser = !keyUser && !String(item.username || '').trim() && String(item.password || '').trim() === cleanPwd;
+                    return !sameUser && !samePwdNoUser;
+                });
+                filtered.unshift({
+                    username: cleanUser,
+                    password: cleanPwd,
+                    lastLoginAt: Date.now()
+                });
+                localStorage.setItem(DEVICE_REMEMBERED_USERS_KEY, JSON.stringify(filtered.slice(0, 25)));
+            } catch (_) {}
+        }
+
+        function hideDeviceUserTypeahead() {
+            const box = document.getElementById('device-user-typeahead-list');
+            if (box) {
+                box.classList.add('hidden');
+                box.innerHTML = '';
+            }
+        }
+
+        function selectDeviceUserSuggestion(idxVal) {
+            const uInp = document.getElementById('user-login-username-input');
+            const pInp = document.getElementById('user-login-password-input');
+            const remChk = document.getElementById('remember-user-account-creds');
+            const savedList = getDeviceRememberedUsers();
+            const picked = savedList[Number(idxVal)];
+            if (!picked) return;
+            if (uInp) uInp.value = picked.username || '';
+            if (pInp) pInp.value = picked.password || '';
+            if (remChk) remChk.checked = true;
+            try {
+                localStorage.setItem(REMEMBERED_USER_ACCT_NAME_KEY, picked.username || '');
+                localStorage.setItem(REMEMBERED_USER_ACCT_PWD_KEY, picked.password || '');
+            } catch (_) {}
+            hideDeviceUserTypeahead();
+        }
+
+        function renderDeviceUserTypeahead() {
+            const uInp = document.getElementById('user-login-username-input');
+            const box = document.getElementById('device-user-typeahead-list');
+            if (!uInp || !box) return;
+            const q = String(uInp.value || '').trim().toLowerCase();
+            if (!q) {
+                hideDeviceUserTypeahead();
+                return;
+            }
+            const savedList = getDeviceRememberedUsers();
+            const indexed = savedList
+                .map((u, idx) => ({ u, idx }))
+                .filter(({ u }) => {
+                    const uname = String(u.username || '').trim().toLowerCase();
+                    return uname && uname.includes(q);
+                });
+            if (!indexed.length) {
+                hideDeviceUserTypeahead();
+                return;
+            }
+            box.innerHTML = indexed.map(({ u, idx }) => `
+                <button type="button" onclick="selectDeviceUserSuggestion(${idx})" class="w-full px-3.5 py-2 text-left text-xs text-slate-200 hover:bg-emerald-950/50 hover:text-emerald-300 flex items-center justify-between gap-2 transition-colors">
+                    <span class="font-semibold truncate">${escapeLogoAttr(u.username)}</span>
+                    <span class="text-[10px] text-slate-500 shrink-0">Saved</span>
+                </button>
+            `).join('');
+            box.classList.remove('hidden');
+        }
 
         function openUserAccountLoginModal(lockedChannelItem) {
             const existingUserSess = getActiveUserAccountSession();
@@ -6613,6 +7427,7 @@
 
             if (uInp) uInp.value = savedName;
             pInp.value = savedPwd;
+            hideDeviceUserTypeahead();
             if (remChk) remChk.checked = !!(savedName || savedPwd || true);
             if (errEl) errEl.classList.add('hidden');
 
@@ -6686,16 +7501,17 @@
 
             if (matchedUserIdx !== -1) {
                 const mUser = users[matchedUserIdx];
-                if (mUser.deviceId && mUser.deviceId !== thisDev) {
+                const devEval = evaluateAndBindUserDevice(mUser, thisDev);
+                if (!devEval.allowed) {
                     if (errEl) {
-                        errEl.textContent = `User "${mUser.username}" is already active on another device (1 device only).`;
+                        errEl.textContent = `User "${mUser.username}" has reached its device limit (${devEval.limit} device${devEval.limit > 1 ? 's' : ''} max).`;
                         errEl.classList.remove('hidden');
                     }
-                    showNotification('This user is already active on another device.', 'error');
+                    showNotification(`Device limit (${devEval.limit}) reached for this user.`, 'error');
                     return;
                 }
-                if (!mUser.deviceId) {
-                    users[matchedUserIdx] = { ...mUser, deviceId: thisDev };
+                if (devEval.changed) {
+                    users[matchedUserIdx] = devEval.updatedUser;
                     persistManagedUsers(users);
                     renderManagedUsersList();
                     try {
@@ -6723,6 +7539,7 @@
                     const saveName = matchedUserIdx !== -1 ? users[matchedUserIdx].username : enteredUser;
                     localStorage.setItem(REMEMBERED_USER_ACCT_NAME_KEY, saveName);
                     localStorage.setItem(REMEMBERED_USER_ACCT_PWD_KEY, enteredPwd);
+                    saveDeviceRememberedUser(saveName, enteredPwd);
                 } else {
                     localStorage.removeItem(REMEMBERED_USER_ACCT_NAME_KEY);
                     localStorage.removeItem(REMEMBERED_USER_ACCT_PWD_KEY);
@@ -6916,16 +7733,17 @@
 
             if (matchedUserIdx !== -1) {
                 const mUser = users[matchedUserIdx];
-                if (mUser.deviceId && mUser.deviceId !== thisDev) {
+                const devEval = evaluateAndBindUserDevice(mUser, thisDev);
+                if (!devEval.allowed) {
                     if (errEl) {
-                        errEl.textContent = `User "${mUser.username}" is already active on another device (1 device only).`;
+                        errEl.textContent = `User "${mUser.username}" has reached its device limit (${devEval.limit} device${devEval.limit > 1 ? 's' : ''} max).`;
                         errEl.classList.remove('hidden');
                     }
-                    showNotification('This user is already active on another device.', 'error');
+                    showNotification(`Device limit (${devEval.limit}) reached for this user.`, 'error');
                     return;
                 }
-                if (!mUser.deviceId) {
-                    users[matchedUserIdx] = { ...mUser, deviceId: thisDev };
+                if (devEval.changed) {
+                    users[matchedUserIdx] = devEval.updatedUser;
                     persistManagedUsers(users);
                     renderManagedUsersList();
                     try {
@@ -6959,6 +7777,7 @@
         }
 
         function verifyItemPassword(item, actionType) {
+            if (window.isAdminLoggedIn) return true;
             const requiredPwd = String(item?.password || '').trim();
             if (!requiredPwd) return true;
             if (getActiveUserAccountSession()) return true;
@@ -7110,12 +7929,122 @@
             loading.classList.remove('hidden');
 
             let networkRetries = 0;
+            let autoReloadAttempts = 0;
+            let lastAdvanceTime = Date.now();
+            let lastObservedCurrentTime = -1;
+            let lastReloadTriggeredAt = 0;
+            let manualUserPaused = false;
+
+            function forceAutoPlayVideo() {
+                if (!video || sessionId !== activePlaySession) return;
+                try {
+                    video.autoplay = true;
+                    video.playsInline = true;
+                    const res = video.play();
+                    if (res && typeof res.catch === 'function') {
+                        res.catch(() => {
+                            try {
+                                video.muted = true;
+                                const mRes = video.play();
+                                if (mRes && typeof mRes.catch === 'function') mRes.catch(() => {});
+                            } catch (_) {}
+                        });
+                    }
+                } catch (_) {}
+            }
+
+            function reloadActiveStreamSource(reasonLabel) {
+                if (sessionId !== activePlaySession || !source) return;
+                const now = Date.now();
+                if (now - lastReloadTriggeredAt < 1800) return;
+                lastReloadTriggeredAt = now;
+                manualUserPaused = false;
+                autoReloadAttempts++;
+                updateStreamIndicator('testing', reasonLabel || 'RELOADING STREAM...');
+                setChannelPlaybackStatus(channel.id, 'testing', 'Reloading stream...');
+                try {
+                    if (window.Hls && window.Hls.isSupported() && isHlsStreamUrl(source)) {
+                        if (autoReloadAttempts % 2 === 1 && hlsInstance) {
+                            try { hlsInstance.recoverMediaError(); } catch (_) {}
+                            try {
+                                if (typeof hlsInstance.liveSyncPosition === 'number' && !isNaN(hlsInstance.liveSyncPosition) && video) {
+                                    video.currentTime = hlsInstance.liveSyncPosition;
+                                }
+                            } catch (_) {}
+                            try { hlsInstance.startLoad(-1); } catch (_) {}
+                        } else {
+                            try { if (hlsInstance) hlsInstance.destroy(); } catch (_) {}
+                            hlsInstance = new window.Hls({
+                                enableWorker: false,
+                                lowLatencyMode: false,
+                                backBufferLength: 30,
+                                maxBufferLength: 30,
+                                maxMaxBufferLength: 60,
+                                manifestLoadingTimeOut: 20000,
+                                manifestLoadingMaxRetry: 4,
+                                levelLoadingTimeOut: 20000,
+                                levelLoadingMaxRetry: 4,
+                                fragLoadingTimeOut: 30000,
+                                fragLoadingMaxRetry: 5,
+                                xhrSetup: function(xhr) {
+                                    xhr.withCredentials = false;
+                                }
+                            });
+                            hlsInstance.attachMedia(video);
+                            try { hlsInstance.loadSource(source); } catch (_) {}
+                            hlsInstance.on(window.Hls.Events.MEDIA_ATTACHED, () => {
+                                if (sessionId === activePlaySession && hlsInstance) {
+                                    try { hlsInstance.loadSource(source); } catch (_) {}
+                                }
+                            });
+                            hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, () => {
+                                if (sessionId === activePlaySession) {
+                                    if (loading) loading.classList.add('hidden');
+                                    forceAutoPlayVideo();
+                                }
+                            });
+                        }
+                    } else if (video) {
+                        try {
+                            video.src = source;
+                            video.load();
+                        } catch (_) {}
+                    }
+                    forceAutoPlayVideo();
+                } finally {
+                    lastAdvanceTime = Date.now();
+                }
+            }
 
             video.onplaying = () => {
                 if (sessionId !== activePlaySession) return;
-                loading.classList.add('hidden');
+                autoReloadAttempts = 0;
+                manualUserPaused = false;
+                lastAdvanceTime = Date.now();
+                lastObservedCurrentTime = Number(video.currentTime || 0);
+                if (loading) loading.classList.add('hidden');
                 updateStreamIndicator('working', 'LIVE');
                 setChannelPlaybackStatus(channel.id, 'working', 'Live & Playing');
+            };
+
+            video.onpause = () => {
+                if (sessionId !== activePlaySession) return;
+                if (video.ended || !manualUserPaused) {
+                    setTimeout(() => {
+                        if (sessionId === activePlaySession && !manualUserPaused && video.paused) {
+                            reloadActiveStreamSource('STOPPED - AUTO RELOADING...');
+                        }
+                    }, 1200);
+                }
+            };
+
+            video.ontimeupdate = () => {
+                if (sessionId !== activePlaySession) return;
+                const ct = Number(video.currentTime || 0);
+                if (Math.abs(ct - lastObservedCurrentTime) > 0.05) {
+                    lastObservedCurrentTime = ct;
+                    lastAdvanceTime = Date.now();
+                }
             };
 
             video.onwaiting = () => {
@@ -7126,7 +8055,37 @@
             video.onstalled = () => {
                 if (sessionId !== activePlaySession) return;
                 updateStreamIndicator('testing', 'RECONNECTING...');
+                reloadActiveStreamSource('STALLED - RELOADING...');
             };
+
+            video.onended = () => {
+                if (sessionId !== activePlaySession) return;
+                reloadActiveStreamSource('STREAM STOPPED - RELOADING...');
+            };
+
+            clearStreamWatchdog();
+            streamWatchdogTimer = setInterval(() => {
+                if (sessionId !== activePlaySession) {
+                    clearStreamWatchdog();
+                    return;
+                }
+                const playerSec = document.getElementById('view-player');
+                const isActiveOrMini = !!(playerSec && (playerSec.classList.contains('active') || playerSec.classList.contains('mini-player')));
+                if (!isActiveOrMini || !source || manualUserPaused) return;
+
+                const ct = Number(video.currentTime || 0);
+                if (Math.abs(ct - lastObservedCurrentTime) > 0.05) {
+                    lastObservedCurrentTime = ct;
+                    lastAdvanceTime = Date.now();
+                    return;
+                }
+
+                // If stream stopped/paused or currentTime hasn't advanced for > 4s, reload & auto-play
+                const stuckForMs = Date.now() - lastAdvanceTime;
+                if (stuckForMs > 4000) {
+                    reloadActiveStreamSource('STOPPED/FROZEN - AUTO RELOADING...');
+                }
+            }, 1500);
 
             if (window.Hls && window.Hls.isSupported()) {
                 hlsInstance = new window.Hls({
@@ -7222,22 +8181,166 @@
             focusFirstChannelCard();
         }
 
-        function resetPlayerOverlayTimeout() {
-            const overlay = document.getElementById('player-overlay');
-            if (!overlay) return;
-            overlay.classList.remove('opacity-0');
-            overlay.classList.add('opacity-100');
-            if (playerOverlayTimeout) clearTimeout(playerOverlayTimeout);
-            playerOverlayTimeout = setTimeout(() => {
-                const menu = document.getElementById('player-category-menu');
-                const video = document.getElementById('video-element');
-                if (menu && !menu.classList.contains('hidden')) return;
-                if (video && !video.paused) {
-                    overlay.classList.remove('opacity-100');
-                    overlay.classList.add('opacity-0');
-                }
-            }, 4000);
+        function isFullscreenPlayerMode() {
+            const appEl = document.getElementById('umc-live-tv-app');
+            const hasFsClass = !!(appEl && appEl.classList.contains('is-app-fullscreen'));
+            const nativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            return !!(isSimulatedFullscreen || window.isSimulatedFullscreen || hasFsClass || nativeFs);
         }
+
+        function isMiniPlayerModeActive() {
+            const pv = document.getElementById('view-player');
+            return !!(miniPlayerActive || (pv && pv.classList.contains('mini-player')));
+        }
+
+        function setFullscreenCursorHidden(hidden) {
+            const shouldHide = !!(hidden && isFullscreenPlayerMode() && !isMiniPlayerModeActive());
+            const targets = [
+                document.body,
+                document.getElementById('umc-live-tv-app'),
+                document.getElementById('view-player'),
+                document.getElementById('player-container'),
+                document.getElementById('video-wrapper'),
+                document.getElementById('video-element'),
+                document.getElementById('embed-element')
+            ];
+            targets.forEach(el => {
+                if (!el) return;
+                if (shouldHide) {
+                    el.style.setProperty('cursor', 'none', 'important');
+                } else {
+                    el.style.removeProperty('cursor');
+                }
+            });
+        }
+
+        function setPlayerOverlayVisible(visible) {
+            const overlay = document.getElementById('player-overlay');
+            const titleBox = document.getElementById('player-title-container');
+            if (!overlay) return;
+            overlay.style.transition = 'none';
+            if (visible || isMiniPlayerModeActive()) {
+                setFullscreenCursorHidden(false);
+                overlay.classList.remove('opacity-0', 'pointer-events-none', 'hidden');
+                overlay.classList.add('opacity-100');
+                overlay.style.display = 'flex';
+                overlay.style.opacity = '1';
+                overlay.style.visibility = 'visible';
+                overlay.style.pointerEvents = 'auto';
+                overlay.style.zIndex = '2147483647';
+                if (titleBox) {
+                    titleBox.classList.remove('opacity-0', 'hidden');
+                    titleBox.classList.add('opacity-100');
+                    titleBox.style.display = 'flex';
+                    titleBox.style.opacity = '1';
+                    titleBox.style.visibility = 'visible';
+                }
+            } else {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0', 'pointer-events-none');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+                overlay.style.pointerEvents = 'none';
+                setFullscreenCursorHidden(true);
+            }
+        }
+
+        let lastFullscreenMouseMoveAt = Date.now();
+        let fullscreenIdleCheckInterval = null;
+
+        function ensureEmbedAutoPlayKeepAlive() {
+            const embedEl = document.getElementById('embed-element');
+            const playerSec = document.getElementById('view-player');
+            if (!embedEl || !playerSec || embedEl.classList.contains('hidden')) return;
+            const isActiveOrMini = playerSec.classList.contains('active') || playerSec.classList.contains('mini-player');
+            if (!isActiveOrMini) return;
+            try {
+                if (embedEl.dataset.embedBaseSrc) {
+                    // Keep autoplay attributes intact on active embed iframe
+                    embedEl.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen; presentation');
+                }
+            } catch (_) {}
+        }
+
+        function scheduleFullscreenIdleHide() {
+            if (fullscreenIdleCheckInterval) {
+                clearInterval(fullscreenIdleCheckInterval);
+                fullscreenIdleCheckInterval = null;
+            }
+            if (playerOverlayTimeout) {
+                clearTimeout(playerOverlayTimeout);
+                playerOverlayTimeout = null;
+            }
+            if (!isFullscreenPlayerMode() || isMiniPlayerModeActive()) {
+                setPlayerOverlayVisible(true);
+                return;
+            }
+
+            setPlayerOverlayVisible(true);
+            fullscreenIdleCheckInterval = setInterval(() => {
+                if (!isFullscreenPlayerMode() || isMiniPlayerModeActive()) {
+                    clearInterval(fullscreenIdleCheckInterval);
+                    fullscreenIdleCheckInterval = null;
+                    setPlayerOverlayVisible(true);
+                    return;
+                }
+                ensureEmbedAutoPlayKeepAlive();
+                const menu = document.getElementById('player-category-menu');
+                const srvMenu = document.getElementById('player-server-menu');
+                if ((menu && !menu.classList.contains('hidden')) || (srvMenu && !srvMenu.classList.contains('hidden'))) {
+                    lastFullscreenMouseMoveAt = Date.now();
+                    setPlayerOverlayVisible(true);
+                    return;
+                }
+                if (Date.now() - lastFullscreenMouseMoveAt >= 5000) {
+                    setPlayerOverlayVisible(false);
+                } else {
+                    setPlayerOverlayVisible(true);
+                }
+            }, 250);
+        }
+
+        function resetPlayerOverlayTimeout() {
+            lastFullscreenMouseMoveAt = Date.now();
+            setPlayerOverlayVisible(true);
+            if (!isFullscreenPlayerMode() || isMiniPlayerModeActive()) {
+                if (fullscreenIdleCheckInterval) {
+                    clearInterval(fullscreenIdleCheckInterval);
+                    fullscreenIdleCheckInterval = null;
+                }
+                return;
+            }
+            scheduleFullscreenIdleHide();
+        }
+
+        (function bindFullscreenMouseActivity() {
+            const wakeOnMove = () => {
+                lastFullscreenMouseMoveAt = Date.now();
+                if (isFullscreenPlayerMode() && !isMiniPlayerModeActive()) {
+                    setPlayerOverlayVisible(true);
+                    scheduleFullscreenIdleHide();
+                } else {
+                    if (fullscreenIdleCheckInterval) {
+                        clearInterval(fullscreenIdleCheckInterval);
+                        fullscreenIdleCheckInterval = null;
+                    }
+                    if (playerOverlayTimeout) {
+                        clearTimeout(playerOverlayTimeout);
+                        playerOverlayTimeout = null;
+                    }
+                    setPlayerOverlayVisible(true);
+                }
+            };
+            ['mousemove', 'pointermove', 'mouseover', 'touchstart', 'mousedown', 'wheel', 'focus'].forEach(evt => {
+                window.addEventListener(evt, wakeOnMove, { passive: true });
+                document.addEventListener(evt, wakeOnMove, { passive: true });
+            });
+            window.addEventListener('blur', () => {
+                if (isFullscreenPlayerMode() && !isMiniPlayerModeActive()) {
+                    wakeOnMove();
+                }
+            }, { passive: true });
+        })();
 
         setTimeout(() => {
             const splash = document.getElementById('ustreamz-splash');
