@@ -656,16 +656,39 @@
 
         /* Mobile-only Screen Rotate button right after Fullscreen button */
         #player-rotate-screen-btn {
-            display: none !important;
+            display: none;
         }
-        @media (max-width: 767px) {
+        @media (max-width: 1024px) and (hover: none), (max-width: 767px) {
             #player-rotate-screen-btn {
                 display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                flex-shrink: 0 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
             }
             #umc-live-tv-app.mobile-rotated-landscape #view-player,
             #umc-live-tv-app.mobile-rotated-landscape #player-container {
                 transform: rotate(90deg);
                 transform-origin: center center;
+            }
+            /* Clean Mobile Responsive Buttons & Spacing */
+            #umc-live-tv-app #player-overlay > div:first-child > div.flex {
+                gap: 6px !important;
+                flex-wrap: nowrap !important;
+                align-items: center !important;
+            }
+            #umc-live-tv-app #player-overlay button {
+                flex-shrink: 0 !important;
+            }
+            #umc-live-tv-app #view-grid > header > div:last-child {
+                gap: 6px !important;
+                flex-wrap: nowrap !important;
+                min-width: 0 !important;
+            }
+            #umc-live-tv-app #view-grid > header button {
+                flex-shrink: 0 !important;
+                min-height: 34px !important;
             }
         }
     </style>
@@ -3318,9 +3341,42 @@
         
         let isMobileRotatedLandscape = false;
         function isMobileDeviceContext() {
-            const narrow = (window.innerWidth || document.documentElement.clientWidth || 0) <= 767;
-            const uaMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '');
-            return narrow || uaMobile;
+            const uaMobile = /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent || '');
+            const coarse = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+            const narrow = (Math.min(window.innerWidth || 9999, window.screen?.width || 9999)) <= 900;
+            return uaMobile || (coarse && narrow);
+        }
+
+        function syncMobileRotateButtonVisibility() {
+            const btn = document.getElementById('player-rotate-screen-btn');
+            if (!btn) return;
+            const isMob = isMobileDeviceContext();
+            const isMini = !!document.getElementById('view-player')?.classList.contains('mini-player');
+            if (isMob && !isMini) {
+                btn.style.display = 'inline-flex';
+                btn.style.visibility = 'visible';
+                btn.style.opacity = '1';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        async function forceMobileLandscapeMode(showToast = false) {
+            if (!isMobileDeviceContext()) return;
+            const appEl = document.getElementById('umc-live-tv-app');
+            if (!isSimulatedFullscreen && typeof enterAppFullScreen === 'function') {
+                enterAppFullScreen();
+            }
+            isMobileRotatedLandscape = true;
+            if (appEl) appEl.classList.add('mobile-rotated-landscape');
+            try {
+                if (screen.orientation && typeof screen.orientation.lock === 'function') {
+                    await screen.orientation.lock('landscape').catch(() => {});
+                }
+            } catch (_) {}
+            if (showToast && typeof showNotification === 'function') {
+                showNotification('Landscape locked');
+            }
         }
 
         async function toggleMobileScreenRotate(e) {
@@ -3333,17 +3389,7 @@
 
             const appEl = document.getElementById('umc-live-tv-app');
             if (!isMobileRotatedLandscape) {
-                if (!isSimulatedFullscreen && typeof enterAppFullScreen === 'function') {
-                    enterAppFullScreen();
-                }
-                isMobileRotatedLandscape = true;
-                if (appEl) appEl.classList.add('mobile-rotated-landscape');
-                try {
-                    if (screen.orientation && typeof screen.orientation.lock === 'function') {
-                        await screen.orientation.lock('landscape').catch(() => {});
-                    }
-                } catch (_) {}
-                if (typeof showNotification === 'function') showNotification('Screen rotated to Landscape');
+                await forceMobileLandscapeMode(true);
             } else {
                 isMobileRotatedLandscape = false;
                 if (appEl) appEl.classList.remove('mobile-rotated-landscape');
@@ -3354,6 +3400,36 @@
                 } catch (_) {}
                 if (typeof showNotification === 'function') showNotification('Screen orientation reset');
             }
+        }
+
+        function setupMobileTiltForceLandscape() {
+            const handleTiltOrOrientationChange = () => {
+                if (!isMobileDeviceContext()) {
+                    syncMobileRotateButtonVisibility();
+                    return;
+                }
+                syncMobileRotateButtonVisibility();
+                const playerActive = !!document.getElementById('view-player')?.classList.contains('active');
+                const isLandscapeViewport = (window.innerWidth || 0) > (window.innerHeight || 0);
+                const orientAngle = Number(window.orientation || screen?.orientation?.angle || 0);
+                if ((playerActive || isSimulatedFullscreen) && (isLandscapeViewport || Math.abs(orientAngle) === 90)) {
+                    forceMobileLandscapeMode(false);
+                }
+            };
+            window.addEventListener('orientationchange', handleTiltOrOrientationChange, { passive: true });
+            window.addEventListener('resize', handleTiltOrOrientationChange, { passive: true });
+            if (screen && screen.orientation && typeof screen.orientation.addEventListener === 'function') {
+                screen.orientation.addEventListener('change', handleTiltOrOrientationChange);
+            }
+            window.addEventListener('deviceorientation', (ev) => {
+                if (!isMobileDeviceContext()) return;
+                const playerActive = !!document.getElementById('view-player')?.classList.contains('active');
+                if (!playerActive && !isSimulatedFullscreen) return;
+                const gamma = Math.abs(Number(ev?.gamma || 0));
+                if (gamma >= 55) {
+                    forceMobileLandscapeMode(false);
+                }
+            }, { passive: true });
         }
 
         async function init() {
@@ -3418,7 +3494,9 @@
                 checkIsAdminLoggedIn().then((ok) => updateAdminLoginStatusUI(ok, '')).catch(() => updateAdminLoginStatusUI(false, ''));
                 updateCloudConnectionStatus();
                 checkAllChannelStatusesOnLoad();
-                hideSplashScreen();
+                syncMobileRotateButtonVisibility();
+                setupMobileTiltForceLandscape();
+                                hideSplashScreen();
                 focusFirstChannelCard();
             } catch (error) {
                 hideSplashScreen();
