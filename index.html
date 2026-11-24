@@ -30,6 +30,8 @@
             padding: 0;
             background-color: #020617;
             width: 100%;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
         }
 
         #umc-live-tv-app {
@@ -655,18 +657,25 @@
             }
         }
 
-        /* Mobile-only Screen Rotate button right after Fullscreen button */
-        #player-rotate-screen-btn {
-            display: none;
+        /* Screen Rotate button hidden with zero layout space (auto-tilt rotation runs automatically on mobile) */
+        #player-rotate-screen-btn,
+        #umc-live-tv-app #view-player #player-rotate-screen-btn,
+        #umc-live-tv-app #view-player:not(.mini-player) #player-rotate-screen-btn {
+            display: none !important;
+            width: 0 !important;
+            min-width: 0 !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
         }
         @media (max-width: 1024px) and (hover: none), (max-width: 767px) {
             #player-rotate-screen-btn {
-                display: inline-flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                flex-shrink: 0 !important;
-                visibility: visible !important;
-                opacity: 1 !important;
+                display: none !important;
+                visibility: hidden !important;
+                pointer-events: none !important;
             }
             #umc-live-tv-app.mobile-rotated-landscape.rotate-dir-cw #view-player {
                 --mobile-rotate-deg: 90deg;
@@ -1784,7 +1793,7 @@
             height: 100% !important;
         }
 
-        /* Clean, consistent mobile player overlay bar & icon alignment */
+        /* Clean, consistent mobile player overlay bar & icon alignment (original single-row layout) */
         #umc-live-tv-app #view-player:not(.mini-player) #player-overlay {
             height: auto !important;
             min-height: 54px !important;
@@ -1793,6 +1802,8 @@
             padding-left: max(10px, env(safe-area-inset-left, 10px)) !important;
             padding-right: max(10px, env(safe-area-inset-right, 10px)) !important;
             display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
             align-items: center !important;
             justify-content: space-between !important;
             gap: 8px !important;
@@ -1810,7 +1821,6 @@
         #umc-live-tv-app #view-player:not(.mini-player) #player-back-button,
         #umc-live-tv-app #view-player:not(.mini-player) #player-overlay button[onclick*="togglePlayingCategoryList"],
         #umc-live-tv-app #view-player:not(.mini-player) #player-fullscreen-btn,
-        #umc-live-tv-app #view-player:not(.mini-player) #player-rotate-screen-btn,
         #umc-live-tv-app #view-player:not(.mini-player) #player-reload-btn,
         #umc-live-tv-app #view-player:not(.mini-player) #player-exit-channel-btn,
         #umc-live-tv-app #view-player:not(.mini-player) #player-server-toggle {
@@ -1828,7 +1838,6 @@
         #umc-live-tv-app #view-player:not(.mini-player) #player-back-button svg,
         #umc-live-tv-app #view-player:not(.mini-player) #player-overlay button[onclick*="togglePlayingCategoryList"] svg,
         #umc-live-tv-app #view-player:not(.mini-player) #player-fullscreen-btn svg,
-        #umc-live-tv-app #view-player:not(.mini-player) #player-rotate-screen-btn svg,
         #umc-live-tv-app #view-player:not(.mini-player) #player-reload-btn svg,
         #umc-live-tv-app #view-player:not(.mini-player) #player-exit-channel-btn svg,
         #umc-live-tv-app #view-player:not(.mini-player) #player-server-toggle svg {
@@ -1842,7 +1851,7 @@
             overflow: hidden !important;
         }
         #umc-live-tv-app #view-player:not(.mini-player) #now-playing-title {
-            max-width: 34vw !important;
+            max-width: 38vw !important;
             padding: 5px 10px !important;
             font-size: 12px !important;
             line-height: 1.2 !important;
@@ -1861,6 +1870,19 @@
             max-height: 68vw !important;
             max-width: 240px !important;
         }
+    }
+
+    /* Fast-click Admin Settings tabs (Download Link & all tabs) */
+    #umc-live-tv-app #settings-admin-menu {
+        position: relative;
+        z-index: 25;
+        touch-action: manipulation;
+    }
+    #umc-live-tv-app #settings-admin-menu .settings-menu-tab {
+        cursor: pointer;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
     /* =========================================================
@@ -2158,12 +2180,15 @@
         grid-template-columns: minmax(0, 1fr) !important;
         grid-template-rows: minmax(0, 1fr) !important;
     }
+    #multiview-grid.mv-layout-1 .mv-focus-btn {
+        display: none !important;
+    }
     .mv-slot-bar {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
-        z-index: 20;
+        z-index: 42;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -2260,8 +2285,66 @@
         color: #ffffff;
         border-color: #ffffff;
     }
+    #multiview-modal.mv-is-minimized {
+        display: flex !important;
+        position: fixed !important;
+        left: -200vw !important;
+        top: 0 !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        z-index: -1 !important;
+    }
     #multiview-minimized-dock {
         z-index: 2147483644;
+    }
+    /* Prevent pull-to-refresh browser reload from any scrollable area */
+    #umc-live-tv-app,
+    #umc-live-tv-app main,
+    #umc-live-tv-app #grid-scroll-container,
+    #umc-live-tv-app #sidebar-nav,
+    #umc-live-tv-app #view-settings,
+    #umc-live-tv-app #settings-main-viewport,
+    #multiview-modal,
+    #mv-picker-list {
+        overscroll-behavior: none !important;
+        overscroll-behavior-y: none !important;
+    }
+    /* Hide Multi View title and "0 Playing" status badge on mobile (both portrait & landscape) */
+    @media (max-width: 1024px) and (hover: none), (max-width: 767px) {
+        #mv-modal-title,
+        #mv-active-count-badge {
+            display: none !important;
+        }
+    }
+    /* Full-player transparent Screen Guard over embed video area (blocks all watermark/ad link clicks without affecting video sizing or bottom controls) */
+    #embed-watermark-shield {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 52px;
+        z-index: 25;
+        background: transparent;
+        pointer-events: auto;
+        cursor: default;
+        touch-action: manipulation;
+    }
+    #umc-live-tv-app #view-player.mini-player #embed-watermark-shield {
+        bottom: 0;
+    }
+    .mv-embed-watermark-shield {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 44px;
+        z-index: 15;
+        background: transparent;
+        pointer-events: auto;
+        cursor: default;
+        touch-action: manipulation;
     }
     </style>
 </head>
@@ -2362,8 +2445,8 @@
                     <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
                     <span id="sidebar-playing-name" class="text-[11px] md:text-xs font-semibold text-white truncate block">—</span>
                 </button>
-                <button type="button" tabindex="0" onclick="closePlayer()" title="Exit Channel" aria-label="Exit Current Channel" class="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-rose-950/90 hover:bg-rose-900 border border-rose-500/35 text-rose-200 hover:text-white transition-colors">
-                    <i data-lucide="power" class="!w-4 !h-4"></i>
+                <button type="button" tabindex="0" onclick="event.stopPropagation(); closePlayer();" title="Stop Playing" aria-label="Stop Current Channel" class="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-rose-950/90 hover:bg-rose-900 border border-rose-500/35 text-rose-200 hover:text-white transition-colors">
+                    <i data-lucide="square" class="!w-3.5 !h-3.5 fill-current"></i>
                 </button>
             </div>
         </div>
@@ -2476,7 +2559,7 @@
                             <i data-lucide="maximize" id="player-fullscreen-icon" class="!w-4 !h-4"></i>
                         </button>
                         <!-- Mobile-only Screen Rotate Button (right behind Full Screen button) -->
-                        <button type="button" tabindex="0" id="player-rotate-screen-btn" onclick="toggleMobileScreenRotate(event)" class="items-center justify-center text-white hover:text-emerald-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" title="Rotate Screen" aria-label="Rotate Screen">
+                        <button type="button" tabindex="0" id="player-rotate-screen-btn" onclick="toggleMobileScreenRotate(event)" class="hidden items-center justify-center text-white hover:text-emerald-300 bg-slate-900/90 border border-white/15 w-8 h-8 rounded-full shadow-lg" title="Rotate Screen" aria-label="Rotate Screen">
                             <i data-lucide="rotate-cw" id="player-rotate-screen-icon" class="!w-4 !h-4"></i>
                         </button>
                         <!-- Reload Playing Channel Button -->
@@ -2503,7 +2586,8 @@
                 </div>
 
                 <!-- Fallback Iframe for Embeds / Null-Origin Sandbox -->
-                <iframe id="embed-element" class="hidden w-full h-full border-0 bg-black"  allow="autoplay; encrypted-media; picture-in-picture; fullscreen; presentation" allowfullscreen referrerpolicy="no-referrer"></iframe>
+                <iframe id="embed-element" class="hidden w-full h-full border-0 bg-black" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; presentation" allowfullscreen referrerpolicy="no-referrer"></iframe>
+                <div id="embed-watermark-shield" class="hidden" onclick="event.preventDefault();event.stopPropagation();if(typeof resetPlayerOverlayTimeout==='function')resetPlayerOverlayTimeout();" onmousedown="event.preventDefault();event.stopPropagation();" ondblclick="event.preventDefault();event.stopPropagation();if(typeof toggleAppFullScreen==='function')toggleAppFullScreen(event);" oncontextmenu="return false;" aria-hidden="true"></div>
                 
                 <!-- Live Stream Status Indicator Dot (Icon Only, No Text) -->
                 <div id="stream-status-badge" role="status" aria-live="polite" class="absolute left-3 z-20 flex items-center justify-center pointer-events-none transition-all duration-300" style="bottom:16px;background:transparent !important;border:none !important;box-shadow:none !important;">
@@ -3590,7 +3674,7 @@
 
 
     <!-- Multi View Modal (1 / 2 / 4 View Simultaneous Channel Player) -->
-    <div id="multiview-modal" class="fixed inset-0 z-[2147483645] hidden flex-col bg-slate-950 text-white">
+    <div id="multiview-modal" oncontextmenu="return false;" class="fixed inset-0 z-[2147483645] hidden flex-col bg-slate-950 text-white">
         <header class="min-h-[52px] flex items-center justify-between gap-2 px-2.5 sm:px-4 py-1.5 border-b border-slate-800 bg-slate-900/95 shrink-0">
             <div class="flex items-center gap-2 min-w-0">
                 <button type="button" onclick="minimizeMultiViewModal()" title="Minimize Multi View (keep playing)" aria-label="Minimize Multi View" class="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-700 bg-slate-800 hover:bg-indigo-600 hover:border-indigo-500 text-slate-200 hover:text-white transition-colors shrink-0">
@@ -3600,7 +3684,7 @@
                     <i data-lucide="x" class="!w-4 !h-4"></i>
                 </button>
                 <div class="min-w-0 flex items-center gap-2">
-                    <h2 class="text-sm sm:text-base font-bold text-white truncate">Multi View</h2>
+                    <h2 id="mv-modal-title" class="text-sm sm:text-base font-bold text-white truncate">Multi View</h2>
                     <span id="mv-active-count-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/15 border border-cyan-500/35 text-cyan-300 shrink-0">0 Playing</span>
                 </div>
             </div>
@@ -3620,11 +3704,9 @@
                         <span>4</span>
                     </button>
                 </div>
-                <button type="button" id="mv-mute-all-btn" onclick="toggleMuteAllMultiViewSlots()" title="Mute All" aria-label="Mute All" class="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors">
-                    <i data-lucide="volume-x" class="!w-4 !h-4"></i>
-                </button>
-                <button type="button" onclick="clearAllMultiViewSlots()" title="Clear All Views" aria-label="Clear All Views" class="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-700 bg-slate-800 hover:bg-rose-600 hover:border-rose-500 text-slate-200 hover:text-white transition-colors">
-                    <i data-lucide="trash-2" class="!w-4 !h-4"></i>
+                <button type="button" id="mv-save-layout-btn" onclick="toggleSaveDeleteMultiViewOnDevice()" title="Save Multi View on this device" aria-label="Save Multi View" class="inline-flex items-center gap-1 h-8 sm:h-9 px-2.5 rounded-xl border border-emerald-500/40 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white text-xs font-semibold transition-colors">
+                    <i data-lucide="save" class="!w-3.5 !h-3.5"></i>
+                    <span class="hidden sm:inline">Save</span>
                 </button>
                 <button type="button" id="mv-fullscreen-btn" onclick="toggleMultiViewFullscreen()" title="Fullscreen" aria-label="Toggle Fullscreen" class="inline-flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-700 bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white transition-colors">
                     <i data-lucide="maximize" class="!w-4 !h-4"></i>
@@ -3667,7 +3749,7 @@
     </div>
 
     <!-- Minimized Multi View Floating Dock -->
-    <div id="multiview-minimized-dock" class="hidden fixed bottom-4 right-4 items-center gap-2 rounded-2xl border border-cyan-500/50 bg-slate-900/95 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.85)] backdrop-blur-md">
+    <div id="multiview-minimized-dock" oncontextmenu="return false;" class="hidden fixed bottom-4 right-4 items-center gap-2 rounded-2xl border border-cyan-500/50 bg-slate-900/95 px-3 py-2 shadow-[0_14px_40px_rgba(0,0,0,0.85)] backdrop-blur-md">
         <button type="button" onclick="restoreMultiViewModal()" class="flex items-center gap-2 text-left min-w-0 pr-1">
             <span class="h-2.5 w-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
             <span class="inline-flex items-center gap-1.5 text-xs font-bold text-white whitespace-nowrap">
@@ -3819,6 +3901,7 @@
 
             setInterval(function() {
                 if (appClosed) return;
+                if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '')) return;
                 const fsEl = document.fullscreenElement || document.webkitFullscreenElement;
                 const simFs = !!window.isSimulatedFullscreen;
                 if (fsEl || simFs) return;
@@ -4168,7 +4251,6 @@
             appData.downloadApp = updatedCfg;
             persistDownloadAppLocally(updatedCfg);
             syncHeaderDownloadAppButton();
-            try { if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons(); } catch (_) {}
 
             const statusMsg = document.getElementById('dl-app-save-status-msg');
             if (statusMsg) {
@@ -5190,19 +5272,16 @@
         function syncMobileRotateButtonVisibility() {
             const btn = document.getElementById('player-rotate-screen-btn');
             if (!btn) return;
-            const isMob = isMobileDeviceContext();
-            const isMini = !!document.getElementById('view-player')?.classList.contains('mini-player');
-            if (isMob && !isMini) {
-                btn.style.display = 'inline-flex';
-                btn.style.visibility = 'visible';
-                btn.style.opacity = '1';
-            } else {
-                btn.style.display = 'none';
-            }
+            btn.style.display = 'none';
+            btn.style.visibility = 'hidden';
         }
 
-        let mobileLandscapeDirection = 'ccw'; // 'ccw' (-90deg) or 'cw' (90deg)
-        let mobileRotateClickStep = 0; // 0: Default, 1: Landscape Left (-90deg), 2: Landscape Right (90deg)
+        let mobileAutoRotateEnabled = true;
+        let mobileLandscapeDirection = 'cw'; // 'cw' (+90deg when top tilted left) or 'ccw' (-90deg when top tilted right)
+        let mobileRotateEnteredFs = false;
+        let mobileTiltDebounceTimer = null;
+        let mobilePendingTiltTarget = null;
+        let lastMobileTiltState = { gx: 0, gy: 9.8, gamma: 0, beta: 75, hasMotion: false, hasOrient: false };
 
         function isNativeLandscapeViewport() {
             const w = window.innerWidth || document.documentElement.clientWidth || 0;
@@ -5213,10 +5292,13 @@
         function syncMobileRotateBtnState() {
             const btn = document.getElementById('player-rotate-screen-btn');
             if (!btn) return;
-            const active = isMobileRotatedLandscape || mobileRotateClickStep !== 0;
+            const active = !!mobileAutoRotateEnabled;
             btn.classList.toggle('text-emerald-300', active);
-            btn.classList.toggle('border-emerald-400/50', active);
+            btn.classList.toggle('border-emerald-400/70', active);
+            btn.classList.toggle('bg-emerald-950/70', active);
             btn.classList.toggle('text-white', !active);
+            btn.title = active ? 'Auto Rotate: ON (Click to Disable)' : 'Auto Rotate: OFF (Click to Enable)';
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
         }
 
         function clearCssMobileRotation(appEl) {
@@ -5227,10 +5309,28 @@
             }
         }
 
+        function exitMobileLandscapeToNormal(alsoExitFs = true) {
+            isMobileRotatedLandscape = false;
+            clearCssMobileRotation();
+            try {
+                if (screen.orientation && typeof screen.orientation.unlock === 'function') {
+                    screen.orientation.unlock();
+                }
+            } catch (_) {}
+            if (alsoExitFs && mobileRotateEnteredFs) {
+                mobileRotateEnteredFs = false;
+                if (isSimulatedFullscreen && typeof exitAppFullScreen === 'function') {
+                    exitAppFullScreen();
+                }
+            } else if (!isSimulatedFullscreen) {
+                mobileRotateEnteredFs = false;
+            }
+            syncMobileRotateBtnState();
+        }
+
         function resetMobileRotationState() {
             isMobileRotatedLandscape = false;
-            mobileRotateClickStep = 0;
-            mobileLandscapeDirection = 'ccw';
+            mobileRotateEnteredFs = false;
             clearCssMobileRotation();
             try {
                 if (screen.orientation && typeof screen.orientation.unlock === 'function') {
@@ -5240,49 +5340,111 @@
             syncMobileRotateBtnState();
         }
 
-        function applyLandscapeDirectionClass(appEl, dir) {
+        function applyLandscapeDirectionClass(appEl) {
             if (!appEl) return;
             appEl.classList.remove('rotate-dir-cw', 'rotate-dir-ccw');
-            const cleanDir = (dir === 'cw') ? 'cw' : 'ccw';
-            mobileLandscapeDirection = cleanDir;
-            appEl.classList.add(cleanDir === 'cw' ? 'rotate-dir-cw' : 'rotate-dir-ccw');
-            appEl.style.setProperty('--mobile-rotate-deg', cleanDir === 'cw' ? '90deg' : '-90deg');
+            mobileLandscapeDirection = 'cw';
+            appEl.classList.add('rotate-dir-cw');
+            appEl.style.setProperty('--mobile-rotate-deg', '90deg');
         }
 
-        async function forceMobileLandscapeMode(showToast = false, dirOverride = null) {
-            if (!isMobileDeviceContext()) return;
+        async function enterMobileLandscapeForDirection() {
+            if (!isMobileDeviceContext() || !mobileAutoRotateEnabled) return;
+            const playerView = document.getElementById('view-player');
+            if (!playerView || !playerView.classList.contains('active') || playerView.classList.contains('mini-player')) return;
+
             const appEl = document.getElementById('umc-live-tv-app');
-            const dir = (dirOverride === 'cw' || dirOverride === 'ccw') ? dirOverride : mobileLandscapeDirection;
-            mobileLandscapeDirection = dir;
+            mobileLandscapeDirection = 'cw';
 
             if (!isSimulatedFullscreen && typeof enterAppFullScreen === 'function') {
+                mobileRotateEnteredFs = true;
                 enterAppFullScreen();
             }
 
-            // Try native orientation lock first (gives true native landscape without CSS transform)
             let nativeLocked = false;
             try {
                 if (screen.orientation && typeof screen.orientation.lock === 'function') {
-                    const targetLock = (dir === 'cw') ? 'landscape-secondary' : 'landscape-primary';
-                    await screen.orientation.lock(targetLock).then(() => { nativeLocked = true; }).catch(async () => {
+                    await screen.orientation.lock('landscape-primary').then(() => { nativeLocked = true; }).catch(async () => {
                         await screen.orientation.lock('landscape').then(() => { nativeLocked = true; }).catch(() => {});
                     });
                 }
             } catch (_) {}
 
-            // Never apply CSS 90deg rotation if viewport is already natively landscape!
             if (nativeLocked || isNativeLandscapeViewport()) {
                 clearCssMobileRotation(appEl);
                 isMobileRotatedLandscape = true;
             } else {
                 isMobileRotatedLandscape = true;
-                applyLandscapeDirectionClass(appEl, dir);
+                applyLandscapeDirectionClass(appEl);
                 if (appEl) appEl.classList.add('mobile-rotated-landscape');
             }
             syncMobileRotateBtnState();
-            if (showToast && typeof showNotification === 'function') {
-                showNotification(dir === 'cw' ? 'Right Landscape' : 'Left Landscape');
+        }
+
+        function computeDesiredTiltTarget() {
+            if (isNativeLandscapeViewport()) {
+                return 'native-landscape';
             }
+            if (lastMobileTiltState.hasMotion) {
+                const gx = lastMobileTiltState.gx;
+                const gy = lastMobileTiltState.gy;
+                const absX = Math.abs(gx);
+                const absY = Math.abs(gy);
+                if (absX >= 6.0 && absX > absY * 1.2) {
+                    return 'cw';
+                }
+                if (absY >= 6.0 && absX <= 4.3) {
+                    return 'normal';
+                }
+                return null;
+            }
+            if (lastMobileTiltState.hasOrient) {
+                const g = lastMobileTiltState.gamma;
+                const b = lastMobileTiltState.beta;
+                if (typeof g === 'number' && !isNaN(g)) {
+                    if (Math.abs(g) >= 48) return 'cw';
+                    if (Math.abs(g) <= 32 && (typeof b !== 'number' || Math.abs(b) >= 40)) return 'normal';
+                }
+            }
+            return null;
+        }
+
+        function applyDesiredTiltTarget(target) {
+            if (!mobileAutoRotateEnabled || !isMobileDeviceContext()) return;
+            const playerView = document.getElementById('view-player');
+            if (!playerView || !playerView.classList.contains('active') || playerView.classList.contains('mini-player')) return;
+
+            if (target === 'native-landscape') {
+                clearCssMobileRotation();
+                isMobileRotatedLandscape = true;
+                return;
+            }
+            if (target === 'cw' || target === 'ccw') {
+                if (!isMobileRotatedLandscape || mobileLandscapeDirection !== target) {
+                    enterMobileLandscapeForDirection(target);
+                }
+            } else if (target === 'normal') {
+                if (isMobileRotatedLandscape) {
+                    exitMobileLandscapeToNormal(true);
+                }
+            }
+        }
+
+        function scheduleTiltEvaluation() {
+            if (!mobileAutoRotateEnabled || !isMobileDeviceContext()) return;
+            const target = computeDesiredTiltTarget();
+            if (!target) return;
+            if (target === mobilePendingTiltTarget) return;
+            mobilePendingTiltTarget = target;
+            if (mobileTiltDebounceTimer) clearTimeout(mobileTiltDebounceTimer);
+            mobileTiltDebounceTimer = setTimeout(() => {
+                mobileTiltDebounceTimer = null;
+                const confirmed = computeDesiredTiltTarget();
+                if (confirmed && confirmed === mobilePendingTiltTarget) {
+                    applyDesiredTiltTarget(confirmed);
+                }
+                mobilePendingTiltTarget = null;
+            }, 220);
         }
 
         async function toggleMobileScreenRotate(e) {
@@ -5293,19 +5455,60 @@
             if (!isMobileDeviceContext()) return;
             if (typeof resetPlayerOverlayTimeout === 'function') resetPlayerOverlayTimeout();
 
-            mobileRotateClickStep = (mobileRotateClickStep + 1) % 3;
+            mobileAutoRotateEnabled = !mobileAutoRotateEnabled;
 
-            if (mobileRotateClickStep === 1) {
-                await forceMobileLandscapeMode(true, 'ccw');
-            } else if (mobileRotateClickStep === 2) {
-                await forceMobileLandscapeMode(true, 'cw');
+            if (mobileAutoRotateEnabled) {
+                // Request iOS 13+ sensor permissions inside click gesture if needed
+                try {
+                    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+                        await DeviceMotionEvent.requestPermission().catch(() => {});
+                    }
+                    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                        await DeviceOrientationEvent.requestPermission().catch(() => {});
+                    }
+                } catch (_) {}
+
+                syncMobileRotateBtnState();
+                if (typeof showNotification === 'function') showNotification('Auto Rotate: ON');
+
+                const immediateTarget = computeDesiredTiltTarget();
+                if (immediateTarget === 'cw' || immediateTarget === 'ccw') {
+                    await enterMobileLandscapeForDirection(immediateTarget);
+                } else {
+                    exitMobileLandscapeToNormal(false);
+                }
             } else {
-                resetMobileRotationState();
-                if (typeof showNotification === 'function') showNotification('Default Orientation');
+                if (mobileTiltDebounceTimer) {
+                    clearTimeout(mobileTiltDebounceTimer);
+                    mobileTiltDebounceTimer = null;
+                }
+                mobilePendingTiltTarget = null;
+                exitMobileLandscapeToNormal(true);
+                if (typeof showNotification === 'function') showNotification('Auto Rotate: OFF');
             }
         }
 
         function setupMobileTiltForceLandscape() {
+            const isIOS = /iPad|iPhone|iPod/i.test(navigator.userAgent || '');
+
+            window.addEventListener('devicemotion', (ev) => {
+                const ag = ev && ev.accelerationIncludingGravity;
+                if (!ag || (ag.x === null && ag.y === null)) return;
+                const sign = isIOS ? -1 : 1;
+                lastMobileTiltState.gx = Number(ag.x || 0) * sign;
+                lastMobileTiltState.gy = Number(ag.y || 0) * sign;
+                lastMobileTiltState.hasMotion = true;
+                if (mobileAutoRotateEnabled) scheduleTiltEvaluation();
+            }, { passive: true });
+
+            window.addEventListener('deviceorientation', (ev) => {
+                if (!ev || (ev.gamma === null && ev.beta === null)) return;
+                lastMobileTiltState.gamma = Number(ev.gamma || 0);
+                lastMobileTiltState.beta = Number(ev.beta || 0);
+                lastMobileTiltState.hasOrient = true;
+                if (mobileAutoRotateEnabled && !lastMobileTiltState.hasMotion) scheduleTiltEvaluation();
+            }, { passive: true });
+
             const handleOrientationOrResize = () => {
                 syncMobileRotateButtonVisibility();
                 if (!isMobileDeviceContext()) {
@@ -5313,12 +5516,19 @@
                     return;
                 }
                 const appEl = document.getElementById('umc-live-tv-app');
-                // Critical consistency guard: if browser/OS rotated natively to landscape, NEVER keep CSS 90deg rotation active
-                if (isNativeLandscapeViewport()) {
+                if (!mobileAutoRotateEnabled) {
                     clearCssMobileRotation(appEl);
-                } else if (isMobileRotatedLandscape && mobileRotateClickStep > 0 && isSimulatedFullscreen) {
-                    applyLandscapeDirectionClass(appEl, mobileLandscapeDirection);
-                    if (appEl) appEl.classList.add('mobile-rotated-landscape');
+                    isMobileRotatedLandscape = false;
+                } else if (isNativeLandscapeViewport()) {
+                    clearCssMobileRotation(appEl);
+                    isMobileRotatedLandscape = true;
+                } else {
+                    const target = computeDesiredTiltTarget();
+                    if (target === 'normal') {
+                        exitMobileLandscapeToNormal(true);
+                    } else if (target === 'cw' || target === 'ccw') {
+                        enterMobileLandscapeForDirection(target);
+                    }
                 }
                 syncMobileRotateBtnState();
             };
@@ -6947,7 +7157,12 @@
                 if (pop) pop.classList.remove('hidden');
             }
 
-            if (window.lucide) lucide.createIcons({ root: document.getElementById('view-settings') || document });
+            const activePanel = activeSettingsTab === 'categories' ? catPanel
+                : (activeSettingsTab === 'download-app' ? dlPanel
+                : (activeSettingsTab === 'users' ? usersPanel : itemsPanel));
+            if (window.lucide && activePanel && activePanel.querySelector('i[data-lucide]')) {
+                lucide.createIcons({ root: activePanel });
+            }
         }
 
         function renderAll() {
@@ -9298,12 +9513,27 @@
             freshFrame.id = 'embed-element';
             freshFrame.className = 'hidden w-full h-full border-0 bg-black';
             
+            freshFrame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
             freshFrame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen; presentation');
             freshFrame.setAttribute('allowfullscreen', '');
             freshFrame.setAttribute('referrerpolicy', 'no-referrer');
             oldFrame.replaceWith(freshFrame);
+            const shield = document.getElementById('embed-watermark-shield');
+            if (shield) shield.classList.add('hidden');
             return freshFrame;
         }
+        (function watchEmbedWatermarkShield() {
+            const syncShield = () => {
+                const f = document.getElementById('embed-element');
+                const s = document.getElementById('embed-watermark-shield');
+                if (!f || !s) return;
+                s.classList.toggle('hidden', f.classList.contains('hidden'));
+            };
+            const pc = document.getElementById('player-container');
+            if (pc && window.MutationObserver) {
+                new MutationObserver(syncShield).observe(pc, { subtree: true, childList: true, attributes: true, attributeFilter: ['class'] });
+            }
+        })();
 
         let streamWatchdogTimer = null;
 
@@ -9347,6 +9577,7 @@
         }
 
         function playInNullOriginSandbox(sourceUrl, channel, sessionId) {
+            clearStreamWatchdog();
             const videoWrap = document.getElementById('video-wrapper');
             const frame = resetEmbedIframe();
             const loading = document.getElementById('player-loading');
@@ -10158,6 +10389,318 @@
             return false;
         }
 
+        /* =========================================================
+           MOBILE LOCK SCREEN MEDIA PLAYER (PREV / PLAY-PAUSE-STOP / NEXT / SEEK BAR)
+           & BACKGROUND PLAYBACK KEEP-ALIVE
+           ========================================================= */
+        let currentPlayingChannelObj = null;
+        window.__ustreamzManualPaused = false;
+        let lastBackgroundHiddenAt = 0;
+        let lastMediaPosSyncAt = 0;
+
+        function buildLockScreenArtworkDataUrl(channelName, categoryName) {
+            try {
+                const canvas = document.createElement('canvas');
+                canvas.width = 512;
+                canvas.height = 512;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return '';
+
+                // Rich dark navy -> indigo -> cyan gradient backdrop
+                const grad = ctx.createLinearGradient(0, 0, 512, 512);
+                grad.addColorStop(0, '#071329');
+                grad.addColorStop(0.55, '#1e1b4b');
+                grad.addColorStop(1, '#0c4a6e');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 512, 512);
+
+                // Subtle radial glow
+                const rad = ctx.createRadialGradient(256, 200, 20, 256, 200, 240);
+                rad.addColorStop(0, 'rgba(56, 189, 248, 0.32)');
+                rad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+                ctx.fillStyle = rad;
+                ctx.fillRect(0, 0, 512, 512);
+
+                // Outer frame ring
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(20, 20, 472, 472);
+
+                // Brand badge
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
+                ctx.beginPath();
+                ctx.roundRect(146, 72, 220, 48, 24);
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.font = 'bold 24px Inter, system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('USTREAMZ', 256, 96);
+
+                // Channel initials circle
+                const initials = String(channelName || 'TV')
+                    .split(/\s+/).filter(Boolean).slice(0, 2)
+                    .map(w => w[0]).join('').toUpperCase() || 'TV';
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.28)';
+                ctx.beginPath();
+                ctx.arc(256, 238, 86, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#818cf8';
+                ctx.lineWidth = 4;
+                ctx.stroke();
+
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '800 64px Inter, system-ui, sans-serif';
+                ctx.fillText(initials, 256, 242);
+
+                // Channel Name
+                const title = String(channelName || 'Live TV').slice(0, 24);
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = 'bold 30px Inter, system-ui, sans-serif';
+                ctx.fillText(title, 256, 376);
+
+                // Live pill
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath();
+                ctx.arc(198, 426, 7, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#cbd5e1';
+                ctx.font = '600 20px Inter, system-ui, sans-serif';
+                ctx.fillText(String(categoryName || 'LIVE').slice(0, 18).toUpperCase() + ' • LIVE', 268, 427);
+
+                return canvas.toDataURL('image/png');
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function getPlayableChannelsForNav() {
+            const list = Array.isArray(appData?.channels) ? appData.channels : [];
+            const playable = list.filter(c => {
+                if (!c || c.contentType === 'app') return false;
+                if (c.openInBrowser) return false;
+                const hasSrc = !!(c.url || c.embedCode || (Array.isArray(c.links) && c.links.some(l => l && l.url)));
+                return hasSrc;
+            });
+            return playable.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), undefined, { sensitivity: 'base', numeric: true }));
+        }
+
+        function switchLockScreenChannel(step) {
+            const list = getPlayableChannelsForNav();
+            if (!list.length) return;
+            const curIdx = list.findIndex(c => String(c.id) === String(currentPlayingChannelId));
+            const nextIdx = curIdx === -1
+                ? 0
+                : (curIdx + step + list.length) % list.length;
+            const nextCh = list[nextIdx];
+            if (nextCh) {
+                window.__ustreamzManualPaused = false;
+                openPlayer(nextCh);
+            }
+        }
+
+        function updateMediaSessionPosition(force = false) {
+            if (!('mediaSession' in navigator) || typeof navigator.mediaSession.setPositionState !== 'function') return;
+            const now = Date.now();
+            if (!force && now - lastMediaPosSyncAt < 900) return;
+            lastMediaPosSyncAt = now;
+
+            const video = document.getElementById('video-element');
+            if (!video) return;
+            try {
+                let pos = Number(video.currentTime || 0);
+                if (!isFinite(pos) || pos < 0) pos = 0;
+
+                let dur = Number(video.duration);
+                if (!isFinite(dur) || dur <= 0) {
+                    if (video.seekable && video.seekable.length > 0) {
+                        const sEnd = Number(video.seekable.end(video.seekable.length - 1));
+                        if (isFinite(sEnd) && sEnd > 0) dur = Math.max(sEnd, pos + 1);
+                    }
+                }
+                if (!isFinite(dur) || dur <= 0) {
+                    dur = Math.max(pos + 30, 60);
+                }
+                if (pos > dur) pos = dur;
+
+                const rate = (isFinite(video.playbackRate) && video.playbackRate > 0) ? video.playbackRate : 1;
+                navigator.mediaSession.setPositionState({
+                    duration: dur,
+                    playbackRate: rate,
+                    position: pos
+                });
+            } catch (_) {}
+        }
+
+        function setupMediaSessionForChannel(channel) {
+            currentPlayingChannelObj = channel || null;
+            if (!('mediaSession' in navigator) || typeof window.MediaMetadata === 'undefined') return;
+
+            const title = String(channel?.name || currentPlayingChannelName || 'UStreamz Live');
+            const category = String(channel?.category || 'Live TV');
+            const logoUrl = typeof getChannelLogo === 'function' ? String(getChannelLogo(channel) || '').trim() : '';
+            const fallbackArt = buildLockScreenArtworkDataUrl(title, category);
+
+            const artwork = [];
+            if (logoUrl && /^https?:\/\//i.test(logoUrl)) {
+                artwork.push(
+                    { src: logoUrl, sizes: '256x256' },
+                    { src: logoUrl, sizes: '512x512' }
+                );
+            } else if (logoUrl && /^data:image\//i.test(logoUrl)) {
+                artwork.push({ src: logoUrl, sizes: '512x512' });
+            }
+            if (fallbackArt) {
+                artwork.push(
+                    { src: fallbackArt, sizes: '512x512', type: 'image/png' },
+                    { src: fallbackArt, sizes: '256x256', type: 'image/png' }
+                );
+            }
+
+            try {
+                navigator.mediaSession.metadata = new window.MediaMetadata({
+                    title: title,
+                    artist: `${category} • LIVE`,
+                    album: 'UStreamz',
+                    artwork: artwork
+                });
+                navigator.mediaSession.playbackState = 'playing';
+            } catch (_) {}
+
+            const safeAction = (name, fn) => {
+                try { navigator.mediaSession.setActionHandler(name, fn); } catch (_) {}
+            };
+
+            safeAction('play', () => {
+                window.__ustreamzManualPaused = false;
+                const v = document.getElementById('video-element');
+                if (v) {
+                    v.play().catch(() => {});
+                }
+                try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+                updateMediaSessionPosition(true);
+            });
+
+            safeAction('pause', () => {
+                window.__ustreamzManualPaused = true;
+                const v = document.getElementById('video-element');
+                if (v) {
+                    try { v.pause(); } catch (_) {}
+                }
+                try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
+                updateMediaSessionPosition(true);
+            });
+
+            safeAction('stop', () => {
+                window.__ustreamzManualPaused = true;
+                if (typeof closePlayer === 'function') closePlayer();
+            });
+
+            safeAction('previoustrack', () => {
+                switchLockScreenChannel(-1);
+            });
+
+            safeAction('nexttrack', () => {
+                switchLockScreenChannel(1);
+            });
+
+            safeAction('seekbackward', (details) => {
+                const v = document.getElementById('video-element');
+                if (!v) return;
+                const offset = Number(details?.seekOffset || 10);
+                try {
+                    const minT = (v.seekable && v.seekable.length > 0) ? v.seekable.start(0) : 0;
+                    v.currentTime = Math.max(minT, Number(v.currentTime || 0) - offset);
+                } catch (_) {}
+                updateMediaSessionPosition(true);
+            });
+
+            safeAction('seekforward', (details) => {
+                const v = document.getElementById('video-element');
+                if (!v) return;
+                const offset = Number(details?.seekOffset || 10);
+                try {
+                    let maxT = Number(v.duration);
+                    if (!isFinite(maxT) && v.seekable && v.seekable.length > 0) {
+                        maxT = v.seekable.end(v.seekable.length - 1);
+                    }
+                    const target = Number(v.currentTime || 0) + offset;
+                    v.currentTime = isFinite(maxT) ? Math.min(maxT, target) : target;
+                } catch (_) {}
+                updateMediaSessionPosition(true);
+            });
+
+            safeAction('seekto', (details) => {
+                const v = document.getElementById('video-element');
+                if (!v || typeof details?.seekTime !== 'number' || !isFinite(details.seekTime)) return;
+                try {
+                    if (details.fastSeek && typeof v.fastSeek === 'function') {
+                        v.fastSeek(details.seekTime);
+                    } else {
+                        let t = details.seekTime;
+                        if (v.seekable && v.seekable.length > 0) {
+                            const sStart = v.seekable.start(0);
+                            const sEnd = v.seekable.end(v.seekable.length - 1);
+                            t = Math.min(Math.max(t, sStart), sEnd);
+                        } else if (isFinite(v.duration) && v.duration > 0) {
+                            t = Math.min(Math.max(t, 0), v.duration);
+                        }
+                        v.currentTime = t;
+                    }
+                } catch (_) {}
+                updateMediaSessionPosition(true);
+            });
+
+            updateMediaSessionPosition(true);
+        }
+
+        function clearMediaSessionPlayer() {
+            currentPlayingChannelObj = null;
+            if (!('mediaSession' in navigator)) return;
+            try {
+                navigator.mediaSession.playbackState = 'none';
+                navigator.mediaSession.metadata = null;
+            } catch (_) {}
+            ['play', 'pause', 'stop', 'previoustrack', 'nexttrack', 'seekbackward', 'seekforward', 'seekto'].forEach(act => {
+                try { navigator.mediaSession.setActionHandler(act, null); } catch (_) {}
+            });
+        }
+
+        // Keep mobile playback alive when screen locks or app goes to background (unless user paused/stopped)
+        document.addEventListener('visibilitychange', () => {
+            const v = document.getElementById('video-element');
+            const videoWrap = document.getElementById('video-wrapper');
+            const isVideoVisible = !!(v && videoWrap && !videoWrap.classList.contains('hidden'));
+            const hasActiveChannel = currentPlayingChannelId !== null;
+
+            if (document.hidden) {
+                lastBackgroundHiddenAt = Date.now();
+                if (hasActiveChannel && isVideoVisible && !window.__ustreamzManualPaused) {
+                    if (currentPlayingChannelObj) setupMediaSessionForChannel(currentPlayingChannelObj);
+                    if (v.paused && !v.ended) {
+                        v.play().catch(() => {});
+                    }
+                    setTimeout(() => {
+                        if (document.hidden && currentPlayingChannelId !== null && !window.__ustreamzManualPaused && v.paused && !v.ended) {
+                            v.play().catch(() => {});
+                        }
+                    }, 350);
+                }
+            } else {
+                if (hasActiveChannel && isVideoVisible && !window.__ustreamzManualPaused) {
+                    if (v.paused && !v.ended) {
+                        v.play().catch(() => {});
+                    }
+                    updateMediaSessionPosition(true);
+                }
+            }
+        });
+
         function openPlayer(channel) {
             if (!verifyItemPassword(channel, 'play')) return;
 
@@ -10168,6 +10711,8 @@
             const categoryMenu = document.getElementById('player-category-menu');
             if (categoryMenu) categoryMenu.classList.add('hidden');
             currentPlayingChannelName = channel.name || 'Unknown channel';
+            window.__ustreamzManualPaused = false;
+            setupMediaSessionForChannel(channel);
 
             updateStreamIndicator('testing', 'CONNECTING...');
             setChannelPlaybackStatus(channel.id, 'testing', 'Connecting stream...');
@@ -10324,10 +10869,35 @@
                 } catch (_) {}
             }
 
+            const useHlsWorker = /^https?:$/i.test(window.location.protocol || '');
+            const buildHlsConfig = () => ({
+                enableWorker: useHlsWorker,
+                lowLatencyMode: false,
+                backBufferLength: 30,
+                maxBufferLength: 30,
+                maxMaxBufferLength: 60,
+                maxBufferHole: 1.5,
+                nudgeMaxRetry: 10,
+                manifestLoadingTimeOut: 20000,
+                manifestLoadingMaxRetry: 6,
+                levelLoadingTimeOut: 20000,
+                levelLoadingMaxRetry: 6,
+                fragLoadingTimeOut: 30000,
+                fragLoadingMaxRetry: 6,
+                xhrSetup: function(xhr) {
+                    xhr.withCredentials = false;
+                }
+            });
+
             function reloadActiveStreamSource(reasonLabel) {
                 if (sessionId !== activePlaySession || !source) return;
+                const videoWrapEl = document.getElementById('video-wrapper');
+                if (videoWrapEl && videoWrapEl.classList.contains('hidden')) {
+                    clearStreamWatchdog();
+                    return;
+                }
                 const now = Date.now();
-                if (now - lastReloadTriggeredAt < 1800) return;
+                if (now - lastReloadTriggeredAt < 6000) return;
                 lastReloadTriggeredAt = now;
                 manualUserPaused = false;
                 autoReloadAttempts++;
@@ -10336,33 +10906,17 @@
                 try {
                     if (window.Hls && window.Hls.isSupported() && isHlsStreamUrl(source)) {
                         if (autoReloadAttempts % 2 === 1 && hlsInstance) {
-                            try { hlsInstance.recoverMediaError(); } catch (_) {}
+                            try { hlsInstance.startLoad(-1); } catch (_) {}
                             try {
                                 if (typeof hlsInstance.liveSyncPosition === 'number' && !isNaN(hlsInstance.liveSyncPosition) && video) {
-                                    video.currentTime = hlsInstance.liveSyncPosition;
+                                    if (Math.abs(hlsInstance.liveSyncPosition - (video.currentTime || 0)) > 8) {
+                                        video.currentTime = hlsInstance.liveSyncPosition;
+                                    }
                                 }
                             } catch (_) {}
-                            try { hlsInstance.startLoad(-1); } catch (_) {}
                         } else {
                             try { if (hlsInstance) hlsInstance.destroy(); } catch (_) {}
-                            hlsInstance = new window.Hls({
-                                enableWorker: false,
-                                lowLatencyMode: false,
-                                backBufferLength: 30,
-                                maxBufferLength: 30,
-                                maxMaxBufferLength: 60,
-                                manifestLoadingTimeOut: 20000,
-                                manifestLoadingMaxRetry: 4,
-                                levelLoadingTimeOut: 20000,
-                                levelLoadingMaxRetry: 4,
-                                fragLoadingTimeOut: 30000,
-                                fragLoadingMaxRetry: 5,
-                                xhrSetup: function(xhr) {
-                                    xhr.withCredentials = false;
-                                }
-                            });
-                            hlsInstance.attachMedia(video);
-                            try { hlsInstance.loadSource(source); } catch (_) {}
+                            hlsInstance = new window.Hls(buildHlsConfig());
                             hlsInstance.on(window.Hls.Events.MEDIA_ATTACHED, () => {
                                 if (sessionId === activePlaySession && hlsInstance) {
                                     try { hlsInstance.loadSource(source); } catch (_) {}
@@ -10374,6 +10928,15 @@
                                     forceAutoPlayVideo();
                                 }
                             });
+                            hlsInstance.on(window.Hls.Events.ERROR, (_ev, errData) => {
+                                if (sessionId !== activePlaySession || !errData || !errData.fatal) return;
+                                if (errData.type === window.Hls.ErrorTypes.NETWORK_ERROR && hlsInstance) {
+                                    try { hlsInstance.startLoad(); } catch (_) {}
+                                } else if (errData.type === window.Hls.ErrorTypes.MEDIA_ERROR && hlsInstance) {
+                                    try { hlsInstance.recoverMediaError(); } catch (_) {}
+                                }
+                            });
+                            hlsInstance.attachMedia(video);
                         }
                     } else if (video) {
                         try {
@@ -10391,22 +10954,44 @@
                 if (sessionId !== activePlaySession) return;
                 autoReloadAttempts = 0;
                 manualUserPaused = false;
+                window.__ustreamzManualPaused = false;
                 lastAdvanceTime = Date.now();
                 lastObservedCurrentTime = Number(video.currentTime || 0);
                 if (loading) loading.classList.add('hidden');
                 updateStreamIndicator('working', 'LIVE');
                 setChannelPlaybackStatus(channel.id, 'working', 'Live & Playing');
+                if ('mediaSession' in navigator) {
+                    try { navigator.mediaSession.playbackState = 'playing'; } catch (_) {}
+                }
+                updateMediaSessionPosition(true);
             };
 
             video.onpause = () => {
                 if (sessionId !== activePlaySession) return;
-                if (video.ended || !manualUserPaused) {
+                if (video.ended) {
                     setTimeout(() => {
-                        if (sessionId === activePlaySession && !manualUserPaused && video.paused) {
-                            reloadActiveStreamSource('STOPPED - AUTO RELOADING...');
+                        if (sessionId === activePlaySession && video.ended) {
+                            reloadActiveStreamSource('STREAM ENDED - RELOADING...');
                         }
-                    }, 1200);
+                    }, 1500);
+                    return;
                 }
+                // If mobile browser auto-paused right as screen locked / backgrounded, resume immediately
+                const justBackgrounded = document.hidden && (Date.now() - lastBackgroundHiddenAt < 2500);
+                if (justBackgrounded && !window.__ustreamzManualPaused) {
+                    setTimeout(() => {
+                        if (sessionId === activePlaySession && !window.__ustreamzManualPaused && video.paused && !video.ended) {
+                            video.play().catch(() => {});
+                        }
+                    }, 180);
+                    return;
+                }
+                manualUserPaused = true;
+                window.__ustreamzManualPaused = true;
+                if ('mediaSession' in navigator) {
+                    try { navigator.mediaSession.playbackState = 'paused'; } catch (_) {}
+                }
+                updateMediaSessionPosition(true);
             };
 
             video.ontimeupdate = () => {
@@ -10415,7 +11000,14 @@
                 if (Math.abs(ct - lastObservedCurrentTime) > 0.05) {
                     lastObservedCurrentTime = ct;
                     lastAdvanceTime = Date.now();
+                    if (loading && !loading.classList.contains('hidden')) loading.classList.add('hidden');
                 }
+                updateMediaSessionPosition(false);
+            };
+
+            video.ondurationchange = () => {
+                if (sessionId !== activePlaySession) return;
+                updateMediaSessionPosition(true);
             };
 
             video.onwaiting = () => {
@@ -10425,8 +11017,7 @@
 
             video.onstalled = () => {
                 if (sessionId !== activePlaySession) return;
-                updateStreamIndicator('testing', 'RECONNECTING...');
-                reloadActiveStreamSource('STALLED - RELOADING...');
+                updateStreamIndicator('testing', 'BUFFERING...');
             };
 
             video.onended = () => {
@@ -10440,9 +11031,21 @@
                     clearStreamWatchdog();
                     return;
                 }
+                if (document.hidden) {
+                    lastAdvanceTime = Date.now();
+                    return;
+                }
+                const videoWrapEl = document.getElementById('video-wrapper');
+                if (videoWrapEl && videoWrapEl.classList.contains('hidden')) {
+                    clearStreamWatchdog();
+                    return;
+                }
                 const playerSec = document.getElementById('view-player');
                 const isActiveOrMini = !!(playerSec && (playerSec.classList.contains('active') || playerSec.classList.contains('mini-player')));
-                if (!isActiveOrMini || !source || manualUserPaused) return;
+                if (!isActiveOrMini || !source || manualUserPaused || video.paused) {
+                    lastAdvanceTime = Date.now();
+                    return;
+                }
 
                 const ct = Number(video.currentTime || 0);
                 if (Math.abs(ct - lastObservedCurrentTime) > 0.05) {
@@ -10451,30 +11054,15 @@
                     return;
                 }
 
-                // If stream stopped/paused or currentTime hasn't advanced for > 4s, reload & auto-play
+                // Only recover if playback has genuinely stalled for > 12s while unpaused
                 const stuckForMs = Date.now() - lastAdvanceTime;
-                if (stuckForMs > 4000) {
-                    reloadActiveStreamSource('STOPPED/FROZEN - AUTO RELOADING...');
+                if (stuckForMs > 12000) {
+                    reloadActiveStreamSource('FROZEN - AUTO RECOVERING...');
                 }
-            }, 1500);
+            }, 3000);
 
             if (window.Hls && window.Hls.isSupported()) {
-                hlsInstance = new window.Hls({
-                    enableWorker: false,
-                    lowLatencyMode: false,
-                    backBufferLength: 30,
-                    maxBufferLength: 30,
-                    maxMaxBufferLength: 60,
-                    manifestLoadingTimeOut: 20000,
-                    manifestLoadingMaxRetry: 4,
-                    levelLoadingTimeOut: 20000,
-                    levelLoadingMaxRetry: 4,
-                    fragLoadingTimeOut: 30000,
-                    fragLoadingMaxRetry: 5,
-                    xhrSetup: function(xhr) {
-                        xhr.withCredentials = false;
-                    }
-                });
+                hlsInstance = new window.Hls(buildHlsConfig());
 
                 hlsInstance.on(window.Hls.Events.MEDIA_ATTACHED, () => {
                     if (sessionId !== activePlaySession || !hlsInstance) return;
@@ -10492,7 +11080,7 @@
                 hlsInstance.on(window.Hls.Events.ERROR, (event, data) => {
                     if (sessionId !== activePlaySession || !data.fatal) return;
 
-                    if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR && networkRetries < 1) {
+                    if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR && networkRetries < 4) {
                         networkRetries++;
                         updateStreamIndicator('testing', `RETRYING (${networkRetries}/4)...`);
                         if (hlsInstance) hlsInstance.startLoad();
@@ -10537,6 +11125,8 @@
         }
 
         function closePlayer() {
+            window.__ustreamzManualPaused = true;
+            clearMediaSessionPlayer();
             stopPlayer();
             exitAppFullScreen();
             miniPlayerActive = false;
@@ -11351,6 +11941,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             // 6) Back button / back gesture: history layers  [mini player] -> [full player] -> [fullscreen] -> [drawer]
             //    Back closes only the top layer; it never closes the whole app while one of them is open.
             const layers = [];
+            let pushedDepth = 0;
             let rootArmed = false;
             let exitAfterPop = false;
             let lastRootBack = 0;
@@ -11363,6 +11954,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 return !!(pv && pv.classList.contains('active') && !miniPlayerActive && currentPlayingChannelId !== null);
             };
             function wantedLayers() {
+                if (!isMob()) return [];
                 const w = [];
                 if (rootArmed) w.push('root');
                 if (currentPlayingChannelId !== null || miniPlayerActive) w.push('mini');
@@ -11372,22 +11964,32 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 return w;
             }
             function reconcileHistory() {
-                if (waitingPop) return;
+                if (!isMob() || waitingPop) return;
                 const want = wantedLayers();
                 let i = 0;
                 while (i < layers.length && i < want.length && layers[i] === want[i]) i++;
                 if (layers.length > i) {
                     const n = layers.length - i;
                     layers.length = i;
-                    ignorePop++;
-                    waitingPop = true;
-                    try { history.go(-n); } catch (_) { ignorePop--; waitingPop = false; }
-                    setTimeout(() => { if (waitingPop) { waitingPop = false; ignorePop = 0; reconcileHistory(); } }, 700);
-                    return;
+                    // Never overshoot pushed history depth (prevents accidental app exit when closing player from Now Playing)
+                    const minKeep = rootArmed ? 1 : 0;
+                    const maxPop = Math.max(0, pushedDepth - minKeep);
+                    const safeN = Math.min(n, maxPop);
+                    if (safeN > 0) {
+                        pushedDepth = Math.max(0, pushedDepth - safeN);
+                        ignorePop++;
+                        waitingPop = true;
+                        try { history.go(-safeN); } catch (_) { ignorePop--; waitingPop = false; }
+                        setTimeout(() => { if (waitingPop) { waitingPop = false; ignorePop = 0; reconcileHistory(); } }, 700);
+                        return;
+                    }
                 }
                 for (let k = i; k < want.length; k++) {
-                    layers.push(want[k]);
-                    try { history.pushState({ ustreamzLayer: want[k] }, ''); } catch (_) {}
+                    try {
+                        history.pushState({ ustreamzLayer: want[k] }, '');
+                        pushedDepth++;
+                        layers.push(want[k]);
+                    } catch (_) {}
                 }
             }
             window.addEventListener('popstate', () => {
@@ -11398,6 +12000,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                     reconcileHistory();
                     return;
                 }
+                if (pushedDepth > 0) pushedDepth--;
                 const top = layers.pop();
                 if (!top) return; // none of our layers: normal navigation
                 if (top === 'root') {
@@ -11639,6 +12242,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
     };
 
     (function initMultiViewController() {
+        const MV_DEVICE_SAVE_KEY = 'ustreamz_multiview_saved_v1';
         let mvLayout = 2; // 1, 2, or 4
         let mvSlots = [null, null, null, null]; // { channel, hls, muted, linkIndex }
         let mvFocusedSlot = -1;
@@ -11647,6 +12251,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
         let mvPickerCat = 'All';
         let mvColPct = 50;
         let mvRowPct = 50;
+        let mvInitializedOnce = false;
 
         function isPortraitMobileStack() {
             return window.matchMedia && window.matchMedia('(max-width: 767px) and (orientation: portrait)').matches;
@@ -11794,7 +12399,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             const badge = document.getElementById('mv-active-count-badge');
             if (badge) badge.textContent = count + ' Playing';
             const minLbl = document.getElementById('mv-minimized-label');
-            if (minLbl) minLbl.textContent = 'Multi View (' + count + ' Playing)';
+            if (minLbl) minLbl.textContent = ((typeof isMobileDeviceContext === 'function' && isMobileDeviceContext()) || window.innerWidth <= 767) ? 'Multi View' : ('Multi View (' + count + ' Playing)');
         }
 
         function getVisibleCategoriesList() {
@@ -11854,21 +12459,82 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
         function applyVideoMuteState(video, muted) {
             if (!video) return;
             const isMuted = !!muted;
+            video.__mvSyncingMute = true;
             try {
-                video.muted = isMuted;
-                video.defaultMuted = isMuted;
                 if (isMuted) {
+                    video.muted = true;
+                    video.defaultMuted = true;
                     video.setAttribute('muted', '');
                     video.volume = 0;
                 } else {
-                    video.removeAttribute('muted');
+                    // Set volume=1 BEFORE muted=false so volumechange never sees volume===0 and flips back to muted!
                     video.volume = 1;
+                    video.muted = false;
+                    video.defaultMuted = false;
+                    video.removeAttribute('muted');
                     if (video.paused) {
                         const p = video.play();
                         if (p && typeof p.catch === 'function') p.catch(() => {});
                     }
                 }
             } catch (_) {}
+            setTimeout(() => { if (video) video.__mvSyncingMute = false; }, 120);
+        }
+
+        function sendIframeMuteCommand(frame, muted) {
+            if (!frame) return;
+            const isMuted = !!muted;
+            // 1) Direct DOM control if same-origin or srcdoc iframe
+            try {
+                const doc = frame.contentDocument || frame.contentWindow?.document;
+                if (doc) {
+                    const mediaEls = doc.querySelectorAll('video, audio');
+                    mediaEls.forEach(m => {
+                        try {
+                            if (isMuted) {
+                                m.muted = true;
+                                m.defaultMuted = true;
+                                m.setAttribute('muted', '');
+                                m.volume = 0;
+                            } else {
+                                m.volume = 1;
+                                m.muted = false;
+                                m.defaultMuted = false;
+                                m.removeAttribute('muted');
+                                if (m.paused) {
+                                    const p = m.play();
+                                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                                }
+                            }
+                        } catch (_) {}
+                    });
+                }
+            } catch (_) {}
+
+            // 2) postMessage commands for embedded players (YouTube, Vimeo, JWPlayer, Clappr, PlayerJS, custom srcdoc bridge)
+            if (!frame.contentWindow) return;
+            const payloads = isMuted
+                ? [
+                    { __umcMvMute: true },
+                    JSON.stringify({ event: 'command', func: 'mute', args: [] }),
+                    JSON.stringify({ method: 'setVolume', value: 0 }),
+                    JSON.stringify({ method: 'setMuted', value: true }),
+                    { api: 'mute' },
+                    { action: 'mute', muted: true },
+                    'mute'
+                  ]
+                : [
+                    { __umcMvMute: false },
+                    JSON.stringify({ event: 'command', func: 'unMute', args: [] }),
+                    JSON.stringify({ method: 'setVolume', value: 1 }),
+                    JSON.stringify({ method: 'setMuted', value: false }),
+                    { api: 'unmute' },
+                    { action: 'unmute', muted: false },
+                    'unmute'
+                  ];
+            payloads.forEach(msg => {
+                try { frame.contentWindow.postMessage(msg, '*'); } catch (_) {}
+            });
         }
 
         function syncSlotMuteButtonUI(idx) {
@@ -11882,23 +12548,6 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             btn.setAttribute('aria-label', muted ? 'Unmute' : 'Mute');
             btn.className = `inline-flex items-center justify-center w-7 h-7 rounded-lg ${muted ? 'bg-slate-900/90 text-slate-300 border-slate-700' : 'bg-cyan-600 text-white border-cyan-400'} border hover:bg-cyan-500 hover:text-white transition-colors`;
             btn.innerHTML = `<i data-lucide="${muted ? 'volume-x' : 'volume-2'}" class="!w-3.5 !h-3.5"></i>`;
-            if (window.lucide) lucide.createIcons({ root: btn });
-            syncMuteAllHeaderButton();
-        }
-
-        function syncMuteAllHeaderButton() {
-            const btn = document.getElementById('mv-mute-all-btn');
-            if (!btn) return;
-            let anyUnmuted = false;
-            for (let i = 0; i < mvLayout; i++) {
-                if (mvSlots[i] && mvSlots[i].channel && !mvSlots[i].muted) {
-                    anyUnmuted = true;
-                    break;
-                }
-            }
-            btn.title = anyUnmuted ? 'Mute All' : 'Unmute All';
-            btn.setAttribute('aria-label', btn.title);
-            btn.innerHTML = `<i data-lucide="${anyUnmuted ? 'volume-2' : 'volume-x'}" class="!w-4 !h-4"></i>`;
             if (window.lucide) lucide.createIcons({ root: btn });
         }
 
@@ -11915,10 +12564,6 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                     document.getElementById('multiview-grid')?.classList.remove('mv-has-focus');
                     applySplitPercentages();
                 }
-                const remainingIdx = mvSlots.findIndex((s, i) => i < mvLayout && s && s.channel);
-                const singleFallbackBtn = (mvLayout > 1 && remainingIdx >= 0)
-                    ? `<button type="button" onclick="watchMultiViewSlotInSingle(${remainingIdx})" class="inline-flex items-center gap-1.5 rounded-xl border border-indigo-500/40 bg-indigo-600/20 hover:bg-indigo-600 text-indigo-200 hover:text-white px-3 py-1.5 text-[11px] font-semibold transition-colors"><i data-lucide="maximize-2" class="!w-3.5 !h-3.5"></i><span>Watch Remaining as Single</span></button>`
-                    : '';
                 slotEl.innerHTML = `
                     <div class="w-full h-full flex flex-col items-center justify-center gap-2.5 p-4 bg-gradient-to-b from-slate-900/90 to-slate-950 text-center">
                         <span class="text-[11px] font-bold uppercase tracking-widest text-slate-500">View ${idx + 1}</span>
@@ -11926,12 +12571,10 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                             <i data-lucide="plus-circle" class="!w-4 !h-4"></i>
                             <span>Add Channel</span>
                         </button>
-                        ${singleFallbackBtn}
                     </div>
                 `;
                 if (window.lucide) lucide.createIcons({ root: slotEl });
                 updateActiveBadge();
-                syncMuteAllHeaderButton();
                 return;
             }
 
@@ -11951,9 +12594,9 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                         <button type="button" id="mv-mute-btn-${idx}" onclick="toggleMultiViewSlotMute(${idx}, event)" title="${muted ? 'Unmute' : 'Mute'}" aria-label="${muted ? 'Unmute' : 'Mute'}" class="inline-flex items-center justify-center w-7 h-7 rounded-lg ${muted ? 'bg-slate-900/90 text-slate-300 border-slate-700' : 'bg-cyan-600 text-white border-cyan-400'} border hover:bg-cyan-500 hover:text-white transition-colors">
                             <i data-lucide="${muted ? 'volume-x' : 'volume-2'}" class="!w-3.5 !h-3.5"></i>
                         </button>
-                        ${mvLayout > 1 ? `<button type="button" id="mv-focus-btn-${idx}" onclick="toggleMultiViewSlotFocus(${idx})" title="${isFocused ? 'Restore Multi View' : 'Expand Big View'}" aria-label="${isFocused ? 'Restore Multi View' : 'Expand Big View'}" class="inline-flex items-center justify-center w-7 h-7 rounded-lg ${isFocused ? 'bg-indigo-600 text-white border-indigo-400' : 'bg-slate-900/90 text-slate-200 border-slate-700'} border hover:bg-indigo-600 hover:text-white transition-colors">
+                        <button type="button" id="mv-focus-btn-${idx}" onclick="toggleMultiViewSlotFocus(${idx})" title="${isFocused ? 'Restore Multi View' : 'Expand Big View'}" aria-label="${isFocused ? 'Restore Multi View' : 'Expand Big View'}" class="mv-focus-btn inline-flex items-center justify-center w-7 h-7 rounded-lg ${isFocused ? 'bg-indigo-600 text-white border-indigo-400' : 'bg-slate-900/90 text-slate-200 border-slate-700'} border hover:bg-indigo-600 hover:text-white transition-colors">
                             <i data-lucide="${isFocused ? 'minimize-2' : 'maximize-2'}" class="!w-3.5 !h-3.5"></i>
-                        </button>` : ''}
+                        </button>
                         <button type="button" onclick="openSingleFromMultiView(${idx})" title="Open in Single Player" aria-label="Open in Single Player" class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-900/90 border border-slate-700 text-sky-300 hover:bg-sky-600 hover:text-white transition-colors">
                             <i data-lucide="tv" class="!w-3.5 !h-3.5"></i>
                         </button>
@@ -11974,7 +12617,6 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
 
             startSlotPlayback(idx);
             updateActiveBadge();
-            syncMuteAllHeaderButton();
         }
 
         function setSlotDot(idx, state) {
@@ -11998,12 +12640,21 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             if (ch.embedCode && !source) {
                 const frame = document.createElement('iframe');
                 frame.className = 'mv-slot-iframe';
+                frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
                 frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
                 frame.setAttribute('allowfullscreen', '');
                 frame.setAttribute('referrerpolicy', 'no-referrer');
-                frame.srcdoc = ch.embedCode;
+                const mvMuteBridge = '<script>window.addEventListener("message",function(e){if(!e||!e.data||typeof e.data.__umcMvMute!=="boolean")return;var m=e.data.__umcMvMute;document.querySelectorAll("video,audio").forEach(function(v){try{if(m){v.muted=true;v.volume=0;}else{v.volume=1;v.muted=false;}}catch(_){}});});<\/script>';
+                frame.srcdoc = String(ch.embedCode || '') + mvMuteBridge;
                 stage.innerHTML = '';
                 stage.appendChild(frame);
+                const mvShield = document.createElement('div');
+                mvShield.className = 'mv-embed-watermark-shield';
+                mvShield.setAttribute('aria-hidden', 'true');
+                mvShield.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                mvShield.addEventListener('mousedown', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                mvShield.addEventListener('contextmenu', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                stage.appendChild(mvShield);
                 setSlotDot(idx, 'live');
                 return;
             }
@@ -12014,13 +12665,26 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             if (!isHls && !isDirect) {
                 const frame = document.createElement('iframe');
                 frame.className = 'mv-slot-iframe';
+                frame.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-forms');
                 frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
                 frame.setAttribute('allowfullscreen', '');
                 frame.setAttribute('referrerpolicy', 'no-referrer');
-                frame.onload = () => setSlotDot(idx, 'live');
+                frame.onload = () => {
+                    setSlotDot(idx, 'live');
+                    if (mvSlots[idx] && mvSlots[idx].muted) {
+                        sendIframeMuteCommand(frame, true);
+                    }
+                };
                 frame.src = source;
                 stage.innerHTML = '';
                 stage.appendChild(frame);
+                const mvShield = document.createElement('div');
+                mvShield.className = 'mv-embed-watermark-shield';
+                mvShield.setAttribute('aria-hidden', 'true');
+                mvShield.addEventListener('click', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                mvShield.addEventListener('mousedown', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                mvShield.addEventListener('contextmenu', (ev) => { ev.preventDefault(); ev.stopPropagation(); });
+                stage.appendChild(mvShield);
                 return;
             }
 
@@ -12030,6 +12694,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             video.playsInline = true;
             video.autoplay = true;
             video.setAttribute('playsinline', '');
+            video.setAttribute('disablePictureInPicture', '');
+            video.setAttribute('oncontextmenu', 'return false;');
             video.setAttribute('controlsList', 'nodownload noremoteplayback');
             applyVideoMuteState(video, !!st.muted);
             stage.innerHTML = '';
@@ -12053,7 +12719,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             video.addEventListener('waiting', () => setSlotDot(idx, 'loading'), { passive: true });
             video.addEventListener('error', () => setSlotDot(idx, 'err'), { passive: true });
             video.addEventListener('volumechange', () => {
-                if (!mvSlots[idx]) return;
+                if (!mvSlots[idx] || video.__mvSyncingMute) return;
                 const isMutedNow = video.muted || video.volume === 0;
                 if (mvSlots[idx].muted !== isMutedNow) {
                     mvSlots[idx].muted = isMutedNow;
@@ -12077,13 +12743,24 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 st.hls = hls;
                 hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(source));
                 hls.on(Hls.Events.MANIFEST_PARSED, () => tryPlay());
+                let mvNetRetries = 0;
                 hls.on(Hls.Events.ERROR, (_ev, data) => {
                     if (!data || !data.fatal) return;
-                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR && linkIndex + 1 < urls.length) {
-                        st.linkIndex = linkIndex + 1;
-                        destroySlotPlayback(idx);
-                        startSlotPlayback(idx);
-                        return;
+                    if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                        if (mvNetRetries < 3) {
+                            mvNetRetries++;
+                            try { hls.startLoad(); } catch (_) {}
+                            return;
+                        }
+                        if (linkIndex + 1 < urls.length) {
+                            st.linkIndex = linkIndex + 1;
+                            destroySlotPlayback(idx);
+                            startSlotPlayback(idx);
+                            return;
+                        }
+                    }
+                    if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                        try { hls.recoverMediaError(); return; } catch (_) {}
                     }
                     setSlotDot(idx, 'err');
                 });
@@ -12096,7 +12773,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             }
         }
 
-        function buildMultiViewGrid() {
+        function ensureAllSlotElementsAndVisibility() {
             const grid = document.getElementById('multiview-grid');
             if (!grid) return;
 
@@ -12105,18 +12782,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             bindCenterSplitters();
             applySplitPercentages();
 
-            for (let i = mvLayout; i < 4; i++) {
-                destroySlotPlayback(i);
-            }
-
-            const existingCount = grid.children.length;
-            if (existingCount > mvLayout) {
-                for (let i = existingCount - 1; i >= mvLayout; i--) {
-                    const el = document.getElementById('mv-slot-' + i);
-                    if (el) el.remove();
-                }
-            }
-            for (let i = 0; i < mvLayout; i++) {
+            // Keep all 4 slot containers in DOM and ONLY toggle hidden class so switching 1 / 2 / 4 NEVER stops or restarts running streams!
+            for (let i = 0; i < 4; i++) {
                 let el = document.getElementById('mv-slot-' + i);
                 if (!el) {
                     el = document.createElement('div');
@@ -12124,12 +12791,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                     el.className = 'mv-slot';
                     grid.appendChild(el);
                     renderSlot(i);
-                } else {
-                    const hasFocusBtn = !!document.getElementById('mv-focus-btn-' + i);
-                    if (mvSlots[i] && mvSlots[i].channel && ((mvLayout === 1 && hasFocusBtn) || (mvLayout > 1 && !hasFocusBtn))) {
-                        renderSlot(i);
-                    }
                 }
+                el.classList.toggle('hidden', i >= mvLayout);
             }
 
             const activeCls = 'inline-flex items-center gap-1 rounded-lg px-2 sm:px-2.5 py-1 bg-indigo-600 text-white transition-colors';
@@ -12141,8 +12804,105 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             if (b2) b2.className = mvLayout === 2 ? activeCls : idleCls;
             if (b4) b4.className = mvLayout === 4 ? activeCls : idleCls;
             updateActiveBadge();
-            syncMuteAllHeaderButton();
         }
+
+        function loadSavedMultiViewFromDevice() {
+            try {
+                const raw = localStorage.getItem(MV_DEVICE_SAVE_KEY);
+                if (!raw) return false;
+                const saved = JSON.parse(raw);
+                if (!saved || typeof saved !== 'object') return false;
+                if ([1, 2, 4].includes(Number(saved.layout))) mvLayout = Number(saved.layout);
+                if (typeof saved.colPct === 'number') mvColPct = saved.colPct;
+                if (typeof saved.rowPct === 'number') mvRowPct = saved.rowPct;
+
+                const savedIds = Array.isArray(saved.slotChannelIds) ? saved.slotChannelIds : [];
+                const savedMuted = Array.isArray(saved.slotMuted) ? saved.slotMuted : [];
+                const channels = Array.isArray(appData?.channels) ? appData.channels : [];
+                let restoredAny = false;
+                for (let i = 0; i < 4; i++) {
+                    const cid = savedIds[i];
+                    if (!cid) continue;
+                    const ch = channels.find(c => String(c.id) === String(cid));
+                    if (!ch) continue;
+                    // Respect password lock if user is not logged in
+                    const locked = !window.isAdminLoggedIn && !!String(ch.password || '').trim() && !(typeof getActiveUserAccountSession === 'function' && getActiveUserAccountSession());
+                    if (locked) continue;
+                    mvSlots[i] = {
+                        channel: ch,
+                        hls: null,
+                        muted: typeof savedMuted[i] === 'boolean' ? savedMuted[i] : (i !== 0),
+                        linkIndex: 0
+                    };
+                    restoredAny = true;
+                }
+                return restoredAny;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function hasSavedMultiViewOnDevice() {
+            try {
+                return !!localStorage.getItem(MV_DEVICE_SAVE_KEY);
+            } catch (_) {
+                return false;
+            }
+        }
+
+        function syncMultiViewSaveButtonUI() {
+            const btn = document.getElementById('mv-save-layout-btn');
+            if (!btn) return;
+            const saved = hasSavedMultiViewOnDevice();
+            if (saved) {
+                btn.title = 'Delete saved Multi View from this device';
+                btn.setAttribute('aria-label', 'Delete Saved Multi View');
+                btn.className = 'inline-flex items-center gap-1 h-8 sm:h-9 px-2.5 rounded-xl border border-rose-500/40 bg-rose-600/20 hover:bg-rose-600 text-rose-200 hover:text-white text-xs font-semibold transition-colors';
+                btn.innerHTML = '<i data-lucide="trash-2" class="!w-3.5 !h-3.5"></i><span class="hidden sm:inline">Delete</span>';
+            } else {
+                btn.title = 'Save Multi View on this device';
+                btn.setAttribute('aria-label', 'Save Multi View');
+                btn.className = 'inline-flex items-center gap-1 h-8 sm:h-9 px-2.5 rounded-xl border border-emerald-500/40 bg-emerald-600/20 hover:bg-emerald-600 text-emerald-200 hover:text-white text-xs font-semibold transition-colors';
+                btn.innerHTML = '<i data-lucide="save" class="!w-3.5 !h-3.5"></i><span class="hidden sm:inline">Save</span>';
+            }
+            if (window.lucide) lucide.createIcons({ root: btn });
+        }
+
+        window.toggleSaveDeleteMultiViewOnDevice = function () {
+            if (hasSavedMultiViewOnDevice()) {
+                try {
+                    localStorage.removeItem(MV_DEVICE_SAVE_KEY);
+                    syncMultiViewSaveButtonUI();
+                    if (typeof showNotification === 'function') {
+                        showNotification('Saved Multi View deleted!');
+                    }
+                } catch (_) {
+                    if (typeof showNotification === 'function') {
+                        showNotification('Could not delete saved Multi View.', 'error');
+                    }
+                }
+                return;
+            }
+            try {
+                const payload = {
+                    layout: mvLayout,
+                    colPct: Math.round(mvColPct),
+                    rowPct: Math.round(mvRowPct),
+                    slotChannelIds: mvSlots.map(s => (s && s.channel) ? String(s.channel.id) : ''),
+                    slotMuted: mvSlots.map(s => !!(s && s.muted)),
+                    savedAt: Date.now()
+                };
+                localStorage.setItem(MV_DEVICE_SAVE_KEY, JSON.stringify(payload));
+                syncMultiViewSaveButtonUI();
+                if (typeof showNotification === 'function') {
+                    showNotification('Multi View saved on this device!');
+                }
+            } catch (_) {
+                if (typeof showNotification === 'function') {
+                    showNotification('Could not save Multi View on this device.', 'error');
+                }
+            }
+        };
 
         window.openMultiViewModal = function () {
             if (typeof closeMobileSidebarDrawer === 'function') closeMobileSidebarDrawer();
@@ -12150,14 +12910,19 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 restoreMultiViewModal();
                 return;
             }
-            if (typeof stopPlayer === 'function') stopPlayer();
-            const pv = document.getElementById('view-player');
-            if (pv) pv.classList.remove('mini-player');
             const modal = document.getElementById('multiview-modal');
             if (!modal) return;
-            modal.classList.remove('hidden');
+
+            const hasAnyPlaying = mvSlots.some(s => s && s.channel);
+            if (!mvInitializedOnce && !hasAnyPlaying) {
+                mvInitializedOnce = true;
+                loadSavedMultiViewFromDevice();
+            }
+
+            modal.classList.remove('hidden', 'mv-is-minimized');
             modal.classList.add('flex');
-            buildMultiViewGrid();
+            ensureAllSlotElementsAndVisibility();
+            syncMultiViewSaveButtonUI();
             if (window.lucide) lucide.createIcons({ root: modal });
         };
 
@@ -12167,14 +12932,25 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             if (!modal || !dock) return;
             closeMultiViewPicker();
             mvMinimized = true;
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            // Keep #multiview-modal rendered off-screen instead of display:none so streams keep playing without pausing!
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'mv-is-minimized');
             dock.classList.remove('hidden');
             dock.classList.add('flex');
             updateActiveBadge();
             if (window.lucide) lucide.createIcons({ root: dock });
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (_) {}
+            }
+            // Ensure active slot videos continue playing seamlessly
+            for (let i = 0; i < mvLayout; i++) {
+                if (!mvSlots[i] || !mvSlots[i].channel) continue;
+                const slotEl = document.getElementById('mv-slot-' + i);
+                const v = slotEl ? slotEl.querySelector('video') : null;
+                if (v && v.paused) {
+                    const p = v.play();
+                    if (p && typeof p.catch === 'function') p.catch(() => {});
+                }
             }
         };
 
@@ -12187,15 +12963,17 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 dock.classList.add('hidden');
                 dock.classList.remove('flex');
             }
-            modal.classList.remove('hidden');
+            modal.classList.remove('hidden', 'mv-is-minimized');
             modal.classList.add('flex');
             applySplitPercentages();
+            syncMultiViewSaveButtonUI();
             if (window.lucide) lucide.createIcons({ root: modal });
         };
 
         window.closeMultiViewModal = function () {
             mvMinimized = false;
             mvFocusedSlot = -1;
+            mvInitializedOnce = false;
             for (let i = 0; i < 4; i++) {
                 destroySlotPlayback(i);
                 mvSlots[i] = null;
@@ -12213,8 +12991,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             }
             const modal = document.getElementById('multiview-modal');
             if (modal) {
+                modal.classList.remove('mv-is-minimized', 'flex');
                 modal.classList.add('hidden');
-                modal.classList.remove('flex');
             }
             if (document.fullscreenElement || document.webkitFullscreenElement) {
                 try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (_) {}
@@ -12222,22 +13000,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
         };
 
         window.setMultiViewLayout = function (count) {
-            const next = count === 4 ? 4 : (count === 1 ? 1 : 2);
-            if (next === 1 && (!mvSlots[0] || !mvSlots[0].channel)) {
-                const firstActiveIdx = mvSlots.findIndex(s => s && s.channel);
-                if (firstActiveIdx > 0) {
-                    const ch = mvSlots[firstActiveIdx].channel;
-                    destroySlotPlayback(firstActiveIdx);
-                    mvSlots[firstActiveIdx] = null;
-                    mvSlots[0] = { channel: ch, hls: null, muted: false, linkIndex: 0 };
-                    mvLayout = 1;
-                    buildMultiViewGrid();
-                    renderSlot(0);
-                    return;
-                }
-            }
-            mvLayout = next;
-            buildMultiViewGrid();
+            mvLayout = count === 4 ? 4 : (count === 1 ? 1 : 2);
+            ensureAllSlotElementsAndVisibility();
         };
 
         window.toggleMultiViewSlotFocus = function (idx) {
@@ -12257,27 +13021,12 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 if (slotEl) slotEl.classList.toggle('mv-slot-focused', focused);
                 if (btn) {
                     btn.title = focused ? 'Restore Multi View' : 'Expand Big View';
-                    btn.className = `inline-flex items-center justify-center w-7 h-7 rounded-lg ${focused ? 'bg-indigo-600 text-white border-indigo-400' : 'bg-slate-900/90 text-slate-200 border-slate-700'} border hover:bg-indigo-600 hover:text-white transition-colors`;
+                    btn.className = `mv-focus-btn inline-flex items-center justify-center w-7 h-7 rounded-lg ${focused ? 'bg-indigo-600 text-white border-indigo-400' : 'bg-slate-900/90 text-slate-200 border-slate-700'} border hover:bg-indigo-600 hover:text-white transition-colors`;
                     btn.innerHTML = `<i data-lucide="${focused ? 'minimize-2' : 'maximize-2'}" class="!w-3.5 !h-3.5"></i>`;
                     if (window.lucide) lucide.createIcons({ root: btn });
                 }
             }
             applySplitPercentages();
-        };
-
-        window.watchMultiViewSlotInSingle = function (idx) {
-            const st = mvSlots[idx];
-            if (!st || !st.channel) return;
-            const ch = st.channel;
-            for (let i = 0; i < 4; i++) {
-                destroySlotPlayback(i);
-                mvSlots[i] = null;
-            }
-            mvSlots[0] = { channel: ch, hls: null, muted: false, linkIndex: 0 };
-            mvLayout = 1;
-            const grid = document.getElementById('multiview-grid');
-            if (grid) grid.innerHTML = '';
-            buildMultiViewGrid();
         };
 
         window.openSingleFromMultiView = function (idx) {
@@ -12297,33 +13046,14 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             if (!st) return;
             const slotEl = document.getElementById('mv-slot-' + idx);
             const v = slotEl ? slotEl.querySelector('video') : null;
-            if (!v) {
-                if (typeof showNotification === 'function') showNotification('Use stream player volume control for embedded channels.');
-                return;
-            }
             st.muted = !st.muted;
-            applyVideoMuteState(v, st.muted);
+            if (v) {
+                applyVideoMuteState(v, st.muted);
+            } else {
+                const frame = slotEl ? slotEl.querySelector('iframe') : null;
+                if (frame) sendIframeMuteCommand(frame, st.muted);
+            }
             syncSlotMuteButtonUI(idx);
-        };
-
-        window.toggleMuteAllMultiViewSlots = function () {
-            let anyUnmuted = false;
-            for (let i = 0; i < mvLayout; i++) {
-                if (mvSlots[i] && mvSlots[i].channel && !mvSlots[i].muted) {
-                    anyUnmuted = true;
-                    break;
-                }
-            }
-            const nextMuted = anyUnmuted ? true : false;
-            for (let i = 0; i < mvLayout; i++) {
-                if (!mvSlots[i] || !mvSlots[i].channel) continue;
-                mvSlots[i].muted = nextMuted;
-                const slotEl = document.getElementById('mv-slot-' + i);
-                const v = slotEl ? slotEl.querySelector('video') : null;
-                if (v) applyVideoMuteState(v, nextMuted);
-                syncSlotMuteButtonUI(i);
-            }
-            syncMuteAllHeaderButton();
         };
 
         window.reloadMultiViewSlot = function (idx) {
@@ -12335,11 +13065,6 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             destroySlotPlayback(idx);
             mvSlots[idx] = null;
             renderSlot(idx);
-            for (let i = 0; i < mvLayout; i++) {
-                if (i !== idx && (!mvSlots[i] || !mvSlots[i].channel)) {
-                    renderSlot(i);
-                }
-            }
         };
 
         window.clearAllMultiViewSlots = function () {
@@ -12348,7 +13073,7 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             for (let i = 0; i < 4; i++) {
                 destroySlotPlayback(i);
                 mvSlots[i] = null;
-                if (i < mvLayout) renderSlot(i);
+                renderSlot(i);
             }
             applySplitPercentages();
             updateActiveBadge();
@@ -12410,11 +13135,57 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
             renderMultiViewPickerList();
         };
 
+        // Strictly disable right-click everywhere inside Multi View
+        ['multiview-modal', 'multiview-minimized-dock'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el && !el.__mvCtxBlocked) {
+                el.__mvCtxBlocked = true;
+                el.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+                    return false;
+                }, { capture: true });
+            }
+        });
+
+        function buildPickerChannelCardHtml(ch) {
+            const logo = typeof getChannelLogo === 'function' ? getChannelLogo(ch) : (ch.logo || '');
+            const locked = !window.isAdminLoggedIn && !!String(ch.password || '').trim() && !(typeof getActiveUserAccountSession === 'function' && getActiveUserAccountSession());
+            const initials = String(ch.name || 'TV').split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase() || 'TV';
+            const stObj = (typeof channelPlaybackStatus !== 'undefined' && channelPlaybackStatus) ? channelPlaybackStatus[String(ch.id)] : null;
+            const stState = stObj?.state || 'unknown';
+            const stTitle = stObj?.message || (stState === 'working' ? 'Online' : (stState === 'failed' ? 'Offline' : (stState === 'testing' ? 'Checking...' : 'Status unknown')));
+            const dotCls = stState === 'working'
+                ? 'bg-emerald-400 shadow-[0_0_7px_#34d399]'
+                : (stState === 'failed'
+                    ? 'bg-rose-500 shadow-[0_0_7px_#f43f5e]'
+                    : (stState === 'testing' ? 'bg-amber-400 animate-pulse' : 'bg-slate-500'));
+            return `
+                <button type="button" onclick="selectChannelForMultiViewSlot('${escapeLogoAttr(String(ch.id))}')" class="relative flex items-center gap-2.5 p-2 rounded-2xl border border-slate-800 bg-slate-950/90 hover:border-cyan-500/70 hover:bg-slate-800/80 text-left transition-all min-w-0">
+                    <div class="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 relative">
+                        <span class="text-xs font-extrabold text-slate-500">${escapeLogoAttr(initials)}</span>
+                        ${logo ? `<img src="${escapeLogoAttr(logo)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'" class="absolute inset-0 w-full h-full object-contain p-1">` : ''}
+                    </div>
+                    <div class="min-w-0 flex-1 pr-3">
+                        <div class="text-xs font-bold text-white truncate flex items-center gap-1">
+                            <span class="truncate">${escapeLogoAttr(ch.name || 'Channel')}</span>
+                            ${locked ? '<i data-lucide="lock" class="!w-3 !h-3 text-rose-400 shrink-0"></i>' : ''}
+                        </div>
+                        <div class="text-[10px] text-slate-400 truncate">${escapeLogoAttr(ch.category || 'Live')}</div>
+                    </div>
+                    <span title="${escapeLogoAttr(stTitle)}" class="absolute top-2 right-2 h-2.5 w-2.5 rounded-full border border-slate-950 ${dotCls}"></span>
+                </button>
+            `;
+        }
+
         window.renderMultiViewPickerList = function () {
             const listEl = document.getElementById('mv-picker-list');
             if (!listEl) return;
             const q = String(document.getElementById('mv-picker-search')?.value || '').trim().toLowerCase();
             const all = getPlayableChannels();
+            const sortAZ = (arr) => arr.slice().sort((a, b) => String(a?.name || '').localeCompare(String(b?.name || ''), undefined, { sensitivity: 'base' }));
+
             const filtered = all.filter(ch => {
                 const cCats = Array.isArray(ch.categories) && ch.categories.length ? ch.categories : [ch.category || 'Uncategorized'];
                 const inCat = mvPickerCat === 'All' || cCats.includes(mvPickerCat);
@@ -12427,26 +13198,44 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 return;
             }
 
-            listEl.innerHTML = filtered.map(ch => {
-                const logo = typeof getChannelLogo === 'function' ? getChannelLogo(ch) : (ch.logo || '');
-                const locked = !window.isAdminLoggedIn && !!String(ch.password || '').trim() && !(typeof getActiveUserAccountSession === 'function' && getActiveUserAccountSession());
-                const initials = String(ch.name || 'TV').split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase() || 'TV';
-                return `
-                    <button type="button" onclick="selectChannelForMultiViewSlot('${escapeLogoAttr(String(ch.id))}')" class="flex items-center gap-2.5 p-2 rounded-2xl border border-slate-800 bg-slate-950/90 hover:border-cyan-500/70 hover:bg-slate-800/80 text-left transition-all min-w-0">
-                        <div class="w-11 h-11 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 relative">
-                            <span class="text-xs font-extrabold text-slate-500">${escapeLogoAttr(initials)}</span>
-                            ${logo ? `<img src="${escapeLogoAttr(logo)}" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'" class="absolute inset-0 w-full h-full object-contain p-1">` : ''}
+            if (mvPickerCat === 'All') {
+                const visibleCats = getVisibleCategoriesList().filter(c => c !== 'All');
+                const chunks = [];
+                const placedIds = new Set();
+
+                visibleCats.forEach(catName => {
+                    const inThisCat = sortAZ(filtered.filter(ch => {
+                        const cCats = Array.isArray(ch.categories) && ch.categories.length ? ch.categories : [ch.category || 'Uncategorized'];
+                        return cCats.includes(catName);
+                    }));
+                    if (!inThisCat.length) return;
+                    inThisCat.forEach(ch => placedIds.add(String(ch.id)));
+                    chunks.push(`
+                        <div class="col-span-full flex items-center gap-2 pt-2 first:pt-0 pb-0.5">
+                            <span class="text-xs font-bold text-cyan-300 tracking-wide">${escapeLogoAttr(catName)}</span>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">${inThisCat.length}</span>
+                            <div class="h-px flex-1 bg-slate-800"></div>
                         </div>
-                        <div class="min-w-0 flex-1">
-                            <div class="text-xs font-bold text-white truncate flex items-center gap-1">
-                                <span class="truncate">${escapeLogoAttr(ch.name || 'Channel')}</span>
-                                ${locked ? '<i data-lucide="lock" class="!w-3 !h-3 text-rose-400 shrink-0"></i>' : ''}
-                            </div>
-                            <div class="text-[10px] text-slate-400 truncate">${escapeLogoAttr(ch.category || 'Live')}</div>
+                    `);
+                    chunks.push(inThisCat.map(buildPickerChannelCardHtml).join(''));
+                });
+
+                const leftovers = sortAZ(filtered.filter(ch => !placedIds.has(String(ch.id))));
+                if (leftovers.length) {
+                    chunks.push(`
+                        <div class="col-span-full flex items-center gap-2 pt-2 pb-0.5">
+                            <span class="text-xs font-bold text-cyan-300 tracking-wide">Other</span>
+                            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">${leftovers.length}</span>
+                            <div class="h-px flex-1 bg-slate-800"></div>
                         </div>
-                    </button>
-                `;
-            }).join('');
+                    `);
+                    chunks.push(leftovers.map(buildPickerChannelCardHtml).join(''));
+                }
+                listEl.innerHTML = chunks.join('');
+            } else {
+                listEl.innerHTML = sortAZ(filtered).map(buildPickerChannelCardHtml).join('');
+            }
+
             if (window.lucide) lucide.createIcons({ root: listEl });
         };
 
@@ -12469,12 +13258,8 @@ ${cfg.updateUrl}` : 'No update URL configured yet.';
                 linkIndex: 0
             };
             closeMultiViewPicker();
+            // ONLY render the selected slot so all other playing streams continue uninterrupted!
             renderSlot(idx);
-            for (let i = 0; i < mvLayout; i++) {
-                if (i !== idx && (!mvSlots[i] || !mvSlots[i].channel)) {
-                    renderSlot(i);
-                }
-            }
         };
     })();
     </script>
